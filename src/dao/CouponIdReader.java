@@ -4,8 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import orderedcollection.IMJ_OC;
-import orderedcollection.MJ_OC_Factory;
+import orderedcollection.*;
 import studysensors.Constants;
 
 public class CouponIdReader {

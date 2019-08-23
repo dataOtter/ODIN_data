@@ -6,6 +6,12 @@ import java.text.ParseException;
 import orderedcollection.*;
 import studysensors.sensors.*;
 
+/***
+ * This file reads the sensor table names
+ *  
+ * @author Maisha
+ *
+ */
 public class SensorTblNamesReader {
     private IMJ_OC<String> _sensorTblNames;
     private final String _path;

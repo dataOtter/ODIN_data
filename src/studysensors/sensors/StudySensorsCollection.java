@@ -15,28 +15,24 @@ public class StudySensorsCollection {
     
     public IMJ_OC<Integer> getSensorIds() {
     	IMJ_OC<Integer> sids = new MJ_OC_Factory<Integer>().create();
-    	for (int i = 0; i<_sensors.length(); i++) {
-    		sids.append(_sensors.getItem(i).getSensorId());
+    	for (int i = 0; i<_sensors.size(); i++) {
+    		sids.add(_sensors.get(i).getSensorId());
     	}
     	return sids;
     }
     
     public StudySensorsCollection getSensorsByStudyId(int studyid) {
     	IMJ_OC<StudySensor> sen = new MJ_OC_Factory<StudySensor>().create();
-    	StudySensor s;
-    	for (int i = 0; i<_sensors.length(); i++) {
-    		s = _sensors.getItem(i);
+    	for (StudySensor s: _sensors) {
     		if (s.getStudyId() == studyid) {
-    			sen.append(s);
+    			sen.add(s);
     		}
     	}
     	return new StudySensorsCollection(sen);
     }
     
     public Double getSensorInterval(int sensorid){
-    	StudySensor sen;
-    	for (int i = 0; i<_sensors.length(); i++) {
-    		sen = _sensors.getItem(i);
+    	for (StudySensor sen: _sensors) {
     		int id = sen.getSensorId();
     		if (id == sensorid) {
     			return sen.getParams().getInterval();
@@ -46,10 +42,10 @@ public class StudySensorsCollection {
     }
 	
 	public int getLength() {
-		return _sensors.length();
+		return _sensors.size();
 	}
 	
 	public StudySensor getStudySensorAtIdx(int i) {
-		return _sensors.getItem(i);
+		return _sensors.get(i);
 	}
 }

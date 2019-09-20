@@ -18,19 +18,19 @@ public class GpsCoordsClustersGalaxy {
     public GpsCoordsClustersGalaxy getNextGalaxy(){
         //loop through _clusters and get all cluster centers -- make map of center to cluster
         IMJ_Map<GpsCoordinate, GpsCoordsCluster> centerToCluster = getCenterToClusterMap();
-        Assertion.test(centerToCluster.length() > 1, "Only one cluster left, cannot get next galaxy");
+        Assertion.test(centerToCluster.size() > 1, "Only one cluster left, cannot get next galaxy");
         
         //find the two closest center coordinates
         GpsCoordinate[] closestCenterCoords = getClosestClusterCenters(centerToCluster);
         
         //make a new cluster by merging those two clusters
-        GpsCoordsCluster cluster = mergeClusters(centerToCluster.getValueOfKey(closestCenterCoords[0]), 
-                centerToCluster.getValueOfKey(closestCenterCoords[1]));
+        GpsCoordsCluster cluster = mergeClusters(centerToCluster.get(closestCenterCoords[0]), 
+                centerToCluster.get(closestCenterCoords[1]));
         
         //update map by removing those 2 and adding the new cluster
-        centerToCluster.delete(closestCenterCoords[0]);
-        centerToCluster.delete(closestCenterCoords[1]);
-        centerToCluster.add(new GpsCoordinate(0, 0), cluster);
+        centerToCluster.remove(closestCenterCoords[0]);
+        centerToCluster.remove(closestCenterCoords[1]);
+        centerToCluster.put(new GpsCoordinate(0, 0), cluster);
         
         //put all clusters from the updated map into a new galaxy
         GpsCoordsClustersGalaxy g = makeGalaxyFromMapOfCentersToClusters(centerToCluster);
@@ -48,20 +48,20 @@ public class GpsCoordsClustersGalaxy {
             obs = new GpsCoordsClusterCenterCalc();
             cluster.registerObserver(obs);
             //put it in _clusters using addCluster
-            _clusters.append(cluster);
+            _clusters.add(cluster);
         }
     }
     
     public int length(){
-        return _clusters.length();
+        return _clusters.size();
     }
     
     public GpsCoordsCluster getClusterAtIdx(int i){
-        return _clusters.getItem(i);
+        return _clusters.get(i);
     }
     
     private void addCluster(GpsCoordsCluster c){
-        _clusters.append(c);
+        _clusters.add(c);
     }
     
     private double getCoordsDistance(GpsCoordinate a, GpsCoordinate b){
@@ -90,12 +90,10 @@ public class GpsCoordsClustersGalaxy {
     
     private GpsCoordsClustersGalaxy makeGalaxyFromMapOfCentersToClusters(IMJ_Map<GpsCoordinate, GpsCoordsCluster> m){
         GpsCoordsClustersGalaxy g = new GpsCoordsClustersGalaxy();
-        GpsCoordinate coord;
-        GpsCoordsCluster cluster;
         //put all clusters from the map into a new galaxy using addCluster
-        for (int i = 0; i<m.length(); i++){
-            coord = m.getKeyAtIdx(i);
-            cluster = m.getValueOfKey(coord);
+        for (int i = 0; i<m.size(); i++){
+        	GpsCoordinate coord = m.getKey(i);
+        	GpsCoordsCluster cluster = m.get(coord);
             g.addCluster(cluster);
         }
         return g;
@@ -103,13 +101,12 @@ public class GpsCoordsClustersGalaxy {
     
     private GpsCoordinate[] getClosestClusterCenters(IMJ_Map<GpsCoordinate, GpsCoordsCluster> m){
         GpsCoordinate[] closestCoords = new GpsCoordinate[2];
-        GpsCoordinate coord, coord2;
         double tempClosest = 999999999.9;
         double distance;
         //find the two closest centers
-        for (int i = 0; i<_clusters.length()-1; i++){
-            coord = m.getKeyAtIdx(i);
-            coord2 = m.getKeyAtIdx(i+1);
+        for (int i = 0; i<_clusters.size()-1; i++){
+        	GpsCoordinate coord = m.getKey(i);
+        	GpsCoordinate coord2 = m.getKey(i+1);
             distance = getCoordsDistance(coord2, coord);
             if (distance < tempClosest){
                 tempClosest = distance;
@@ -121,18 +118,14 @@ public class GpsCoordsClustersGalaxy {
     }
     
     private IMJ_Map<GpsCoordinate, GpsCoordsCluster> getCenterToClusterMap(){
-        GpsCoordinate coord;
-        GpsCoordsCluster cluster;
-        GpsCoordsClusterCenterCalc cal;
         //loop through _clusters and get all cluster centers
         IMJ_Map<GpsCoordinate, GpsCoordsCluster> centerToCluster = 
                 new MJ_Map_Factory<GpsCoordinate, GpsCoordsCluster>().create();
-        for (int i = 0; i<_clusters.length(); i++){
-            cluster = _clusters.getItem(i);
+        for (GpsCoordsCluster cluster: _clusters) {
             IGpsCoordsClusterObserver o = cluster.getSpecifiedObserver(GpsCoordsClusterCenterCalc.class);
-            cal = (GpsCoordsClusterCenterCalc) o;
-            coord = cal.getCenter();
-            centerToCluster.add(coord, cluster);
+            GpsCoordsClusterCenterCalc cal = (GpsCoordsClusterCenterCalc) o;
+            GpsCoordinate coord = cal.getCenter();
+            centerToCluster.put(coord, cluster);
         }
         return centerToCluster;
     }

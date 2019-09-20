@@ -17,7 +17,8 @@ public class AnalysisGps implements IAnalysis{
     public AnalysisGps(int cid, int sensorId, GpsDataCollection allGpsData, double si) {
         _sensorId = sensorId;
         _data = allGpsData.getCouponData(cid).getDeepCopy();
-        _couponId = cid;_sensorInterval = si;
+        _couponId = cid; 
+        _sensorInterval = si;
     }
     
     @Override

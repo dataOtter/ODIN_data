@@ -1,11 +1,5 @@
 package stats;
 
-import java.io.FileNotFoundException;
-
-import dao.CouponIdReader;
-import orderedcollection.IMJ_OC;
-import studysensors.Constants;
-
 public class StatsBuilder {
     private final String _path;
     private final int _formatVersion;

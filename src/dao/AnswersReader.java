@@ -1,7 +1,5 @@
 package dao;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.Scanner;
 
@@ -19,18 +17,15 @@ public class AnswersReader {
 		_formatVersion = formatVersion;
 	}
 	
-	public AnswersCollection getAllAnswers() throws FileNotFoundException, ParseException {
+	public AnswersCollection getAllAnswers() throws ParseException {
+        Scanner sc = new ScannerHelper(_path, Constants.ANSWERS_CSV, Constants.ANSWERS_NUM_COLS).getScanner();
+        
 		IMJ_OC<OneAnswer> answers = new MJ_OC_Factory<OneAnswer>().create();
-        
-        String[] line;
-        File f = new File(_path + "\\" + Constants.ANSWERS_CSV);
-        Scanner sc = new Scanner(f);
-        sc.nextLine();
-        
+		
         while ( sc.hasNextLine() ){
-            line = getCompleteLineAsArray(sc);
+        	String[] line = getCompleteLineAsArray(sc);
             OneAnswer oneAns = new OneAnswer(_formatVersion, line);
-            answers.append(oneAns);
+            answers.add(oneAns);
         } 
         sc.close();
         

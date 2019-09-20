@@ -12,11 +12,9 @@ public class RulesCollection {
 	
 	public RulesCollection getRulesCollectionByType(String ruleType){
 		IMJ_OC<OneRule> newRules = new MJ_OC_Factory<OneRule>().create();
-		OneRule r;
-		for (int i=0; i<_allRules.length(); i++) {
-			r = _allRules.getItem(i);
+		for (OneRule r: _allRules) {
 			if (r.getRuleType().contains(ruleType)) {
-				newRules.append(r);
+				newRules.add(r);
 			}
 		}
 		RulesCollection c = new RulesCollection(newRules);
@@ -25,10 +23,8 @@ public class RulesCollection {
 	
 	public IMJ_OC<Integer> getAllRids() {
 		IMJ_OC<Integer> rids = new MJ_OC_Factory<Integer>().create();
-		OneRule r;
-		for (int i = 0; i<_allRules.length(); i++) {
-			r = _allRules.getItem(i);
-			rids.append(r.getRuleId());
+		for (OneRule r: _allRules) {
+			rids.add(r.getRuleId());
 		}
 		return rids;
 	}
@@ -38,12 +34,9 @@ public class RulesCollection {
 	}
 	
 	public OneRule getRuleById(int rid) {
-		OneRule rule;
-
-		for (int i = 0; i<_allRules.length(); i++) {
-			rule = _allRules.getItem(i);
-            if (rule.getRuleId() == rid){
-                return rule;
+		for (OneRule r: _allRules) {
+            if (r.getRuleId() == rid){
+                return r;
             }
         }
         return null;

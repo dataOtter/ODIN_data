@@ -4,10 +4,10 @@ import dao.SensorType;
 
 public class StudySensor {
 	private SensorType _type;
-	private SensorParameters _params;
+	private AbsSensorParameters _params;
 	private int _studyId;
 	
-	public StudySensor(SensorType type, SensorParameters params, int studyId) {
+	public StudySensor(SensorType type, AbsSensorParameters params, int studyId) {
 		_type = type;
 		_params = params;
 		_studyId = studyId;
@@ -21,7 +21,7 @@ public class StudySensor {
 		return _type.getSensorId();
 	}
 	
-	public SensorParameters getParams() {
+	public AbsSensorParameters getParams() {
 		return _params;
 	}
 	

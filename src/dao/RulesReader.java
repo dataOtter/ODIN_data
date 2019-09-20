@@ -1,8 +1,5 @@
 package dao;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.text.ParseException;
 import java.util.Scanner;
 
 import orderedcollection.*;
@@ -20,19 +17,25 @@ public class RulesReader {
 		_rules = null;
 	}
 	
-	public RulesCollection getAllRules() throws ParseException, FileNotFoundException {
+	public RulesCollection getAllRules() {
 		if (_rules == null) {
+	    	int numCols;
+	    	if (_formatVersion == 2) {
+	    		numCols = Constants.RULES_NUM_COLS_V2;
+	    	}
+	    	else {
+	    		numCols = Constants.RULES_NUM_COLS;
+	    	}
+			Scanner sc = new ScannerHelper(_path, Constants.RULES_CSV, numCols).getScanner();
+
 			IMJ_OC<OneRule> rules = new MJ_OC_Factory<OneRule>().create();
 			
-			File f = new File(_path + "\\" + Constants.RULES_CSV);
-	        try (Scanner sc = new Scanner(f)) {
-	            sc.nextLine();
-	            while (sc.hasNextLine()){
-	                String row = sc.nextLine();
-	                OneRule r = new OneRule(_formatVersion, row);
-	                rules.append(r);
-	            }
-	        }
+            while (sc.hasNextLine()){
+                String row = sc.nextLine();
+                OneRule r = new OneRule(_formatVersion, row);
+                rules.add(r);
+            }
+            sc.close();
 	        _rules = new RulesCollection(rules);
 		}
         return _rules;

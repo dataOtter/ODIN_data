@@ -13,11 +13,11 @@ public class AnswersCollection {
     public IMJ_OC<Integer> getRids() {
     	IMJ_OC<Integer> rids = new MJ_OC_Factory<Integer>().create();
     	
-		for (int i=0; i<_allAnswers.length(); i++) {
-			int thisRid = _allAnswers.getItem(i).getRuleId();
+		for (int i=0; i<_allAnswers.size(); i++) {
+			int thisRid = _allAnswers.get(i).getRuleId();
 			
 			if ( ! rids.contains(thisRid)) {
-				rids.append(thisRid);
+				rids.add(thisRid);
 			}
 		}
 		return rids;
@@ -25,13 +25,11 @@ public class AnswersCollection {
 	
 	public AnswersCollection getAnswersByRids(IMJ_OC<Integer> rids) {
 		IMJ_OC<OneAnswer> newAnswers = new MJ_OC_Factory<OneAnswer>().create();
-		OneAnswer a;
-		for (int i=0; i<_allAnswers.length(); i++) {
-			a = _allAnswers.getItem(i);
+		for (OneAnswer a: _allAnswers) {
 			int thisRid = a.getRuleId();
 			
 			if (rids.contains(thisRid)) {
-				newAnswers.append(a);
+				newAnswers.add(a);
 			}
 		}
 		return new AnswersCollection(newAnswers);
@@ -39,13 +37,11 @@ public class AnswersCollection {
 	
 	public AnswersCollection getAnswersByRids(int rid) {
 		IMJ_OC<OneAnswer> newAnswers = new MJ_OC_Factory<OneAnswer>().create();
-		OneAnswer a;
-		for (int i=0; i<_allAnswers.length(); i++) {
-			a = _allAnswers.getItem(i);
+		for (OneAnswer a: _allAnswers) {
 			int thisRid = a.getRuleId();
 			
 			if (rid == thisRid) {
-				newAnswers.append(a);
+				newAnswers.add(a);
 			}
 		}
 		return new AnswersCollection(newAnswers);
@@ -53,13 +49,11 @@ public class AnswersCollection {
 	
 	public AnswersCollection getAnswersByCids(IMJ_OC<Integer> cids) {
 		IMJ_OC<OneAnswer> newAnswers = new MJ_OC_Factory<OneAnswer>().create();
-		OneAnswer a;
-		for (int i=0; i<_allAnswers.length(); i++) {
-			a = _allAnswers.getItem(i);
+		for (OneAnswer a: _allAnswers) {
 			int thisCid = a.getCouponId();
 			
 			if (cids.contains(thisCid)) {
-				newAnswers.append(a);
+				newAnswers.add(a);
 			}
 		}
 		return new AnswersCollection(newAnswers);
@@ -70,6 +64,6 @@ public class AnswersCollection {
 	}
 
 	public void addAnswer(OneAnswer ans) {
-		_allAnswers.append(ans);
+		_allAnswers.add(ans);
 	}
 }

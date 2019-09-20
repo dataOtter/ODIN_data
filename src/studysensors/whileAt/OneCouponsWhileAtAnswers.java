@@ -20,32 +20,31 @@ public class OneCouponsWhileAtAnswers {
         IMJ_OC<Integer> whileAtRids = whileAtAnswers.getRids();
         _ruleIdToAnswersMap = new MJ_Map_Factory<Integer, AnswersCollection>().create();
         
-        for (int i = 0; i<whileAtRids.length(); i++) {
-        	int rid = whileAtRids.getItem(i);
+        for (int rid: whileAtRids) {
         	AnswersCollection ans = whileAtAnswers.getAnswersByRids(rid);
-        	_ruleIdToAnswersMap.add(rid, ans);
+        	_ruleIdToAnswersMap.put(rid, ans);
         }
     }
     
     void addOneAnswerEntry(Integer rid, OneAnswer a){
     	AnswersCollection answers;
-        if (_ruleIdToAnswersMap.contains(rid)){
-        	answers = _ruleIdToAnswersMap.getValueOfKey(rid);
+        if (_ruleIdToAnswersMap.containsKey(rid)){
+        	answers = _ruleIdToAnswersMap.get(rid);
         	answers.addAnswer(a);
         }
         else{
         	IMJ_OC<OneAnswer> ans = new MJ_OC_Factory<OneAnswer>().create();
-        	ans.append(a);
+        	ans.add(a);
         	answers = new AnswersCollection(ans);
-            _ruleIdToAnswersMap.add(rid, answers);
+            _ruleIdToAnswersMap.put(rid, answers);
         }
     }
     
     public AnswersCollection getOneRulesAnswersCollection(int rid){
-    	if ( ! _ruleIdToAnswersMap.contains(rid)) {
+    	if ( ! _ruleIdToAnswersMap.containsKey(rid)) {
     		return new AnswersCollection(new MJ_OC_Factory<OneAnswer>().create());
     	}
-        return _ruleIdToAnswersMap.getValueOfKey(rid);
+        return _ruleIdToAnswersMap.get(rid);
     }
     
     public int getCouponId(){

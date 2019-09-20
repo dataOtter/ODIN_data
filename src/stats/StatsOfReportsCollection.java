@@ -12,9 +12,8 @@ public class StatsOfReportsCollection {
 	
 	public OneStatsReport getValues() {
 		OneStatsReport answer = new OneStatsReport();
-		IMJ_OC<String> tags_list = _reps.getAllTags();
-		for (int i=0; i<tags_list.length(); i++) {
-			String tag = tags_list.getItem(i);
+		IMJ_OC<String> tagsList = _reps.getAllTags();
+		for (String tag: tagsList) {
 			IMJ_OC<Double> val_list = _reps.getAllValuesForTag(tag);
 			
 			double ave = getAvg(val_list);
@@ -38,28 +37,27 @@ public class StatsOfReportsCollection {
 	}
 	
 	private Double getAvg(IMJ_OC<Double> values){
-		double count = values.length();
+		double count = values.size();
 		double sum = 0;
 		for (int j = 0; j<count; j++){
-			sum += values.getItem(j);
+			sum += values.get(j);
 		}
 		return sum/count;
 	}
 
 	private Double getStdev(IMJ_OC<Double> values, double avg){
-		double count = values.length();
+		double count = values.size();
 		double sumSqDiff = 0;
 		for (int j = 0; j<count; j++){
-			double per = values.getItem(j);
+			double per = values.get(j);
 			sumSqDiff += (per - avg) * (per - avg);
 		}
 		return Math.sqrt(sumSqDiff/count);
 	}
 	
 	private Double getMax(IMJ_OC<Double> values){
-		double max = values.getItem(0);
-		for (int j = 0; j<values.length(); j++){
-			double temp = values.getItem(j);
+		double max = values.get(0);
+		for (double temp: values) {
 			if (temp > max) {
 				max = temp;
 			}
@@ -68,9 +66,8 @@ public class StatsOfReportsCollection {
 	}
 	
 	private Double getMin(IMJ_OC<Double> values){
-		double min = values.getItem(0);
-		for (int j = 0; j<values.length(); j++){
-			double temp = values.getItem(j);
+		double min = values.get(0);
+		for (double temp: values) {
 			if (temp < min) {
 				min = temp;
 			}

@@ -1,125 +1,201 @@
 package orderedcollection;
 
 import Assert.Assertion;
+import java.util.Collection;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  *
  * @author Maisha Jauernig
- * @param <T>
+ * @param <E>
  */
-public class MJ_OC_List <T> implements IMJ_OC <T>{
-    private MJ_Node<T> _start;
+public class MJ_OC_List <E> extends MJ_OC <E>{
+    private MJ_OC_Node<E> _start = null;
+    private int _len = 0;
     
-    public MJ_OC_List(){}
-    
-    @Override
-    public int length(){
-        if (_start == null){
-            return 0;
-        }
-        int counter = 0;
-        for (MJ_Node<T> i = _start; i != null; i = i.getNext()){
-            counter += 1;
-        }
-        return counter;
+    public MJ_OC_List(){
+    	super();
     }
     
     @Override
-    public void prepend(T s){
+    public boolean add(E e){
+        MJ_OC_Node<E> newNode = new MJ_OC_Node<>(e);
+        
         if (_start == null){
-            _start = new MJ_Node<>(s);
-        }
-        else{
-            MJ_Node<T> newNode = new MJ_Node<>(s);
-            newNode.setNext(_start);
             _start = newNode;
         }
-    }
-    
-    @Override
-    public T getItem(int index){
-        //Assertion.test(index <= length(), "Index out of range");
-        MJ_Node<T> n = getNodeAtIdx(index);
-        if (n != null){
-            return (T) n.getData();
-        }
-        return null;
-    }
-    
-    @Override
-    public boolean contains(T value){
-        MJ_Node<T> node = _start;
         
-        while (node != null){
-            if (node.getData() == value){
+        else{
+            MJ_OC_Node<E> node = _start;
+            
+            while (node.hasNext()){
+                node = node.getNext();
+            }
+            node.setNext(newNode);
+        }
+        _len++;
+        return true;  // eventually have something that makes sure it was appended
+    }
+    
+    @Override
+    public void add(int index, E value){
+        int len = size();
+        //Assertion.test(index > len, "Index out of range");
+        
+        if (index == len){
+            add(value);
+        }
+        else if (index == 0){
+            prepend(value);
+        }
+        else{
+            MJ_OC_Node<E> n = new MJ_OC_Node<>(value);
+            MJ_OC_Node<E> nRight = getNodeAtIdx(index);
+            MJ_OC_Node<E> nLeft = getNodeAtIdx(index-1);
+            n.setNext(nRight);
+            nLeft.setNext(n);
+        }
+        _len++;
+    }
+
+    @Override
+    public void clear() {
+        _start = null;
+        _len = 0;
+    }
+    
+    @Override
+    public boolean contains(Object value){
+        for (MJ_OC_Node<E> n = _start; n != null; n = n.getNext()){
+            if (n.getData() == value){
                 return true;
             }
-            node = node.getNext();
         }
         return false;
     }
     
     @Override
-    public void append(T s){
-        MJ_Node<T> newNode = new MJ_Node<>(s);
-        MJ_Node<T> node = _start;
-        
-        if (_start == null){
-            _start = new MJ_Node<>(s);
+    public E get(int index){
+        //Assertion.test(index < length(), "Index out of range");
+        if (size() <= index){
+            return null;
         }
-        
+        return getNodeAtIdx(index).getData();
+    }
+    
+    @Override
+    public IMJ_OC <E> getDeepCopy(){
+        IMJ_OC <E> stor = new MJ_OC_List<E>();
+        for (int i = 0; i<_len; i++){
+            stor.add(this.get(i));
+        }
+        return stor;
+    }
+    
+//    @Override
+//	public int hashCode() {
+//    	int hashCode = 1;
+//        for (E e : this)
+//            hashCode = 31*hashCode + (e==null ? 0 : e.hashCode());
+//        return hashCode;
+//    }
+
+    @Override
+    public int indexOf(Object value) {
+    	int idx = 0;
+    	for (MJ_OC_Node<E> n = _start; n != null; n = n.getNext()){
+            if (n.getData() == value){
+                return idx;
+            }
+            else {
+            	idx++;
+            }
+        }
+    	return -1;
+    }
+    
+    @Override
+    public void prepend(E e){
+        if (_start == null){
+            _start = new MJ_OC_Node<>(e);
+        }
         else{
-            while (node.getNext() != null){
-                node = node.getNext();
-            }
-            node.setNext(newNode);
+            MJ_OC_Node<E> newNode = new MJ_OC_Node<>(e);
+            newNode.setNext(_start);
+            _start = newNode;
         }
+        _len++;
     }
     
     @Override
-    public void deleteItem(int index){
-        Assertion.test(index < length(), "Index out of range");
-        
-        if (_start == null){  // nothing to delete
-            return;
+    public void printAll(){
+        Assertion.test(_start != null, "Collection is empty");
+        for (MJ_OC_Node<E> i = _start; i != null; i = i.getNext()){
+            System.out.println(i.getData());
         }
-        if (index == 0){  // if trying to delete the first item
-            if (_start.getNext() == null){  // and there is only one item, delete that
-                _start = null;
-            }
-            else{  // and there is more than one item, set start to be the next item
-                _start = _start.getNext();
-            }
-        }
-        else{  // if trying to delete an item that is not the first item
-            MJ_Node<T> node = getNodeAtIdx(index-1);  // get the item before the one to delete
-            if (node == null){
-                return;
-            }
-            MJ_Node<T> toDelete = node.getNext();
-            if (toDelete == null){
-                return;
-            }
-            MJ_Node<T> newNext = toDelete.getNext();  // get the item after the one to delete
-            node.setNext(newNext);
-        }
+        System.out.println("\n");
     }
     
     @Override
-    public void setValue(int index, T newValue){
-        MJ_Node<T> n = getNodeAtIdx(index);
-        if (n != null){
-            n.setData(newValue);
-        }
-    }
-    
-    private MJ_Node<T> getNodeAtIdx(int idx){
-        if (_start == null){
+    public E remove(int index){
+        //Assertion.test(index < length(), "Index out of range");
+        if (size() <= index){
             return null;
         }
         
+        E t;
+        if (index == 0){  // removing first item
+            t = _start.getData();
+            if (_start.getNext() == null){  // if _start is the only item
+                _start = null;
+            }
+            else{  // if there is more than one item
+                _start = _start.getNext();  // set start to be the next item
+            }
+        }
+        
+        else{  // removing an item that is not the first item
+            MJ_OC_Node<E> nodeToLeft = getNodeAtIdx(index-1);
+            Assertion.test(nodeToLeft != null, "Object at previous index does not exist");
+            
+            MJ_OC_Node<E> nodeToDelete = nodeToLeft.getNext();
+            Assertion.test(nodeToDelete != null, "No object at index to delete");
+            
+            MJ_OC_Node<E> nodeToRight = nodeToDelete.getNext();
+            nodeToLeft.setNext(nodeToRight);
+            
+            t = nodeToDelete.getData();
+        }
+        _len--;
+        return t;
+    }
+    
+    @Override
+    public E set(int index, E newValue){
+        if ( index < 0 || index >= _len){
+            return null;
+        }
+        MJ_OC_Node<E> n = getNodeAtIdx(index);
+        if (n == null){
+            return null;
+        }
+        E e = n.getData();
+        n.setData(newValue);
+        return e;
+    }
+    
+    @Override
+    public int size(){
+        return _len;
+    }
+    
+    private MJ_OC_Node<E> getNodeAtIdx(int idx){
+        if (_start == null){
+            return null;
+        }
         int counter = 0;
-        MJ_Node<T> node = _start;
+        MJ_OC_Node<E> node = _start;
         
         while (counter != idx){
             node = node.getNext();
@@ -130,44 +206,59 @@ public class MJ_OC_List <T> implements IMJ_OC <T>{
         }
         return node;
     }
-    
-    
+
     @Override
-    public void insert(int index, T value){
-        int len = length();
-        //Assertion.test(index > len, "Index out of range");
-        
-        if (index == len){
-            append(value);
-        }
-        else if (index == 0){
-            prepend(value);
-        }
-        else{
-            MJ_Node<T> n = new MJ_Node<>(value);
-            MJ_Node<T> nRight = getNodeAtIdx(index);
-            MJ_Node<T> nLeft = getNodeAtIdx(index-1);
-            n.setNext(nRight);
-            nLeft.setNext(n);
-        }
+    public Object[] toArray() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
+
     @Override
-    public void printAll(){
-        Assertion.test(_start != null, "Collection is empty");
-        for (MJ_Node<T> i = _start; i != null; i = i.getNext()){
-            System.out.println(i.getData());
-        }
-        System.out.println("\n");
+    public <T> T[] toArray(T[] a) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
-    public IMJ_OC <T> getDeepCopy(){
-        IMJ_OC <T> stor = new MJ_OC_List();
-        for (int i = 0; i<this.length(); i++){
-            stor.append(this.getItem(i));
-        }
-        return stor;
+    public boolean remove(Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends E> c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean addAll(int index, Collection<? extends E> c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ListIterator<E> listIterator() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ListIterator<E> listIterator(int index) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<E> subList(int fromIndex, int toIndex) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

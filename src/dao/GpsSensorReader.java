@@ -1,7 +1,5 @@
 package dao;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -22,10 +20,8 @@ public class GpsSensorReader {
 		_formatVersion = formatVersion;
 	}
 	
-	public GpsDataCollection getAllGpsSensorData(String gpsSensorTblName) throws FileNotFoundException, ParseException {
-		File f = new File(_path + "\\" + gpsSensorTblName + ".csv");
-        Scanner sc = new Scanner(f);
-        sc.nextLine();
+	public GpsDataCollection getAllGpsSensorData(String gpsSensorTblName) throws ParseException {
+        Scanner sc = new ScannerHelper(_path, gpsSensorTblName + ".csv", Constants.SENSOR_NUM_COLS).getScanner();
         
         GpsDataCollection sensorCollection = new GpsDataCollection();
 		
@@ -52,13 +48,36 @@ public class GpsSensorReader {
 		Calendar dateTime = Calendar.getInstance();
         //SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy hh:mm aa", Locale.US);
         SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss.S", Locale.US);
-        Date d = sdf.parse(line[Constants.SENSOR_TIME_IDX]);
+        Date d = sdf.parse(line[Constants.SENSOR_GPS_TIME_IDX]);
         dateTime.setTime(d);
+
+        double latitude = -1;
+        double longitude = -1;
         
-        String lat = line[Constants.SENSOR_GPS_LAT_IDX].replaceAll("\"","");
-        String lon = line[Constants.SENSOR_GPS_LON_IDX].replaceAll("\"","");
-        double latitude = Double.parseDouble(lat);
-        double longitude = Double.parseDouble(lon);
+        if (_formatVersion <= 1) {
+            String lat = line[Constants.SENSOR_GPS_LAT_IDX].replaceAll("\"","");
+            String lon = line[Constants.SENSOR_GPS_LON_IDX].replaceAll("\"","");
+            latitude = Double.parseDouble(lat);
+            longitude = Double.parseDouble(lon);
+        }
+        else if (_formatVersion <= 2) {
+            //System.out.println(line[Constants.SENSOR_GPS_LAT_IDX]);
+            //System.out.println(line[Constants.SENSOR_GPS_LON_IDX]);
+            
+            String latString = line[Constants.SENSOR_GPS_LAT_IDX]
+            		.replaceAll("\\[", "").replaceAll("\\{", "").replaceAll("\"", "").replaceAll("\\}", "").replaceAll("\\]", "");
+            String lonString = line[Constants.SENSOR_GPS_LON_IDX]
+            		.replaceAll("\\[", "").replaceAll("\\{", "").replaceAll("\"", "").replaceAll("\\}", "").replaceAll("\\]", "");
+
+            latString = latString.split(":")[1];
+            lonString = lonString.split(":")[1];
+            
+            //System.out.println(latString);
+            //System.out.println(lonString);
+            
+            latitude = Double.parseDouble(latString);
+            longitude = Double.parseDouble(lonString);
+        }
         
         return new GpsDataPoint(dateTime, latitude, longitude);
 	}

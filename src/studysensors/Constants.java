@@ -7,18 +7,32 @@ package studysensors;
 public class Constants {
     
     public static final String DIRECTORY_PATH = 
-            //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t1";
-            "C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\06-04-2019_167";
-//"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120";
+            //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\06-04-2019_167";
+            "C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";
+    		//"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120";
     
-    public static final int DEFAULT_FORMAT_VERSION = 1;
-    
+    // base version is 1
+    public static final int DEFAULT_FORMAT_VERSION = 2;
+    public static final boolean TESTING_GPS_ONLY = true;
+
+    //*********ANALAYSIS VARIABLES*********
     // for GPS data eval
     public final static double PERCENT_ALLOWED_DEVIATION_FROM_SI = 0.01;
     public static final String PERC_ALLOWED_DEV_FROM_SI = "percAllowedDevFromSI";
     
+    // for while at rules eval
+    public static final int GPS_SENSOR_ID = 12;
+    public static final double PERCENT_ALLOWED_DEVIATION_FROM_REQ_RULE_FIRE_TIME = 0.1;
+    public static final String PERC_ALLOWED_DEV_FROM_RULE_FIRE_TIME = "percAllowedDevFromRuleFireTime";
+    // when an answer fired too late, after what percentage of the minT 
+    // is it considered missed entirely rather than fired late
+    public static final double PERCENT_CUTOFF_OF_MINT_FOR_LATE_ANS = 0.8;
+    public static final String PERC_CUTOFF_MINT_LATE_ANS = "percTimeAllowedToBeLate";
+    
+    //*********CSV FILE NAMES & COLUMNS*********
     public static final String STUDY_CSV = "study.csv";
     public static final int STUDY_NUM_COLS = 15;
+    public static final int STUDY_NUM_COLS_V2 = 18;
     public static final int STUDY_STUDYID_IDX = 0;
     
     public static final String SENSORTYPES_CSV = "sensortypes.csv";
@@ -30,10 +44,13 @@ public class Constants {
     
     public static final String COUPON_CSV = "coupon.csv";
     public static final int COUPON_NUM_COLS = 21;
+    public static final int COUPON_NUM_COLS_V2 = 23;
     public static final int COUPON_COUPONID_IDX = 0;
     public static final int COUPON_CONSENTSTATUS_IDX = 5; 
     
     public static final String RULES_CSV = "rules.csv";
+    public static final int RULES_NUM_COLS = 13;
+    public static final int RULES_NUM_COLS_V2 = 14;
     public static final int RULES_RULEID_IDX = 0;
     public static final int RULES_QUESTIONID_IDX = 1;
     public static final int RULES_RULETYPE_IDX = 2;
@@ -49,11 +66,12 @@ public class Constants {
     public static final int ANSWERS_ANSWERTEXT_IDX = 4;
     public static final int ANSWERS_RULEFIREDTIME_IDX = 7;
 
+    public static final int SENSOR_NUM_COLS = 5;
     public static final int SENSOR_COUPONID_IDX = 0;
     public static final int SENSOR_SENSORID_IDX = 1;
-    public static final int SENSOR_TIME_IDX = 4;
     public static final int SENSOR_GPS_LAT_IDX = 2;
     public static final int SENSOR_GPS_LON_IDX = 3;
+    public static final int SENSOR_GPS_TIME_IDX = 4;
     
     public static final String STUDYTOSENSOR_CSV = "studytosensor.csv";
     public static final int STUDYTOSENSOR_NUM_COLS = 4;
@@ -62,14 +80,7 @@ public class Constants {
     public static final int STUDYTOSENSOR_GPS_TIME_IDX = 2;
     public static final int STUDYTOSENSOR_GPS_DISTANCE_IDX = 3;
     
-    // for while at rules eval
-    public static final double PERCENT_ALLOWED_DEVIATION_FROM_REQ_RULE_FIRE_TIME = 0.1;
-    public static final String PERC_ALLOWED_DEV_FROM_RULE_FIRE_TIME = "percAllowedDevFromRuleFireTime";
-    // when an answer fired too late, after what percentage of the minT 
-    // is it considered missed entirely rather than fired late
-    public static final double PERCENT_CUTOFF_OF_MINT_FOR_LATE_ANS = 0.8;
-    public static final String PERC_CUTOFF_MINT_LATE_ANS = "percTimeAllowedToBeLate";
-    
+    //**********REPORT TAGS**********
     public static final String REPORT_TYPE_GPS_SENSOR_ANALYSIS = "gpsSensor";
     public static final String REPORT_TYPE_WHILEAT_RULE_ANALYSIS = "whileAtRule";
     public static final String REPORT_TYPE_ALL_RULES_ANALYSIS = "allRules";
@@ -78,6 +89,7 @@ public class Constants {
     public static final String REPORTS_RULEID = "ruleId";
     public static final String REPORTS_COUPONID = "couponId";
     public static final String REPORTS_SENSORID = "sensorId";
+    public static final String REPORTS_STUDYID = "studyId";
     
     public static final String REPORTS_SENSOR_INTERVAL = "sensorInterval";
     public static final String REPORTS_GOOD_FIRE_PERCENT = "goodFirePercentOfIdeal";

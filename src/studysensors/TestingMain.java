@@ -19,10 +19,10 @@ public class TestingMain {
 
     public static void main(String[] args) throws Exception {
     	String gpsSensorTblName = new SensorTblNamesReader(Constants.DIRECTORY_PATH, 
-    			Constants.DEFAULT_FORMAT_VERSION).getSensorTblNames().getItem(0);
+    			Constants.DEFAULT_FORMAT_VERSION).getSensorTblNames().get(0);
     	GpsDataCollection gpsSensorData = new GpsSensorReader(Constants.DIRECTORY_PATH, 
     			Constants.DEFAULT_FORMAT_VERSION).getAllGpsSensorData(gpsSensorTblName);
-    	IMJ_OC<Integer> cids = new CouponIdReader(Constants.DIRECTORY_PATH, 
+    	IMJ_OC<Integer> cids = new CouponReader(Constants.DIRECTORY_PATH, 
     			Constants.DEFAULT_FORMAT_VERSION).getActiveCouponIds();
     	StudySensorsCollection sensors = new SensorsReader(Constants.DIRECTORY_PATH, 
     			Constants.DEFAULT_FORMAT_VERSION).getStudySensorsCollection();
@@ -33,8 +33,7 @@ public class TestingMain {
         int sensorId = 12;
         double sensorInterval = sensors.getSensorInterval(sensorId);
         
-        for (int i = 0; i<cids.length(); i++){
-            int couponId = cids.getItem(i);
+        for (int couponId: cids) {
             OneCouponsGpsData d = gpsSensorData.getCouponData(couponId);
             System.out.println("\nCoupon ID " + couponId);
             testAllGpsPerformanceEvaluations(d, sensorInterval);
@@ -44,7 +43,7 @@ public class TestingMain {
             testGpsCoordsClustersGalaxiesUniverseClass(d, 2);
             
             int cid = 1, rid = 1;        
-            AnalysisWhileAt eval = new AnalysisWhileAt(answers, rules, gpsSensorData, sensors, cid, rid);
+            AnalysisWhileAt eval = new AnalysisWhileAt(answers, rules, gpsSensorData, sensorInterval, cid, rid);
             OneReport report = eval.getAnalysisReport();
             System.out.println(report);
         } 

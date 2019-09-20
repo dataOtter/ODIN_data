@@ -12,30 +12,28 @@ public class GpsCoordsCluster {
     
     public GpsCoordsCluster(GpsCoordinate c){
         _coords = new MJ_OC_Factory<GpsCoordinate>().create();
-        _coords.append(c);
+        _coords.add(c);
     }
     
     public void addCoordToCluster(GpsCoordinate c){
-        _coords.append(c);
-        for (int i = 0; i<_observers.length(); i++){
-            _observers.getItem(i).notifyCoordAdded(c);
+        _coords.add(c);
+        for (IGpsCoordsClusterObserver obs: _observers) {
+            obs.notifyCoordAdded(c);
         }
     }
     
     //void removeOutliers(){}
     
     public int length(){
-        return _coords.length();
+        return _coords.size();
     }
     
     public GpsCoordinate getCoordAtIdx(int i){
-        return _coords.getItem(i);
+        return _coords.get(i);
     }
     
     public IGpsCoordsClusterObserver getSpecifiedObserver(Class<?> cl){
-        IGpsCoordsClusterObserver o;
-        for (int i = 0; i<_observers.length(); i++){
-            o = _observers.getItem(i);
+        for (IGpsCoordsClusterObserver o: _observers) {
             if (cl.isAssignableFrom(o.getClass())){
                 return o;
             }
@@ -44,7 +42,7 @@ public class GpsCoordsCluster {
     }
     
     public void registerObserver(IGpsCoordsClusterObserver o){
-        _observers.append(o);
+        _observers.add(o);
     }
     
     /*GpsCoordinate getCenter2(){

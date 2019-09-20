@@ -25,11 +25,11 @@ public class OneCouponsGpsData {
     }
     
     public void addGpsDataPoint(GpsDataPoint gdp){
-        _data.append(gdp);
+        _data.add(gdp);
     }
     
     public GpsDataPoint getDataAtIdx(int i){
-        return _data.getItem(i);
+        return _data.get(i);
     }
     
     public int getCouponId(){
@@ -37,10 +37,10 @@ public class OneCouponsGpsData {
     }
     
     public int length(){
-        return _data.length();
+        return _data.size();
     }
     
     public void deleteItem(int idx){
-        _data.deleteItem(idx);
+        _data.remove(idx);
     }
 }

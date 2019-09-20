@@ -26,40 +26,40 @@ public abstract class OneReport {
 	}
 	
 	public Double getValue(String tag) {
-		if ( ! _data.contains(tag)) {
+		if ( ! _data.containsKey(tag)) {
 			return null;
 		}
-		return _data.getValueOfKey(tag);
+		return _data.get(tag);
 	}
 
 	public String getDocs(String tag) {
-		if ( ! _docs.contains(tag)) {
+		if ( ! _docs.containsKey(tag)) {
 			return null;
 		}
-		return _docs.getValueOfKey(tag);
+		return _docs.get(tag);
 	}
 	
 	public int getCid() {
-		return _data.getValueOfKey(Constants.REPORTS_COUPONID).intValue();
+		return _data.get(Constants.REPORTS_COUPONID).intValue();
 	}
 	
 	public void addValue(String tag, Double val) {
-		_data.add(tag, val);
-		_docs.add(tag, "");
+		_data.put(tag, val);
+		_docs.put(tag, "");
 	}
 	
 	public void addValue(String tag, Double val, String doc) {
-		_data.add(tag, val);
-		_docs.add(tag, doc);
+		_data.put(tag, val);
+		_docs.put(tag, doc);
 	}
 	
 	@Override
 	public String toString() {
 		String s = "";
-		for (int i = 0; i<_data.length(); i++) {
-			String tag = _data.getKeyAtIdx(i);
+		for (int i = 0; i<_data.size(); i++) {
+			String tag = _data.getKey(i);
 			
-			double val = _data.getValueOfKey(tag);
+			double val = _data.get(tag);
 			String valAsString = "";
 			if (val < 1.0 && val > 0.0) {
 				valAsString = String.format("%.1f", val);
@@ -68,17 +68,54 @@ public abstract class OneReport {
 				valAsString = String.format("%.0f", val);
 			}
 
-			s += _docs.getValueOfKey(tag) + " (" + tag + ") : " + valAsString + "\n";
+			s += _docs.get(tag) + " (" + tag + ") : " + valAsString + "\n";
 		}
 		return s;
 	}
 
 	public IMJ_OC<String> getAllTags() {
-		IMJ_OC<String> tag_list = new MJ_OC_Factory<String>().create();
-		for (int i = 0; i<_data.length(); i++) {
-			String tag = _data.getKeyAtIdx(i);
-			tag_list.append(tag);
+		IMJ_OC<String> tagList = new MJ_OC_Factory<String>().create();
+		for (int i = 0; i<_data.size(); i++) {
+			String tag = _data.getKey(i);
+			tagList.add(tag);
 		}
-		return tag_list;
+		return tagList;
+	}
+	
+	public IMJ_Map<String, String> getTagToDataToWrite(String typeAndId, IMJ_OC<String> tags) {
+		return getTagToVal(typeAndId, _data, tags);
+	}
+	
+	public IMJ_Map<String, String> getTagToDocsToWrite(String typeAndId, IMJ_OC<String> tags) {
+		return getTagToVal(typeAndId, _docs, tags);
+	}
+	
+	private IMJ_Map<String, String> getTagToVal(String typeAndId, IMJ_Map<String, ?> dataMap, 
+			IMJ_OC<String> tags) {
+		IMJ_Map<String, String> tagToVal = new MJ_Map_Factory<String, String>().create();
+		// for each tag, value pair in the given data map
+		for (int i = 0; i<dataMap.size(); i++) {
+			String tag = dataMap.getKey(i);
+			// ignore couponid data because it will be added only once, at ReportsCollection level
+			if (tag != Constants.REPORTS_COUPONID) {
+				String finalTag = typeAndId + "_" + tag;
+				// update list of unique tags across all reports
+				if ( ! tags.contains(finalTag) ) {
+					tags.add(tag);
+				}
+				Object val = dataMap.get(tag);
+				String finalVal = "";
+				// if the dataMap is the _docs map
+				if (val instanceof String) {
+					finalVal = (String) val;
+				}
+				// if the dataMap is the _data map
+				else if (val instanceof Double) {
+					finalVal = Double.toString((Double) val);
+				}
+				tagToVal.put(finalTag, finalVal);
+			}
+		}
+		return tagToVal;
 	}
 }

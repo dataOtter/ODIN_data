@@ -17,18 +17,21 @@ public class AnalysisEngine {
     public void register(IAnalysis an) {
     	// TODO: should we check if this is a duplicate - 
     	// ie. there is another analysis with the same name?
-    	_analyses.append(an);
+    	_analyses.add(an);
     }
     
     public ReportsCollection getAllReports() {
 
     	ReportsCollection allReportsMap = new ReportsCollection();
     	
-    	for (int i=0; i<_analyses.length(); i++) {
-    		IAnalysis an = _analyses.getItem(i);
-            String type = an.getAnalysisType();
-    		OneReport rep = an.getAnalysisReport();
-    		allReportsMap.addAnalysisByType(type, rep);
+    	//for (IAnalysis an: _analyses) {
+		for (int i = 0; i<_analyses.size(); i++) {
+    		IAnalysis an = _analyses.get(i);
+    		if (an != null) {
+    			String type = an.getAnalysisType();
+        		OneReport rep = an.getAnalysisReport();
+        		allReportsMap.addAnalysisByType(type, rep);
+    		}
     	}
     	
         return allReportsMap;

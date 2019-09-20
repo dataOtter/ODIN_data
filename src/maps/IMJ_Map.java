@@ -1,21 +1,45 @@
 package maps;
 
+import java.util.Map;
+
+import Assert.Assertion;
+
 /**
- *
+ * An object that maps keys to values. A map cannot contain duplicate keys; 
+ * each key can map to at most one value.
  * @author Maisha
  * @param <K>
  * @param <V>
  */
-public interface IMJ_Map <K, V> {
+public interface IMJ_Map <K, V> {//extends Map <K,V> {
+	
+	public void clear();
+	public boolean containsKey(Object key);
+    public V get(Object key);
+    public boolean isEmpty();
+    public V put(K key, V val);
+    public V remove(Object key);
+    public int size();
+	
+	/**
+     * @param idx
+     * @return Returns the key at index idx. 
+     */
+    K getKey(int idx);
     
-    boolean contains(K key);
-    V getValueOfKey(K key);
-    void add(K key, V val);
-    void setValueOfKey(K key, V val);
-    boolean delete(K key);
-    K getKeyAtIdx(int i);
-    void clear();  // erases everything in the map
-    int length();  // gets the number of keys in the map
+    /**
+     * Pretty prints the contents of this map.
+     */
     void print();
     
+    /**
+     * Replaces the entry for the specified key only if it is currently mapped to some value.
+     * @param key
+     * @param val
+     * @return Returns the previous value associated with the specified key, 
+     * or null if there was no mapping for the key. (A null return can also 
+     * indicate that the map previously associated null with the key, 
+     * if the implementation supports null values.)
+     */
+    V replace(K key, V val);
 }

@@ -31,29 +31,28 @@ public class AllWhileAtRuleData {
      * @return
      */
     public AnswersCollection getWhileAtAnswersForOneCid(int cid) {
-    	if ( ! _cidToAnswersCollection.contains(cid) ) {
+    	if ( ! _cidToAnswersCollection.containsKey(cid) ) {
 			return new AnswersCollection(new MJ_OC_Factory<OneAnswer>().create());
 		}
 		else {
-			return _cidToAnswersCollection.getValueOfKey(cid);
+			return _cidToAnswersCollection.get(cid);
 		}
     }
     
     private void buildCidToWhileAtAnswersMaps() {
     	IMJ_OC<OneAnswer> ansOc = _whileAtAnswersCollection.getAnswers();
     	
-    	for (int i = 0; i<ansOc.length(); i++) {
-    		OneAnswer ans = ansOc.getItem(i);
+    	for (OneAnswer ans: ansOc) {
     		int cid = ans.getCouponId();
     		
-    		if ( ! _cidToAnswersCollection.contains(cid) ) {
+    		if ( ! _cidToAnswersCollection.containsKey(cid) ) {
     			IMJ_OC<OneAnswer> newAnsOc = new MJ_OC_Factory<OneAnswer>().create();
     			AnswersCollection newAnswersCollection = new AnswersCollection(newAnsOc);
     			newAnswersCollection.addAnswer(ans);
-    			_cidToAnswersCollection.add(cid,  newAnswersCollection);
+    			_cidToAnswersCollection.put(cid,  newAnswersCollection);
     		}
     		else {
-    			AnswersCollection existing = _cidToAnswersCollection.getValueOfKey(cid);
+    			AnswersCollection existing = _cidToAnswersCollection.get(cid);
     			existing.addAnswer(ans);
     		}
     	}

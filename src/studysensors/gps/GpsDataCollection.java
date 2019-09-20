@@ -15,18 +15,18 @@ public final class GpsDataCollection {
     }
 
     public void addCouponAndItsData(int couponId, OneCouponsGpsData data){
-        _couponToData.add(couponId, data);
+        _couponToData.put(couponId, data);
     }
     
     public OneCouponsGpsData getCouponData(int couponId){
-        return _couponToData.getValueOfKey(couponId);
+        return _couponToData.get(couponId);
     }
     
     public boolean hasCouponEntry(int couponId){
-        return _couponToData.contains(couponId);
+        return _couponToData.containsKey(couponId);
     }
     
     public int length(){
-        return _couponToData.length();
+        return _couponToData.size();
     }
 }

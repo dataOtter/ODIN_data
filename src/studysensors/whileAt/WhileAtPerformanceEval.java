@@ -1,7 +1,6 @@
 package studysensors.whileAt;
 
 import studysensors.rules.*;
-import studysensors.sensors.*;
 import Assert.Assertion;
 import dao.OneAnswer;
 import dao.OneRule;
@@ -24,7 +23,6 @@ public class WhileAtPerformanceEval {
 	private int _likelyMissedAnsCount = 0;
 	private int _idealWorldNumRuleFires = 0;
 	private int _shouldFireCount = 0;
-	private final int _sensorId = 12;
 
 	private final double _sensorFireTimeInterval;
 	private final double _minTReq;
@@ -45,7 +43,7 @@ public class WhileAtPerformanceEval {
 
     // _answers will contain all answers, regardless of cid and rid
 	public WhileAtPerformanceEval(AnswersCollection answers, RulesCollection rules, GpsDataCollection allGpsSensorData,
-			StudySensorsCollection sensorIntervals, int cid, int rid) {
+			double sensorFireTimeInterval, int cid, int rid) {
 		
 		AllWhileAtRuleData allWhileAtRuleData = new AllWhileAtRuleData(answers, rules);
 		// will contain all whileAt answers for this Cid (regardless of rid)
@@ -53,12 +51,11 @@ public class WhileAtPerformanceEval {
 		_cid = cid;
 		_rid = rid;
 		_rule = rules.getRuleById(_rid);
+		_sensorFireTimeInterval = sensorFireTimeInterval;
 
 		Assertion.test(allGpsSensorData.length() > 0, "No GPS data found");
 		_gpsData = allGpsSensorData.getCouponData(_cid).getDeepCopy();
 		Assertion.test(_gpsData.length() > 0, "No GPS data found for coupon ID " + _cid);
-		
-		_sensorFireTimeInterval = sensorIntervals.getSensorInterval(_sensorId);
 		
 		// minimum time that must pass between rule fires
 		_minTReq = _rule.getMinTimeSinceLastFire() * 1.0;
@@ -71,7 +68,7 @@ public class WhileAtPerformanceEval {
 		} else {
 			_answersLeft = new MJ_OC_Factory<OneAnswer>().create();
 		}
-		_numRuleFiresTotal = _answersLeft.length();
+		_numRuleFiresTotal = _answersLeft.size();
 		_earlyAns = new MJ_OC_Factory<OneAnswer>().create();
 		_lateAns = new MJ_OC_Factory<OneAnswer>().create();
 
@@ -141,7 +138,7 @@ public class WhileAtPerformanceEval {
 			locNotWithinRadius();
 		}
 		Assertion.test(
-				_earlyAns.length() + _answersLeft.length() + _goodAnsCount + _lateAns.length() == _numRuleFiresTotal,
+				_earlyAns.size() + _answersLeft.size() + _goodAnsCount + _lateAns.size() == _numRuleFiresTotal,
 				"not all answers are accounted for");
 	}
 
@@ -174,7 +171,7 @@ public class WhileAtPerformanceEval {
 		_shouldFireCount++;
 		_curMinTBetweenFires = _minTReq;
 
-		if (_answersLeft.length() > 0) {
+		if (_answersLeft.size() > 0) {
 			findGoodAnswer(tNowAndIdealFireT);
 		} else {
 			// dummy true fire time when there are no answers left
@@ -196,11 +193,11 @@ public class WhileAtPerformanceEval {
 	private void findGoodAnswer(double tNowAndIdealFireT) {
 		OneAnswer ans;
 		double allowedDevT = Constants.PERCENT_ALLOWED_DEVIATION_FROM_REQ_RULE_FIRE_TIME * _curMinTBetweenFires;
-		int lenBefore = _answersLeft.length();
+		int lenBefore = _answersLeft.size();
 
 		// loop through answers
-		for (int i = 0; i < _answersLeft.length(); i++) {
-			ans = _answersLeft.getItem(i);
+		for (int i = 0; i < _answersLeft.size(); i++) {
+			ans = _answersLeft.get(i);
 
 			_trueFireT = ans.getRuleFiredTime().getTimeInMillis() / 1000.0;
 
@@ -233,32 +230,32 @@ public class WhileAtPerformanceEval {
 					} else {
 						_lateAnsCount++;
 					}
-					_lateAns.append(ans);
+					_lateAns.add(ans);
 					// System.out.println("here is a late answer");
 				}
 				// remove this answer from the list of answers to avoid counting it again
-				_answersLeft.deleteItem(i);
-				if (lenBefore != _answersLeft.length() + 1) {
+				_answersLeft.remove(i);
+				if (lenBefore != _answersLeft.size() + 1) {
 					System.out.println(
-							"index: " + i + " length before: " + lenBefore + " length now: " + _answersLeft.length());
+							"index: " + i + " length before: " + lenBefore + " length now: " + _answersLeft.size());
 				}
-				Assertion.test(lenBefore == _answersLeft.length() + 1, "delete did not work");
+				Assertion.test(lenBefore == _answersLeft.size() + 1, "delete did not work");
 				break;
 			}
 			// if this answer's fire time is too early,
 			else {
 				if (!_earlyAns.contains(ans)) {
 					// keep track of answers/rule fires that were too early
-					_earlyAns.append(ans);
+					_earlyAns.add(ans);
 					// if this is too early now, it will only be earlier still for the next rule
 					// fire time
 					// remove this answer from the list of answers to avoid counting it again
-					_answersLeft.deleteItem(i);
-					if (lenBefore != _answersLeft.length() + 1) {
+					_answersLeft.remove(i);
+					if (lenBefore != _answersLeft.size() + 1) {
 						System.out.println("index: " + i + " length before: " + lenBefore + " length now: "
-								+ _answersLeft.length());
+								+ _answersLeft.size());
 					}
-					Assertion.test(lenBefore == _answersLeft.length() + 1, "delete did not work");
+					Assertion.test(lenBefore == _answersLeft.size() + 1, "delete did not work");
 					// System.out.println("new early answer");
 					i--;
 					lenBefore--;
@@ -270,8 +267,8 @@ public class WhileAtPerformanceEval {
 	private double getMaxTimeToCheck() {
 		double gpsMaxT = _ad.getLastRecordingTime();
 		double ansMaxT = 0.0;
-		if (_answersLeft.length() > 0) {
-			ansMaxT = _answersLeft.getItem(_answersLeft.length() - 1).getRuleFiredTime().getTimeInMillis() / 1000.0;
+		if (_answersLeft.size() > 0) {
+			ansMaxT = _answersLeft.get(_answersLeft.size() - 1).getRuleFiredTime().getTimeInMillis() / 1000.0;
 		}
 		return Math.max(gpsMaxT, ansMaxT);
 	}
@@ -331,9 +328,9 @@ public class WhileAtPerformanceEval {
 				"Percent of minimum time between rule fires cutoff for being late allowance");
 		// all late or missed answer times
 		if (_lateAnsCount > 0) {
-			for (int i = 0; i < _lateAns.length(); i++) {
+			for (int i = 0; i < _lateAns.size(); i++) {
 				map.addValue(Constants.REPORTS_LATEORMISSED_ANS + i,
-						_lateAns.getItem(i).getRuleFiredTime().getTimeInMillis() * 1.0,
+						_lateAns.get(i).getRuleFiredTime().getTimeInMillis() * 1.0,
 						"Late or missed answer occurence " + i + ", time in milliseconds");
 			}
 		}
@@ -342,17 +339,17 @@ public class WhileAtPerformanceEval {
 
 	private OneReport getEarlyFireCounts(OneReport map) {
 		// count of early fires
-		map.addValue(Constants.REPORTS_EARLY_RULE_FIRES, _earlyAns.length() * 1.0, "Number of early rule fires");
+		map.addValue(Constants.REPORTS_EARLY_RULE_FIRES, _earlyAns.size() * 1.0, "Number of early rule fires");
 		// all early answer times
-		if (_earlyAns.length() > 0) {
-			for (int i = 0; i < _earlyAns.length(); i++) {
+		if (_earlyAns.size() > 0) {
+			for (int i = 0; i < _earlyAns.size(); i++) {
 				map.addValue(Constants.REPORTS_EARLY_ANS + i,
-						_earlyAns.getItem(i).getRuleFiredTime().getTimeInMillis() * 1.0,
+						_earlyAns.get(i).getRuleFiredTime().getTimeInMillis() * 1.0,
 						"Early answer occurence " + i + ", time in milliseconds");
 			}
 		}
 		// count of not late, missed, early, or on time fires
-		map.addValue(Constants.REPORTS_OTHER_RULE_FIRES, _answersLeft.length() * 1.0,
+		map.addValue(Constants.REPORTS_OTHER_RULE_FIRES, _answersLeft.size() * 1.0,
 				"Number of rule fires that were not early, late, missed, or on time");
 
 		return map;

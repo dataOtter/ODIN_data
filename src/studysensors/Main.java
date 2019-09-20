@@ -1,8 +1,9 @@
 package studysensors;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 
+import dao.OutputFileWriter;
 import stats.ReportsCollection;
 import stats.StatsEngine;
 import stats.StatsBuilder;
@@ -12,13 +13,15 @@ import stats.StatsBuilder;
  */
 public class Main {
 
-    public static void main(String[] args) throws FileNotFoundException, ParseException {
+    public static void main(String[] args) throws ParseException, IOException {
 
         String path = Constants.DIRECTORY_PATH;
         int formatVersion = Constants.DEFAULT_FORMAT_VERSION;
         		
-        AnalysisEngine eng = new AnalysisEngineBuilder(path, formatVersion).
+        AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion);
+        AnalysisEngine eng = bld.
 				registerGpsAnalyses().registerWhileAtAnalyses().build();
+        		//registerGpsAnalyses().build();
         
         ReportsCollection allReports = eng.getAllReports();
         
@@ -26,6 +29,9 @@ public class Main {
         StatsEngine stats = sb.build();
         
         ReportsCollection allStats = stats.getStats();
+        
+        OutputFileWriter out = new OutputFileWriter(allReports, path, formatVersion);
+        out.writeAllDataToFiles();
         
         // printing
         System.out.println(allReports);

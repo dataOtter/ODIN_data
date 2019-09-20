@@ -1,8 +1,6 @@
 package stats;
 
-import java.io.FileNotFoundException;
-
-import dao.CouponIdReader;
+import dao.CouponReader;
 import orderedcollection.IMJ_OC;
 import studysensors.Constants;
 
@@ -22,13 +20,12 @@ public class StatsEngine {
         _doSensors = doSensors;
 	}
 	
-	public ReportsCollection getStats() throws FileNotFoundException {
+	public ReportsCollection getStats() {
 
         ReportsCollection stats = new ReportsCollection();
-        IMJ_OC<Integer> cid_list = new CouponIdReader(_path, _formatVersion).getActiveCouponIds();
+        IMJ_OC<Integer> cidList = new CouponReader(_path, _formatVersion).getActiveCouponIds();
         
-        for (int i=0; i<cid_list.length(); i++) {
-        	int cid = cid_list.getItem(i);
+        for (int cid: cidList) {
         	
         	if (_doRules) {
             	ReportsCollection justRules = _allReports.extractAllRuleReportsForOneCid(cid);

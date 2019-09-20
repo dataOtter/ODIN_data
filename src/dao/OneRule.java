@@ -1,5 +1,6 @@
 package dao;
 
+import maps.*;
 import studysensors.Constants;
 
 /**
@@ -22,19 +23,42 @@ public class OneRule {
         _ruleId = Integer.parseInt(line[Constants.RULES_RULEID_IDX]);
         _questionId = Integer.parseInt(line[Constants.RULES_QUESTIONID_IDX]);
         _ruleType = line[Constants.RULES_RULETYPE_IDX];
+        
         if (_ruleType.contains(Constants.RULE_WHILEAT_NAME)){
-            _dist = Integer.parseInt(line[3].split(":")[1].replace("\"", ""));
             if (_formatVersion<=0) {
+                _dist = Integer.parseInt(line[3].split(":")[1].replace("\"", ""));
                 _lat = Double.parseDouble(line[5].split(":")[1].replace("\"", ""));
                 _lon = Double.parseDouble(line[6].split(":")[1].replace("\"", "").replace("}", ""));
                 _minTime = Integer.parseInt(line[4].split(":")[1].replace("\"", ""));
             }
-            else {
+            else if (_formatVersion==1) {
+                _dist = Integer.parseInt(line[3].split(":")[1].replace("\"", ""));
                 _lat = Double.parseDouble(line[4].split(":")[1].replace("\"", ""));
                 _lon = Double.parseDouble(line[5].split(":")[1].replace("\"", ""));
                 _minTime = Integer.parseInt(line[6].split(":")[1].replace("\"", "").replace("}", ""));
             }
+            else { // if (_formatVersion==2) 
+            	int offset = ruleRow.indexOf("ruleParamToValue");
+            	String tail = ruleRow.substring(offset);
+            	int start = tail.indexOf("{") + 1;
+            	int finish = tail.indexOf("}");
+            	String mapString = tail.substring(start,  finish);
+            	String cleaned = mapString.replaceAll("\"",  "").replaceAll("\\\\",  "");
+            	
+            	IMJ_Map<String, String> RuleParamNameToVal = new MJ_Map_Factory<String, String>().create();
+        		String[] words = cleaned.split(",");
+        		for (String w:words) {
+        			String[] kv = w.split(":");
+        			RuleParamNameToVal.put(kv[0],  kv[1]);
+        		}
+        		//RuleParamNameToVal.print();
+                _dist = Integer.parseInt(RuleParamNameToVal.get("distance"));
+                _lat = Double.parseDouble(RuleParamNameToVal.get("latitude"));
+                _lon = Double.parseDouble(RuleParamNameToVal.get("longitude"));
+                _minTime = Integer.parseInt(RuleParamNameToVal.get("mintimesincelastfire"));
+            }
         }
+        
         else{
             _dist = null;
             _lat = null;

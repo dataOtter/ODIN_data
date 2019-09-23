@@ -70,7 +70,7 @@ public class ReportsCollection {
 		return sub;
 	}
 
-	public IMJ_OC<String> getAllTags() {
+	public IMJ_OC<String> getAllUniqueTags() {
 		IMJ_OC<String> tagList = new MJ_OC_Factory<String>().create();
 		
 		for (int i = 0; i<_allReports.size(); i++) {
@@ -118,8 +118,8 @@ public class ReportsCollection {
 		return s;
 	}
 	
-	public IMJ_Map<String, String> getTagToDesc(int studyId, IMJ_OC<String> allUniqueTags) {
-		return (IMJ_Map<String, String>) getMapOfValues(studyId, false, allUniqueTags); 
+	public IMJ_Map<String, String> getTagToDescAndBuildFinalTags(int studyId, IMJ_OC<String> allFinalTags) {
+		return (IMJ_Map<String, String>) getMapOfValues(studyId, false, allFinalTags); 
 	}
 		/*IMJ_Map<String, String> tagToDesc = new MJ_Map_Factory<String, String>().create(); 
 		// for each list of report types
@@ -135,8 +135,8 @@ public class ReportsCollection {
 	}*/
 	
 	public IMJ_Map<Integer, IMJ_Map<String, String>> getCidToTagToData(int studyId, 
-			IMJ_OC<String> allUniqueTags) {
-		return (IMJ_Map<Integer, IMJ_Map<String, String>>) getMapOfValues(studyId, true, allUniqueTags); 
+			IMJ_OC<String> allFinalTags) {
+		return (IMJ_Map<Integer, IMJ_Map<String, String>>) getMapOfValues(studyId, true, allFinalTags); 
 	}
 		/*// for each list of report types
 		for (int i = 0; i<_allReports.size(); i++) {
@@ -150,7 +150,7 @@ public class ReportsCollection {
 		return cidToTagToData;
 	}*/
 	
-	private IMJ_Map<?, ?> getMapOfValues(int studyId, boolean isDataNotDesc, IMJ_OC<String> allUniqueTags) {
+	private IMJ_Map<?, ?> getMapOfValues(int studyId, boolean isDataNotDesc, IMJ_OC<String> allFinalTags) {
 		IMJ_Map<?, ?> mapOfValues = null;
 		if (isDataNotDesc) {
 			mapOfValues = new MJ_Map_Factory<Integer, IMJ_Map<String, String>>().create(); 
@@ -167,44 +167,51 @@ public class ReportsCollection {
 			for (OneReport rep: reps) {
 				if (isDataNotDesc) {
 					addToCidToTagToData(rep, type, studyId, 
-							(IMJ_Map<Integer, IMJ_Map<String, String>>) mapOfValues, allUniqueTags);
+							(IMJ_Map<Integer, IMJ_Map<String, String>>) mapOfValues);
 				}
 				else {
-					addToTagToDesc(rep, type, studyId, 
-							(IMJ_Map<String, String>) mapOfValues, allUniqueTags);
+					addToTagToDescAndToFinalTags(rep, type, studyId, 
+							(IMJ_Map<String, String>) mapOfValues, allFinalTags);
 				}
 			} 
 		} 
 		return mapOfValues;
 	}
 	
-	private void addToTagToDesc(OneReport rep, String type, int studyId, 
-			IMJ_Map<String, String> tagToDesc, IMJ_OC<String> allUniqueTags) {
+	private void addToTagToDescAndToFinalTags(OneReport rep, String type, int studyId, 
+			IMJ_Map<String, String> tagToDesc, IMJ_OC<String> allFinalTags) {
 		// get the sensor or rule id and type, to prepend to column names
 		String typeAndId = getTypeAndId(type, rep);
 		// get the vals to add to tagToDesc to write to the file
-		IMJ_Map<String, String> toWrite = rep.getTagToDocsToWrite(typeAndId, allUniqueTags);
+		IMJ_Map<String, String> oneRepTagToDesc = rep.getFinalTagToDocs(typeAndId);
+		
 		// add new unique vals to tagToDesc
-		for (int k = 0; k<toWrite.size(); k++) {
-			String tag = toWrite.getKey(k);
-			String descr = toWrite.get(tag);
-			if ( ! tagToDesc.containsKey(tag)) {
-				tagToDesc.put(tag, descr);
+		for (int k = 0; k<oneRepTagToDesc.size(); k++) {
+			String finalTag = oneRepTagToDesc.getKey(k);
+			String descr = oneRepTagToDesc.get(finalTag);
+			
+			// update list of unique tags across all reports
+			if ( ! allFinalTags.contains(finalTag) ) {
+				allFinalTags.add(finalTag);
+			}
+						
+			if ( ! tagToDesc.containsKey(finalTag)) {
+				tagToDesc.put(finalTag, descr);
 			}
 			else {
-				String existingDesc = tagToDesc.get(tag);
-				Assertion.test(existingDesc == descr, "Conflicting descriptions of tag " + tag);
+				String existingDesc = tagToDesc.get(finalTag);
+				Assertion.test(existingDesc == descr, "Conflicting descriptions of tag " + finalTag);
 			}
 		}
 	}
 	
 	private void addToCidToTagToData(OneReport rep, String type, int studyId,
-			IMJ_Map<Integer, IMJ_Map<String, String>> cidToTagToData, IMJ_OC<String> allUniqueTags) {
+			IMJ_Map<Integer, IMJ_Map<String, String>> cidToTagToData) {
 		int cid = rep.getCid();
 		// get the sensor or rule id and type, to prepend to column names
 		String typeAndId = getTypeAndId(type, rep);
 		// get the vals to add to the final cidToTagToData to write to the file
-		IMJ_Map<String, String> tagToData = rep.getTagToDataToWrite(typeAndId, allUniqueTags);
+		IMJ_Map<String, String> tagToData = rep.getFinalTagToData(typeAndId);
 		// if the final cidToTagToData to write to the file already has an entry for this cid 
 		// (and later study id), add the new columns to that entry
 		if (cidToTagToData.containsKey(cid)) {
@@ -224,10 +231,10 @@ public class ReportsCollection {
 	private String getTypeAndId(String type, OneReport rep) {
 		String typeAndId = "";
 		if (rep.isSensorReport()) {
-			typeAndId = type + "_id" + rep.getValue(Constants.REPORTS_SENSORID);
+			typeAndId = type + "_id_" + rep.getValue(Constants.REPORTS_SENSORID).intValue();
 		}
 		else if (rep.isRuleReport()) {
-			typeAndId = type + "_id" + rep.getValue(Constants.REPORTS_RULEID);
+			typeAndId = type + "_id_" + rep.getValue(Constants.REPORTS_RULEID).intValue();
 		}
 		return typeAndId;
 	}

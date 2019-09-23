@@ -12,7 +12,7 @@ public class StatsOfReportsCollection {
 	
 	public OneStatsReport getValues() {
 		OneStatsReport answer = new OneStatsReport();
-		IMJ_OC<String> tagsList = _reps.getAllTags();
+		IMJ_OC<String> tagsList = _reps.getAllUniqueTags();
 		for (String tag: tagsList) {
 			IMJ_OC<Double> val_list = _reps.getAllValuesForTag(tag);
 			

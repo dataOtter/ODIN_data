@@ -10,7 +10,7 @@ import studysensors.Constants;
 
 public class OutputFileWriter {
 	private final ReportsCollection _repsCollection;
-	private IMJ_OC<String> _allUniqueTags;
+	private IMJ_OC<String> _allFinalTags;
 	private IMJ_OC<String> _tagsWritten;
     private final String _path;
     private final int _formatVersion;
@@ -19,32 +19,51 @@ public class OutputFileWriter {
         _path = path;
         _formatVersion = formatVersion;
 		_repsCollection = reps;
-		_allUniqueTags = new MJ_OC_Factory<String>().create();
+		_allFinalTags = new MJ_OC_Factory<String>().create();
 		_tagsWritten = new MJ_OC_Factory<String>().create();
-		_allUniqueTags.add(Constants.REPORTS_COUPONID);
-		_allUniqueTags.add(Constants.REPORTS_STUDYID);
+		_allFinalTags.add(Constants.REPORTS_COUPONID);
+		_allFinalTags.add(Constants.REPORTS_STUDYID);
 	}
 	
 	public void writeAllDataToFiles() throws IOException {
 		Study s = new StudyReader(_path, _formatVersion).getStudy();
 		int studyId = s.getStudyId();
+		
+		// must call docs first in order to make list of _allFinalTags
 		FileWriter wrDocs = new FileWriter("health_codebook.csv");
+		String colsToWrite = "column_index,variable_tag,variable_description\n";
+		try { 
+			wrDocs.write(colsToWrite);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		writeDocsToFile(wrDocs, studyId);
 
 		FileWriter wrData = new FileWriter("health_report.csv");
+		//write to the file the index numbers of _allUniqueTags as columns
+		colsToWrite = "";
+		for (int i = 0; i<_allFinalTags.size(); i++) {
+			colsToWrite += i + ",";
+		}
+		colsToWrite = colsToWrite.substring(0, colsToWrite.length()-1) + "\n";
+		try { 
+			wrData.write(colsToWrite);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		writeDataToFile(wrData, studyId);
 	}
 	
 	private void writeDocsToFile(FileWriter wr, int studyId) {
-		
-		
-		the column numbers in the docs file are all -1
-		
-		/*// this should happen above for file writer, just once 
-		String toWrite = "column_index,variable_tag,variable_description";*/
+		// must call docs first in order to make list of _allFinalTags
 		
 		// get unique tags and descriptions for the given studyid 
-		IMJ_Map<String, String> tagToDesc = _repsCollection.getTagToDesc(studyId, _allUniqueTags);
+		IMJ_Map<String, String> tagToDesc = _repsCollection.getTagToDescAndBuildFinalTags(studyId, _allFinalTags);
+		
+		// add the coupon id and study id tag
+		for (int i = 0; i<2; i++) {
+			tagToDesc.put(_allFinalTags.get(i), "");
+		}
 		// for each tag, desc pair
 		for (int i = 0; i<tagToDesc.size(); i++) {
 			String tag = tagToDesc.getKey(i);
@@ -52,8 +71,8 @@ public class OutputFileWriter {
 			// (if there will be multiple studies in one file)
 			if ( ! _tagsWritten.contains(tag) ) {
 				// get the column index, tag, and description to write to the file
-				String toWrite = Integer.toString(_allUniqueTags.indexOf(tag)) + "," + tag + "," 
-				+ tagToDesc.get(tag) + "\n";
+				String toWrite = Integer.toString(_allFinalTags.indexOf(tag)) + "," + tag + "," 
+				+ tagToDesc.get(tag).replace(",", " ") + "\n";  // replacing commmas as this is not a json
 				try {
 					wr.write(toWrite);
 					_tagsWritten.add(tag);
@@ -70,18 +89,15 @@ public class OutputFileWriter {
 	}
 	
 	private void writeDataToFile(FileWriter wr, int studyId) {
-		/*// this should happen above for file writer, just once 
-		write to the file passed in the index numbers of _allUniqueTags as columns */
-		
 		// make map from: tag in correct order, to: empty string data placeholder
 		IMJ_Map<String, String> tagOrderedToData = new MJ_Map_Factory<String, String>().create();
-		for (String tag: _allUniqueTags) {
-			tagOrderedToData.put(tag, "");
+		for (String tag: _allFinalTags) {
+			tagOrderedToData.put(tag, "NA");
 		}
 		
 		// get unique tags and data for each cid and the given studyid 
 		IMJ_Map<Integer, IMJ_Map<String, String>> cidToTagToData = 
-				_repsCollection.getCidToTagToData(studyId, _allUniqueTags);
+				_repsCollection.getCidToTagToData(studyId, _allFinalTags);
 		// for each coupon's tagToData map
 		for (int i = 0; i<cidToTagToData.size(); i++) {
 			int cid = cidToTagToData.getKey(i);
@@ -90,7 +106,12 @@ public class OutputFileWriter {
 			// write the data row for the cid to the file
 			String toWrite = "";
 			for (int j = 0; i<tagOrderedToData.size(); j++) {
-				toWrite += tagOrderedToData.get(tagOrderedToData.getKey(j)) + ",";
+				String tag = tagOrderedToData.getKey(j);
+				if (tag == null) {
+					System.out.println(tag + " is null");
+				}
+				toWrite += tagOrderedToData.get(tag) + ",";
+				System.out.println(toWrite);
 			}
 			try {
 				wr.write(toWrite.substring(0, toWrite.length()-1) + "\n");

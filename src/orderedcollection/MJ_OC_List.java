@@ -68,7 +68,7 @@ public class MJ_OC_List <E> extends MJ_OC <E>{
     @Override
     public boolean contains(Object value){
         for (MJ_OC_Node<E> n = _start; n != null; n = n.getNext()){
-            if (n.getData() == value){
+            if (n.getData().equals(value)){
                 return true;
             }
         }

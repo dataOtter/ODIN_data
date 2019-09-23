@@ -82,16 +82,15 @@ public abstract class OneReport {
 		return tagList;
 	}
 	
-	public IMJ_Map<String, String> getTagToDataToWrite(String typeAndId, IMJ_OC<String> tags) {
-		return getTagToVal(typeAndId, _data, tags);
+	public IMJ_Map<String, String> getFinalTagToData(String typeAndId) {
+		return getTagToVal(typeAndId, _data);
 	}
 	
-	public IMJ_Map<String, String> getTagToDocsToWrite(String typeAndId, IMJ_OC<String> tags) {
-		return getTagToVal(typeAndId, _docs, tags);
+	public IMJ_Map<String, String> getFinalTagToDocs(String typeAndId) {
+		return getTagToVal(typeAndId, _docs);
 	}
 	
-	private IMJ_Map<String, String> getTagToVal(String typeAndId, IMJ_Map<String, ?> dataMap, 
-			IMJ_OC<String> tags) {
+	private IMJ_Map<String, String> getTagToVal(String typeAndId, IMJ_Map<String, ?> dataMap) {
 		IMJ_Map<String, String> tagToVal = new MJ_Map_Factory<String, String>().create();
 		// for each tag, value pair in the given data map
 		for (int i = 0; i<dataMap.size(); i++) {
@@ -99,16 +98,12 @@ public abstract class OneReport {
 			// ignore couponid data because it will be added only once, at ReportsCollection level
 			if (tag != Constants.REPORTS_COUPONID) {
 				String finalTag = typeAndId + "_" + tag;
-				// update list of unique tags across all reports
-				if ( ! tags.contains(finalTag) ) {
-					tags.add(tag);
-				}
 				Object val = dataMap.get(tag);
 				String finalVal = "";
 				// if the dataMap is the _docs map
 				if (val instanceof String) {
 					finalVal = (String) val;
-				}
+				}  
 				// if the dataMap is the _data map
 				else if (val instanceof Double) {
 					finalVal = Double.toString((Double) val);

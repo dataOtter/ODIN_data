@@ -18,9 +18,14 @@ public class MJ_Map_OC <K,V> implements IMJ_Map <K,V> {
     private IMJ_OC <K> _keys;
     private IMJ_OC <V> _values;
     
-    public MJ_Map_OC(){
+    public MJ_Map_OC() {
         _keys = new MJ_OC_Factory<K>().create();
         _values = new MJ_OC_Factory<V>().create();
+    }
+    
+    private MJ_Map_OC(IMJ_OC <K> keys, IMJ_OC <V> values) {
+        _keys = keys;
+        _values = values;
     }
     
     @Override
@@ -53,6 +58,14 @@ public class MJ_Map_OC <K,V> implements IMJ_Map <K,V> {
         Assertion.test(idx > -1, "Key not found");
         return _values.get(idx);
     }
+
+	@Override
+	public IMJ_Map<K, V> getDeepCopy() {
+		IMJ_OC <K> copyKeys = _keys.getDeepCopy();
+	    IMJ_OC <V> copyVals = _values.getDeepCopy();
+	    IMJ_Map<K, V> copy = new MJ_Map_OC<K, V>(copyKeys, copyVals);
+		return copy;
+	}
     
     @Override
     public K getKey(int idx){
@@ -117,6 +130,17 @@ public class MJ_Map_OC <K,V> implements IMJ_Map <K,V> {
     @Override
     public int size(){
         return _keys.size();
+    }
+    
+    @Override 
+    public String toString() {
+    	String s = "";
+        for (int i = 0; i<this.size(); i++){
+        	K k = _keys.get(i);
+        	V v = _values.get(i);
+            s += k + ": " + v + "\n";
+        }
+		return s.substring(0, s.length()-1);
     }
 
     /*@Override

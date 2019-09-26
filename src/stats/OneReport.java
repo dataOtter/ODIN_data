@@ -1,8 +1,8 @@
 package stats;
 
+import Constants.ConstTags;
 import maps.*;
 import orderedcollection.*;
-import studysensors.Constants;
 
 public abstract class OneReport {
 	private final IMJ_Map<String, Double> _data;
@@ -40,7 +40,7 @@ public abstract class OneReport {
 	}
 	
 	public int getCid() {
-		return _data.get(Constants.REPORTS_COUPONID).intValue();
+		return _data.get(ConstTags.REPORTS_COUPONID).intValue();
 	}
 	
 	public void addValue(String tag, Double val) {
@@ -96,7 +96,7 @@ public abstract class OneReport {
 		for (int i = 0; i<dataMap.size(); i++) {
 			String tag = dataMap.getKey(i);
 			// ignore couponid data because it will be added only once, at ReportsCollection level
-			if (tag != Constants.REPORTS_COUPONID) {
+			if (tag != ConstTags.REPORTS_COUPONID) {
 				String finalTag = typeAndId + "_" + tag;
 				Object val = dataMap.get(tag);
 				String finalVal = "";

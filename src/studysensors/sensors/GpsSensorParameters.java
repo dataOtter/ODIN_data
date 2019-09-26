@@ -1,13 +1,15 @@
 package studysensors.sensors;
 
+import Constants.Constants;
+
 public class GpsSensorParameters extends AbsSensorParameters {
 	private final double _interval;
 	private final double _distance;
 	
 	public GpsSensorParameters(String line) {
 		super (line);
-		_interval = Double.parseDouble(_paramNameToVal.get("time"));
-		_distance = Double.parseDouble(_paramNameToVal.get("distance"));
+		_interval = Double.parseDouble(_paramNameToVal.get(Constants.STUDYTOSENSOR_GPS_TIME_LABEL));
+		_distance = Double.parseDouble(_paramNameToVal.get(Constants.STUDYTOSENSOR_GPS_DISTANCE_LABEL));
 	}
 	
 	@Override

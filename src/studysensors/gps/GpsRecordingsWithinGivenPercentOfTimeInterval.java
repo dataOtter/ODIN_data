@@ -1,7 +1,8 @@
 package studysensors.gps;
 
-import studysensors.Constants;
 import studysensors.gps.gpsDeepLayer.OneCouponsGpsData;
+import Constants.ConstTags;
+import Constants.Constants;
 import stats.OneReport;
 
 /**
@@ -61,13 +62,10 @@ public class GpsRecordingsWithinGivenPercentOfTimeInterval extends GpsPerformanc
 
     @Override
     public OneReport addToMap(OneReport map) {
-        map.addValue(Constants.REPORTS_TOTAL_SENSOR_RECS, getTotalNumOfGpsRecs() * 1.0, "Total GPS recordings");
-        map.addValue(Constants.PERC_ALLOWED_DEV_FROM_SI, _per * 100.0, 
-        		"Maximum percent deviation from requested sensor interval");
-        map.addValue(Constants.REPORTS_SENSOR_RECS_WITHIN_DEV, getValue() * 1.0,
-        		"Number of GPS recordings within given allowed deviation of sensor interval");
-        map.addValue(Constants.REPORTS_SENSOR_RECS_PERC_WITHIN_DEV, getValueInPercent(), 
-        		"Percent of GPS recordings within given allowed deviation of sensor interval");
+        map.addValue(ConstTags.REPORTS_TOTAL_SENSOR_RECS, getTotalNumOfGpsRecs() * 1.0, ConstTags.REPORTS_T_S_R_TEXT);
+        map.addValue(ConstTags.REPORTS_PERC_ALLW_DEV_FRM_SI, _per * 100.0, ConstTags.REPORTS_P_A_D_F_SI_TEXT);
+        map.addValue(ConstTags.REPORTS_SENSOR_RECS_WITHIN_DEV, getValue() * 1.0, ConstTags.REPORTS_S_R_W_D_TEXT);
+        map.addValue(ConstTags.REPORTS_PERC_SENSOR_RECS_WITHIN_DEV, getValueInPercent(), ConstTags.REPORTS_S_R_P_W_D_TEXT);
         return map;
     }
 }

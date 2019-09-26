@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 
-import studysensors.Constants;
+import Constants.Constants;
 import studysensors.gps.GpsDataCollection;
 import studysensors.gps.gpsDeepLayer.*;
 

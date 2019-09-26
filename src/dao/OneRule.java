@@ -1,7 +1,7 @@
 package dao;
 
+import Constants.Constants;
 import maps.*;
-import studysensors.Constants;
 
 /**
  *
@@ -38,7 +38,7 @@ public class OneRule {
                 _minTime = Integer.parseInt(line[6].split(":")[1].replace("\"", "").replace("}", ""));
             }
             else { // if (_formatVersion==2) 
-            	int offset = ruleRow.indexOf("ruleParamToValue");
+            	int offset = ruleRow.indexOf(Constants.RULES_RULEPARAMTOVALUE);
             	String tail = ruleRow.substring(offset);
             	int start = tail.indexOf("{") + 1;
             	int finish = tail.indexOf("}");
@@ -52,10 +52,10 @@ public class OneRule {
         			RuleParamNameToVal.put(kv[0],  kv[1]);
         		}
         		//RuleParamNameToVal.print();
-                _dist = Integer.parseInt(RuleParamNameToVal.get("distance"));
-                _lat = Double.parseDouble(RuleParamNameToVal.get("latitude"));
-                _lon = Double.parseDouble(RuleParamNameToVal.get("longitude"));
-                _minTime = Integer.parseInt(RuleParamNameToVal.get("mintimesincelastfire"));
+                _dist = Integer.parseInt(RuleParamNameToVal.get(Constants.RULES_DISTANCE));
+                _lat = Double.parseDouble(RuleParamNameToVal.get(Constants.RULES_LATITUDE));
+                _lon = Double.parseDouble(RuleParamNameToVal.get(Constants.RULES_LONGITUDE));
+                _minTime = Integer.parseInt(RuleParamNameToVal.get(Constants.RULES_MINTLASTFIRE));
             }
         }
         

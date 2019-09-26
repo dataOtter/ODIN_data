@@ -6,14 +6,15 @@ package maps;
  * @param <K>
  * @param <V>
  */
-public class MJ_Map_EntryNode <K,V> {
+public class MJ_MapNode <K,V> {
     private K _key;
     private V _value;
-    private MJ_Map_EntryNode<K,V> _next;
+    private MJ_MapNode<K,V> _next;
     
-    public MJ_Map_EntryNode(K k, V v){
+    public MJ_MapNode(K k, V v){
         _key = k;
         _value = v;
+        _next = null;
     }
     
     public K getKey(){
@@ -33,7 +34,7 @@ public class MJ_Map_EntryNode <K,V> {
         _value = v;
     }
     
-    public MJ_Map_EntryNode<K,V> getNext(){
+    public MJ_MapNode<K,V> getNext(){
         return _next;
     }
     
@@ -41,7 +42,7 @@ public class MJ_Map_EntryNode <K,V> {
         return _next != null;
     }
     
-    public void setNext(MJ_Map_EntryNode<K,V> n){
+    public void setNext(MJ_MapNode<K,V> n){
         _next = n;
     }
 }

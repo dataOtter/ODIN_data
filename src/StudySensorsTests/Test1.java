@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import Constants.ConstTags;
 import orderedcollection.*;
 import stats.*;
 import studysensors.*;
@@ -65,7 +66,7 @@ public class Test1 {
     @Test
     public void checkGPS() {
         
-        IMJ_OC<OneReport> gpsSensorReports = allReports.getAnalysesByType(Constants.REPORT_TYPE_GPS_SENSOR_ANALYSIS);
+        IMJ_OC<OneReport> gpsSensorReports = allReports.getAnalysesByType(ConstTags.REPORT_TYPE_GPS_SENSOR_ANALYSIS);
         
         for (OneReport oneRep: gpsSensorReports) {
 //            System.out.println(oneRep.getValue(Constants.REPORTS_SENSOR_INTERVAL));
@@ -73,22 +74,22 @@ public class Test1 {
 //            System.out.println(oneRep.getValue(Constants.REPORTS_STANDARD_DEV_ONE_SENSOR));
 //            System.out.println(oneRep.getValue(Constants.REPORTS_TOTAL_SENSOR_RECS));
          
-            assertTrue(oneRep.getValue(Constants.REPORTS_SENSOR_INTERVAL) == 3600.0);
-            assertTrue(oneRep.getValue(Constants.REPORTS_AVERAGE_ONE_SENSOR) == 100.0);
-            assertTrue(oneRep.getValue(Constants.REPORTS_STANDARD_DEV_ONE_SENSOR) == 0.0);
-            assertTrue(oneRep.getValue(Constants.REPORTS_TOTAL_SENSOR_RECS) == 108.0);
+            assertTrue(oneRep.getValue(ConstTags.REPORTS_SENSOR_INTERVAL) == 3600.0);
+            assertTrue(oneRep.getValue(ConstTags.REPORTS_AVERAGE_ONE_SENSOR) == 100.0);
+            assertTrue(oneRep.getValue(ConstTags.REPORTS_STANDARD_DEV_ONE_SENSOR) == 0.0);
+            assertTrue(oneRep.getValue(ConstTags.REPORTS_TOTAL_SENSOR_RECS) == 108.0);
         }
     }
     
     @Test
     public void checkWhileAt() {
-        IMJ_OC<OneReport> WhileAtReports = allReports.getAnalysesByType(Constants.REPORT_TYPE_WHILEAT_RULE_ANALYSIS);
+        IMJ_OC<OneReport> WhileAtReports = allReports.getAnalysesByType(ConstTags.REPORT_TYPE_WHILEAT_RULE_ANALYSIS);
         
         for (OneReport oneRep: WhileAtReports) {
-            assertTrue(oneRep.getValue(Constants.REPORTS_GOOD_RULE_FIRES) == 0.0);
-            assertTrue(oneRep.getValue(Constants.REPORTS_IDEAL_RULE_FIRES) == 20.0);
-            assertTrue(oneRep.getValue(Constants.REPORTS_GOOD_FIRE_PERCENT) == 0.0);
-            assertTrue(oneRep.getValue(Constants.REPORTS_RULE_MIN_T) == 10800.0);
+            assertTrue(oneRep.getValue(ConstTags.REPORTS_GOOD_RULE_FIRES) == 0.0);
+            assertTrue(oneRep.getValue(ConstTags.REPORTS_IDEAL_RULE_FIRES) == 20.0);
+            assertTrue(oneRep.getValue(ConstTags.REPORTS_GOOD_FIRE_PERCENT) == 0.0);
+            assertTrue(oneRep.getValue(ConstTags.REPORTS_RULE_MIN_T) == 10800.0);
         }
     }
 }

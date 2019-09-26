@@ -1,7 +1,7 @@
 package studysensors.gps;
 
-import studysensors.Constants;
 import studysensors.gps.gpsDeepLayer.OneCouponsGpsData;
+import Constants.ConstTags;
 import stats.OneReport;
 
 /**
@@ -65,9 +65,9 @@ public class GpsAverageTimeInterval extends GpsPerformanceEvaluation {
     
     @Override
     public void printAll(){
-        System.out.println("\n\tAverage time between GPS recordings (sec): " + getValue() +
-                "\n\tAverage percentage variance from requested interval: " + getValueInPercent() +
-                "\n\tStandard deviation (in percent of SI) between actual GPS recordings" + getStdev());
+        System.out.println("\n\t" + ConstTags.REPORTS_A_O_S_I_S_TEXT + ": " + getValue() +
+                "\n\t" + ConstTags.REPORTS_A_O_S_TEXT + ": " + getValueInPercent() +
+                "\n\t" + ConstTags.REPORTS_S_D_O_S_TEXT + ": " + getStdev());
     }
     
     @Override
@@ -75,12 +75,9 @@ public class GpsAverageTimeInterval extends GpsPerformanceEvaluation {
         double avg = getValue() * 1.0;
         double stdev = getStdev();
         double avgInPer = getValueInPercent();
-        map.addValue(Constants.REPORTS_AVERAGE_ONE_SENSOR_IN_SECS, avg, 
-        		"Average time in seconds between actual GPS recordings");
-        map.addValue(Constants.REPORTS_AVERAGE_ONE_SENSOR, avgInPer, 
-        		"Average percent deviation of actual time between GPS recordings from sensor interval");
-        map.addValue(Constants.REPORTS_STANDARD_DEV_ONE_SENSOR, stdev, 
-        		"Standard deviation (in percent of SI) between actual GPS recordings");
+        map.addValue(ConstTags.REPORTS_AVERAGE_ONE_SENSOR_IN_SECS, avg, ConstTags.REPORTS_A_O_S_I_S_TEXT);
+        map.addValue(ConstTags.REPORTS_AVERAGE_ONE_SENSOR, avgInPer, ConstTags.REPORTS_A_O_S_TEXT);
+        map.addValue(ConstTags.REPORTS_STANDARD_DEV_ONE_SENSOR, stdev, ConstTags.REPORTS_S_D_O_S_TEXT);
         return map;
     }
 }

@@ -2,7 +2,7 @@ package dao;
 
 import java.util.Scanner;
 
-import studysensors.Constants;
+import Constants.Constants;
 
 public class StudyReader {
     private final String _path;

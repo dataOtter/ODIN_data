@@ -11,7 +11,7 @@ import java.util.ListIterator;
  * @param <E>
  */
 public class MJ_OC_Array<E> extends MJ_OC<E> {
-    
+	
     private E[] _storage;
     private int _storageSize;
     private int _slotsUsed;
@@ -157,6 +157,11 @@ public class MJ_OC_Array<E> extends MJ_OC<E> {
         }
         return arr;
     }
+    
+    @Override
+	public String toString() {
+    	return _storage.toString();
+	}
     
     private void makeArrayLonger(){
         E[] tempStorage = _storage;

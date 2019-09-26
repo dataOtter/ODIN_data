@@ -20,6 +20,11 @@ public interface IMJ_Map <K, V> {//extends Map <K,V> {
     public V put(K key, V val);
     public V remove(Object key);
     public int size();
+    
+    /**
+     * @return Returns a deep copy of this.
+     */
+    IMJ_Map <K, V> getDeepCopy();
 	
 	/**
      * @param idx

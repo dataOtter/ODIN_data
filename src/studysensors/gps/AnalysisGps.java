@@ -1,5 +1,6 @@
 package studysensors.gps;
 
+import Constants.ConstTags;
 import stats.*;
 import studysensors.*;
 import studysensors.gps.gpsDeepLayer.OneCouponsGpsData;
@@ -26,9 +27,9 @@ public class AnalysisGps implements IAnalysis{
         
     	OneReport rep = new OneSensorReport();
     	
-        rep.addValue(Constants.REPORTS_COUPONID, _couponId * 1.0);
-        rep.addValue(Constants.REPORTS_SENSORID, _sensorId * 1.0);
-        rep.addValue(Constants.REPORTS_SENSOR_INTERVAL, _sensorInterval);
+        rep.addValue(ConstTags.REPORTS_COUPONID, _couponId * 1.0);
+        rep.addValue(ConstTags.REPORTS_SENSORID, _sensorId * 1.0);
+        rep.addValue(ConstTags.REPORTS_SENSOR_INTERVAL, _sensorInterval);
         
         GpsAverageTimeInterval avg = new GpsAverageTimeInterval(_data, _sensorInterval);
         rep = avg.addToMap(rep);
@@ -48,6 +49,6 @@ public class AnalysisGps implements IAnalysis{
 
 	@Override
 	public String getAnalysisType() {
-		return Constants.REPORT_TYPE_GPS_SENSOR_ANALYSIS;
+		return ConstTags.REPORT_TYPE_GPS_SENSOR_ANALYSIS;
 	}
 }

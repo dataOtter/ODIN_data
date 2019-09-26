@@ -4,8 +4,8 @@ import java.text.ParseException;
 import java.util.Scanner;
 
 import Assert.Assertion;
+import Constants.Constants;
 import orderedcollection.*;
-import studysensors.Constants;
 import studysensors.rules.AnswersCollection;
 
 public class AnswersReader {

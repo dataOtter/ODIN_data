@@ -2,9 +2,9 @@ package dao;
 
 import java.util.Scanner;
 
+import Constants.Constants;
 import maps.*;
 import orderedcollection.*;
-import studysensors.Constants;
 import studysensors.sensors.*;
 
 public class SensorsReader {

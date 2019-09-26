@@ -1,8 +1,8 @@
 package stats;
 
+import Constants.ConstTags;
 import dao.CouponReader;
 import orderedcollection.IMJ_OC;
-import studysensors.Constants;
 
 public class StatsEngine {
 
@@ -30,13 +30,13 @@ public class StatsEngine {
         	if (_doRules) {
             	ReportsCollection justRules = _allReports.extractAllRuleReportsForOneCid(cid);
             	OneStatsReport rep1 = new StatsOfReportsCollection(justRules).getValues();
-            	stats.addAnalysisByType(Constants.REPORT_TYPE_ALL_RULES_ANALYSIS, rep1);
+            	stats.addAnalysisByType(ConstTags.REPORT_TYPE_ALL_RULES_ANALYSIS, rep1);
         	}
         	
         	if (_doSensors) {
             	ReportsCollection justSensors = _allReports.extractAllSensorReportsForOneCid(cid);
             	OneStatsReport rep2 = new StatsOfReportsCollection(justSensors).getValues();
-            	stats.addAnalysisByType(Constants.REPORT_TYPE_ALL_SENSORS_ANALYSIS, rep2);
+            	stats.addAnalysisByType(ConstTags.REPORT_TYPE_ALL_SENSORS_ANALYSIS, rep2);
         	}
         }
         return stats;

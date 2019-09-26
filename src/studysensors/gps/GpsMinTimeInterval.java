@@ -1,7 +1,7 @@
 package studysensors.gps;
 
-import studysensors.Constants;
 import studysensors.gps.gpsDeepLayer.OneCouponsGpsData;
+import Constants.ConstTags;
 import stats.OneReport;
 
 /**
@@ -42,17 +42,15 @@ public class GpsMinTimeInterval extends GpsPerformanceEvaluation {
     
     @Override
     public void printAll(){
-        System.out.println("\n\tMin time between GPS recordings (sec): " + getValue() +
-                    "\n\tMin percentage variance from requested interval: " + getValueInPercent());
+        System.out.println("\n\t" + ConstTags.REPORTS_MIN_B_S_R_TEXT + ": " + getValue() +
+                    "\n\t" + ConstTags.REPORTS_MIN_B_S_R_A_P_TEXT + ": " + getValueInPercent());
             
     }
 
     @Override
     public OneReport addToMap(OneReport map) {
-        map.addValue(Constants.REPORTS_MINT_BTW_SENSOR_RECS, getValue() * 1.0, 
-        		"Minimum/smallest time in seconds between actual GPS recordings");
-        map.addValue(Constants.REPORTS_MINT_BTW_SENSOR_RECS_AS_PERC, getValueInPercent(), 
-        		"Percent deviation of smallest actual time between GPS recordings from sensor interval");
+        map.addValue(ConstTags.REPORTS_MINT_BTW_SENSOR_RECS, getValue() * 1.0, ConstTags.REPORTS_MIN_B_S_R_TEXT);
+        map.addValue(ConstTags.REPORTS_MINT_BTW_SENSOR_RECS_AS_PERC, getValueInPercent(), ConstTags.REPORTS_MIN_B_S_R_A_P_TEXT);
         return map;
     }
 }

@@ -1,7 +1,9 @@
 package maps;
 
 import Assert.Assertion;
-import maps.MJ_Map_EntryNode;
+import maps.MJ_MapNode;
+import orderedcollection.IMJ_OC;
+import orderedcollection.MJ_OC_List;
 
 import java.util.Collection;
 import java.util.Map;
@@ -14,20 +16,23 @@ import java.util.Set;
  * @param <V>
  */
 public class MJ_Map_Nodes <K,V> implements IMJ_Map <K,V> {
-    private MJ_Map_EntryNode<K,V> _start;
+    private MJ_MapNode<K,V> _start;
+    private int _len;
     
     public MJ_Map_Nodes(){
         _start = null;
+        _len = 0;
     }
     
     @Override
     public void clear(){
         _start = null;
+        _len = 0;
     }
     
     @Override
     public boolean containsKey(Object key){
-        MJ_Map_EntryNode<K,V> node = _start;
+        MJ_MapNode<K,V> node = _start;
         
         for (int i = 0; i<size(); i++){
             if (node.getKey().equals(key)){
@@ -43,7 +48,7 @@ public class MJ_Map_Nodes <K,V> implements IMJ_Map <K,V> {
     public V get(Object key){
         Assertion.test(_start != null, "no data to retrieve");
         
-        MJ_Map_EntryNode<K,V> node = _start;
+        MJ_MapNode<K,V> node = _start;
         
         while (! node.getKey().equals(key)) {
                 node = node.getNext();
@@ -52,8 +57,19 @@ public class MJ_Map_Nodes <K,V> implements IMJ_Map <K,V> {
     }
 
 	@Override
+	public IMJ_Map<K, V> getDeepCopy() {
+		IMJ_Map<K,V> copy = new MJ_Map_Nodes<K,V>();
+        for (int i = 0; i<_len; i++){
+        	K k = this.getKey(i);
+        	V v = this.get(k);
+            copy.put(k, v);
+        }
+        return copy;
+	}
+
+	@Override
 	public K getKey(int idx) {
-		MJ_Map_EntryNode<K,V> node = _start;
+		MJ_MapNode<K,V> node = _start;
         
         for (int i = 0; i<size(); i++){
         	if (i == idx) {
@@ -72,7 +88,7 @@ public class MJ_Map_Nodes <K,V> implements IMJ_Map <K,V> {
     @Override
     public void print(){
         Assertion.test(_start != null, "Map is empty");
-        for (MJ_Map_EntryNode<K,V> i = _start; i != null; i = i.getNext()){
+        for (MJ_MapNode<K,V> i = _start; i != null; i = i.getNext()){
             System.out.println(i.getKey() + ": " + i.getValue());
         }
         System.out.println("\n");
@@ -82,21 +98,21 @@ public class MJ_Map_Nodes <K,V> implements IMJ_Map <K,V> {
     public V put(K key, V val){
         V v = null;
         
-        if (_start == null){
-            _start = new MJ_Map_EntryNode<>(key, val);
+        if (_start == null) {
+            _start = new MJ_MapNode<>(key, val);
+            _len++;
             return null;
         }
         
         // if the key already exists and the value is a replacement 
-        if (_start.getKey().equals(key)){
+        if (_start.getKey().equals(key)) {
             v = _start.getValue();
             _start.setValue(val);
             return v;
         }
-        
-        MJ_Map_EntryNode<K,V> node = _start;
-        while (node.hasNext()){
-            if (node.getKey().equals(key)){
+        MJ_MapNode<K,V> node = _start;
+        while (node.hasNext()) {
+            if (node.getKey().equals(key)) {
                 v = node.getValue();
                 node.setValue(val);
                 return v;
@@ -105,8 +121,9 @@ public class MJ_Map_Nodes <K,V> implements IMJ_Map <K,V> {
         }
         
         // if the key does not exist yet
-        node.setNext(new MJ_Map_EntryNode<>(key, val));
-        return v;
+        node.setNext(new MJ_MapNode<>(key, val));
+        _len++;
+        return null;
     }
     
     @Override
@@ -114,7 +131,7 @@ public class MJ_Map_Nodes <K,V> implements IMJ_Map <K,V> {
         V v = null;
         
         if (_start != null){
-            MJ_Map_EntryNode<K,V> node = _start;
+            MJ_MapNode<K,V> node = _start;
             do{
                 if (node.getKey().equals(key)){
                     v = node.getValue();
@@ -123,7 +140,7 @@ public class MJ_Map_Nodes <K,V> implements IMJ_Map <K,V> {
                 }
                 node = node.getNext();
             }
-            while (node.hasNext());
+            while (node != null);
         }
         return v;
     }
@@ -132,9 +149,10 @@ public class MJ_Map_Nodes <K,V> implements IMJ_Map <K,V> {
     public V remove(Object key){
         Assertion.test(_start != null, "no data to delete");
         V v;
+        _len--;
         
-        MJ_Map_EntryNode<K,V> nodeToDelete = _start;
-        MJ_Map_EntryNode<K,V> nodeToLeft = null;
+        MJ_MapNode<K,V> nodeToDelete = _start;
+        MJ_MapNode<K,V> nodeToLeft = null;
         
         while ( ! nodeToDelete.getKey().equals(key)){
                 nodeToLeft = nodeToDelete;
@@ -155,7 +173,7 @@ public class MJ_Map_Nodes <K,V> implements IMJ_Map <K,V> {
             }
         }
         else{  // if trying to delete an item that is not the first item
-            MJ_Map_EntryNode<K,V> nodeToRight = nodeToDelete.getNext();  // get the item after the one to delete
+            MJ_MapNode<K,V> nodeToRight = nodeToDelete.getNext();  // get the item after the one to delete
             if (nodeToRight != null){  // if there is an item after the one to delete,
                 nodeToLeft.setNext(nodeToRight);  // point the previous item to that
             }
@@ -168,14 +186,26 @@ public class MJ_Map_Nodes <K,V> implements IMJ_Map <K,V> {
     
     @Override
     public int size(){
-        if (_start == null){
+    	return _len;
+        /*if (_start == null){
             return 0;
         }
         int counter = 0;
         for (MJ_Map_EntryNode<K,V> i = _start; i != null; i = i.getNext()){
             counter += 1;
         }
-        return counter;
+        return counter;*/
+    }
+    
+    @Override
+    public String toString() {
+    	String s = "";
+        for (int i = 0; i<_len; i++){
+        	K k = this.getKey(i);
+        	V v = this.get(k);
+            s += k + ": " + v + "\n";
+        }
+		return s.substring(0, s.length()-1);
     }
 
     /*@Override

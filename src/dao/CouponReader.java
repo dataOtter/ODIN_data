@@ -2,8 +2,8 @@ package dao;
 
 import java.util.Scanner;
 
+import Constants.Constants;
 import orderedcollection.*;
-import studysensors.Constants;
 
 public class CouponReader {
 	private final String _path;
@@ -31,7 +31,7 @@ public class CouponReader {
             int cid = Integer.parseInt(line[Constants.COUPON_COUPONID_IDX]);
             String consentStatus = line[Constants.COUPON_CONSENTSTATUS_IDX];
             
-            if ("consentAgreed".equals(consentStatus)){
+            if (Constants.COUPON_CONSENTSTATUS_CONSENTAGREED.equals(consentStatus)){
                 cids.add(cid);
             }
         }

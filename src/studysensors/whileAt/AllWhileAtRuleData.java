@@ -1,9 +1,9 @@
 package studysensors.whileAt;
 
+import Constants.Constants;
 import dao.OneAnswer;
 import maps.*;
 import orderedcollection.*;
-import studysensors.Constants;
 import studysensors.rules.*;
 
 /**

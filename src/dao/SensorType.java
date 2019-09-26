@@ -1,6 +1,6 @@
 package dao;
 
-import studysensors.Constants;
+import Constants.Constants;
 
 /**
  *

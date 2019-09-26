@@ -2,11 +2,12 @@ package studysensors.whileAt;
 
 import studysensors.rules.*;
 import Assert.Assertion;
+import Constants.ConstTags;
+import Constants.Constants;
 import dao.OneAnswer;
 import dao.OneRule;
 import orderedcollection.*;
 import stats.OneReport;
-import studysensors.Constants;
 import studysensors.gps.*;
 import studysensors.gps.gpsDeepLayer.*;
 
@@ -78,18 +79,18 @@ public class WhileAtPerformanceEval {
 
 	public OneReport getWhileAtPerformanceEvalData(OneReport map) {
 		doTheWork();
-		map.addValue(Constants.REPORTS_COUPONID, _cid * 1.0);
-		map.addValue(Constants.REPORTS_RULEID, _rid * 1.0);
+		map.addValue(ConstTags.REPORTS_COUPONID, _cid * 1.0);
+		map.addValue(ConstTags.REPORTS_RULEID, _rid * 1.0);
 		map = getGoodFireCounts(map);
 		map = getLateAndMissedFireCounts(map);
 		map = getEarlyFireCounts(map);
 		// allowed margin of error for firing late or early
-		map.addValue(Constants.PERC_ALLOWED_DEV_FROM_RULE_FIRE_TIME,
+		map.addValue(ConstTags.REPORTS_PERC_ALLW_DEV_FRM_RULE_FIRE_T,
 				Constants.PERCENT_ALLOWED_DEVIATION_FROM_REQ_RULE_FIRE_TIME * 100,
 				"Allowed time deviation from minimum time between fires");
 		// 2*SI and minTReq
-		map.addValue(Constants.REPORTS_SENSOR_INTERVAL, _sensorFireTimeInterval);
-		map.addValue(Constants.REPORTS_RULE_MIN_T, getMinTReq(), "Rule required minimum time between fires");
+		map.addValue(ConstTags.REPORTS_SENSOR_INTERVAL, _sensorFireTimeInterval);
+		map.addValue(ConstTags.REPORTS_RULE_MIN_T, getMinTReq(), "Rule required minimum time between fires");
 		return map;
 	}
 
@@ -291,9 +292,9 @@ public class WhileAtPerformanceEval {
 
 	private OneReport getGoodFireCounts(OneReport map) {
 		// counts of good, total, and ideal rule fires
-		map.addValue(Constants.REPORTS_GOOD_RULE_FIRES, _goodAnsCount * 1.0, "Number of good rule fires");
-		map.addValue(Constants.REPORTS_TOTAL_RULE_FIRES, _numRuleFiresTotal * 1.0, "Number of total rule fires");
-		map.addValue(Constants.REPORTS_IDEAL_RULE_FIRES, _idealWorldNumRuleFires * 1.0,
+		map.addValue(ConstTags.REPORTS_GOOD_RULE_FIRES, _goodAnsCount * 1.0, "Number of good rule fires");
+		map.addValue(ConstTags.REPORTS_TOTAL_RULE_FIRES, _numRuleFiresTotal * 1.0, "Number of total rule fires");
+		map.addValue(ConstTags.REPORTS_IDEAL_RULE_FIRES, _idealWorldNumRuleFires * 1.0,
 				"Number of ideal world rule fires");
 
 		// percent good of ideal fires
@@ -301,7 +302,7 @@ public class WhileAtPerformanceEval {
 		if (_idealWorldNumRuleFires > 0) {
 			ans1 = Math.round(((double) _goodAnsCount / _idealWorldNumRuleFires) * 100.0);
 		}
-		map.addValue(Constants.REPORTS_GOOD_FIRE_PERCENT, ans1,
+		map.addValue(ConstTags.REPORTS_GOOD_FIRE_PERCENT, ans1,
 				"Good rule fire percentage out of ideal world rule fires");
 
 		double ans2;
@@ -311,7 +312,7 @@ public class WhileAtPerformanceEval {
 		} else {
 			ans2 = 0.0;
 		}
-		map.addValue(Constants.REPORTS_GOOD_FIRE_PERCENT_OF_TOTAL, ans2,
+		map.addValue(ConstTags.REPORTS_GOOD_FIRE_PERCENT_OF_TOTAL, ans2,
 				"Good rule fire percentage out of all rule fires");
 
 		return map;
@@ -319,17 +320,17 @@ public class WhileAtPerformanceEval {
 
 	private OneReport getLateAndMissedFireCounts(OneReport map) {
 		// counts of late and missed fires
-		map.addValue(Constants.REPORTS_LATE_RULE_FIRES, _lateAnsCount * 1.0,
+		map.addValue(ConstTags.REPORTS_LATE_RULE_FIRES, _lateAnsCount * 1.0,
 				"Number of late rule fires (late by at most given % of minimum time between fires)");
-		map.addValue(Constants.REPORTS_MISSED_RULE_FIRES, _likelyMissedAnsCount * 1.0,
+		map.addValue(ConstTags.REPORTS_MISSED_RULE_FIRES, _likelyMissedAnsCount * 1.0,
 				"Number of missed rule fires (later than given % of minimum time between fires)");
 		// cutoff for deciding if late or missed
-		map.addValue(Constants.PERC_CUTOFF_MINT_LATE_ANS, Constants.PERCENT_CUTOFF_OF_MINT_FOR_LATE_ANS * 100.0,
+		map.addValue(ConstTags.REPORTS_PERC_CUTOFF_MINT_LATE_ANS, Constants.PERCENT_CUTOFF_OF_MINT_FOR_LATE_ANS * 100.0,
 				"Percent of minimum time between rule fires cutoff for being late allowance");
 		// all late or missed answer times
 		if (_lateAnsCount > 0) {
 			for (int i = 0; i < _lateAns.size(); i++) {
-				map.addValue(Constants.REPORTS_LATEORMISSED_ANS + i,
+				map.addValue(ConstTags.REPORTS_LATEORMISSED_ANS + i,
 						_lateAns.get(i).getRuleFiredTime().getTimeInMillis() * 1.0,
 						"Late or missed answer occurence " + i + ", time in milliseconds");
 			}
@@ -339,17 +340,17 @@ public class WhileAtPerformanceEval {
 
 	private OneReport getEarlyFireCounts(OneReport map) {
 		// count of early fires
-		map.addValue(Constants.REPORTS_EARLY_RULE_FIRES, _earlyAns.size() * 1.0, "Number of early rule fires");
+		map.addValue(ConstTags.REPORTS_EARLY_RULE_FIRES, _earlyAns.size() * 1.0, "Number of early rule fires");
 		// all early answer times
 		if (_earlyAns.size() > 0) {
 			for (int i = 0; i < _earlyAns.size(); i++) {
-				map.addValue(Constants.REPORTS_EARLY_ANS + i,
+				map.addValue(ConstTags.REPORTS_EARLY_ANS + i,
 						_earlyAns.get(i).getRuleFiredTime().getTimeInMillis() * 1.0,
 						"Early answer occurence " + i + ", time in milliseconds");
 			}
 		}
 		// count of not late, missed, early, or on time fires
-		map.addValue(Constants.REPORTS_OTHER_RULE_FIRES, _answersLeft.size() * 1.0,
+		map.addValue(ConstTags.REPORTS_OTHER_RULE_FIRES, _answersLeft.size() * 1.0,
 				"Number of rule fires that were not early, late, missed, or on time");
 
 		return map;

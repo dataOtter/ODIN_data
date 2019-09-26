@@ -2,8 +2,8 @@ package dao;
 
 import java.util.Scanner;
 
+import Constants.Constants;
 import orderedcollection.*;
-import studysensors.Constants;
 import studysensors.rules.RulesCollection;
 
 public class RulesReader {

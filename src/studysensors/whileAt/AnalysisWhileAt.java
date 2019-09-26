@@ -1,7 +1,7 @@
 package studysensors.whileAt;
 
+import Constants.ConstTags;
 import stats.*;
-import studysensors.Constants;
 import studysensors.IAnalysis;
 import studysensors.gps.GpsDataCollection;
 import studysensors.rules.*;
@@ -28,6 +28,6 @@ public class AnalysisWhileAt implements IAnalysis{
 
 	@Override
 	public String getAnalysisType() {
-		return Constants.REPORT_TYPE_WHILEAT_RULE_ANALYSIS;
+		return ConstTags.REPORT_TYPE_WHILEAT_RULE_ANALYSIS;
 	}
 }

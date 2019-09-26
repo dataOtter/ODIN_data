@@ -7,8 +7,8 @@ import maps.IMJ_Map;
 import maps.MJ_Map_Factory;
 import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
-import studysensors.Constants;
 import Assert.Assertion;
+import Constants.ConstTags;
 
 public class ReportsCollection {
     // String = GPSSensor, WhileAtRule, Stats
@@ -181,7 +181,7 @@ public class ReportsCollection {
 	private void addToTagToDescAndToFinalTags(OneReport rep, String type, int studyId, 
 			IMJ_Map<String, String> tagToDesc, IMJ_OC<String> allFinalTags) {
 		// get the sensor or rule id and type, to prepend to column names
-		String typeAndId = getTypeAndId(type, rep);
+		String typeAndId = ConstTags.getTypeAndId(type, rep);
 		// get the vals to add to tagToDesc to write to the file
 		IMJ_Map<String, String> oneRepTagToDesc = rep.getFinalTagToDocs(typeAndId);
 		
@@ -209,7 +209,7 @@ public class ReportsCollection {
 			IMJ_Map<Integer, IMJ_Map<String, String>> cidToTagToData) {
 		int cid = rep.getCid();
 		// get the sensor or rule id and type, to prepend to column names
-		String typeAndId = getTypeAndId(type, rep);
+		String typeAndId = ConstTags.getTypeAndId(type, rep);
 		// get the vals to add to the final cidToTagToData to write to the file
 		IMJ_Map<String, String> tagToData = rep.getFinalTagToData(typeAndId);
 		// if the final cidToTagToData to write to the file already has an entry for this cid 
@@ -223,19 +223,8 @@ public class ReportsCollection {
 		}
 		// otherwise, make an entry for that cid and add the data
 		else {
-			tagToData.put(Constants.REPORTS_STUDYID, Integer.toString(studyId));
+			tagToData.put(ConstTags.REPORTS_STUDYID, Integer.toString(studyId));
 			cidToTagToData.put(cid, tagToData);
 		}
-	}
-	
-	private String getTypeAndId(String type, OneReport rep) {
-		String typeAndId = "";
-		if (rep.isSensorReport()) {
-			typeAndId = type + "_id_" + rep.getValue(Constants.REPORTS_SENSORID).intValue();
-		}
-		else if (rep.isRuleReport()) {
-			typeAndId = type + "_id_" + rep.getValue(Constants.REPORTS_RULEID).intValue();
-		}
-		return typeAndId;
 	}
 }

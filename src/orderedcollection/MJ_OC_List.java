@@ -86,11 +86,11 @@ public class MJ_OC_List <E> extends MJ_OC <E>{
     
     @Override
     public IMJ_OC <E> getDeepCopy(){
-        IMJ_OC <E> stor = new MJ_OC_List<E>();
+        IMJ_OC <E> copy = new MJ_OC_List<E>();
         for (int i = 0; i<_len; i++){
-            stor.add(this.get(i));
+            copy.add(this.get(i));
         }
-        return stor;
+        return copy;
     }
     
 //    @Override
@@ -186,21 +186,31 @@ public class MJ_OC_List <E> extends MJ_OC <E>{
     }
     
     @Override
-    public int size(){
+    public int size() {
         return _len;
     }
     
-    private MJ_OC_Node<E> getNodeAtIdx(int idx){
-        if (_start == null){
+    @Override
+	public String toString() {
+    	String s = "";
+        for (int i = 0; i<_len; i++){
+            s += this.get(i) + ", ";
+        }
+        s = s.substring(0, s.length()-2);
+		return s;
+	}
+
+	private MJ_OC_Node<E> getNodeAtIdx(int idx) {
+        if (_start == null) {
             return null;
         }
         int counter = 0;
         MJ_OC_Node<E> node = _start;
         
-        while (counter != idx){
+        while (counter != idx) {
             node = node.getNext();
             counter += 1;
-            if (node == null){
+            if (node == null) {
                 return null;
             }
         }

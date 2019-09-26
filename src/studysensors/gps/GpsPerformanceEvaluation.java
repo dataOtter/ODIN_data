@@ -1,6 +1,7 @@
 package studysensors.gps;
 
 import studysensors.gps.gpsDeepLayer.OneCouponsGpsData;
+import Constants.ConstTags;
 import stats.OneReport;
 
 /**
@@ -21,7 +22,7 @@ public abstract class GpsPerformanceEvaluation{
     }
     
     public void printTimeInterval(){
-        System.out.println("\nResearcher requested time interval: " + Math.round(_sensorInterval));
+        System.out.println("\n" + ConstTags.REPORTS_S_I_TEXT + ": " + Math.round(_sensorInterval));
     }
     
     public Double getTimeInterval(){

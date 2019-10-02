@@ -1,9 +1,6 @@
 package orderedcollection;
 
 import Assert.Assertion;
-import java.util.Collection;
-import java.util.List;
-import java.util.ListIterator;
 
 /**
  *
@@ -41,7 +38,7 @@ public class MJ_OC_List <E> extends MJ_OC <E>{
     @Override
     public void add(int index, E value){
         int len = size();
-        //Assertion.test(index > len, "Index out of range");
+        Assertion.test(index < len, "Index out of range");
         
         if (index == len){
             add(value);
@@ -66,19 +63,8 @@ public class MJ_OC_List <E> extends MJ_OC <E>{
     }
     
     @Override
-    public boolean contains(Object value){
-        for (MJ_OC_Node<E> n = _start; n != null; n = n.getNext()){
-            if (n.getData().equals(value)){
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    @Override
     public E get(int index){
-        //Assertion.test(index < length(), "Index out of range");
-        if (size() <= index){
+        if (_len <= index){
             return null;
         }
         return getNodeAtIdx(index).getData();
@@ -91,28 +77,6 @@ public class MJ_OC_List <E> extends MJ_OC <E>{
             copy.add(this.get(i));
         }
         return copy;
-    }
-    
-//    @Override
-//	public int hashCode() {
-//    	int hashCode = 1;
-//        for (E e : this)
-//            hashCode = 31*hashCode + (e==null ? 0 : e.hashCode());
-//        return hashCode;
-//    }
-
-    @Override
-    public int indexOf(Object value) {
-    	int idx = 0;
-    	for (MJ_OC_Node<E> n = _start; n != null; n = n.getNext()){
-            if (n.getData() == value){
-                return idx;
-            }
-            else {
-            	idx++;
-            }
-        }
-    	return -1;
     }
     
     @Override
@@ -139,8 +103,7 @@ public class MJ_OC_List <E> extends MJ_OC <E>{
     
     @Override
     public E remove(int index){
-        //Assertion.test(index < length(), "Index out of range");
-        if (size() <= index){
+        if (_len <= index){
             return null;
         }
         
@@ -218,57 +181,7 @@ public class MJ_OC_List <E> extends MJ_OC <E>{
     }
 
     @Override
-    public Object[] toArray() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public <T> T[] toArray(T[] a) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends E> c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean addAll(int index, Collection<? extends E> c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int lastIndexOf(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public ListIterator<E> listIterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public ListIterator<E> listIterator(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<E> subList(int fromIndex, int toIndex) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

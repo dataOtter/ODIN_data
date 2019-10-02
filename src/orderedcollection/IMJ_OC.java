@@ -1,18 +1,15 @@
 package orderedcollection;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  *
  * @author Maisha Jauernig
  * @param <E>
  */
-public interface IMJ_OC <E> extends Iterable <E> { // extends List<E> {
+public interface IMJ_OC <E> extends Iterable <E>, List<E> {
     
-	boolean add(E x);
+	/*boolean add(E x);
 	void add(int i, E x);
 	void clear();
 	E get(int i);
@@ -35,7 +32,7 @@ public interface IMJ_OC <E> extends Iterable <E> { // extends List<E> {
 	
 	boolean containsAll(Collection<?> c);
 	boolean isEmpty();
-	Iterator<E> iterator();
+	Iterator<E> iterator();*/
 	
     /**
      * @return Returns a deep copy of this collection.

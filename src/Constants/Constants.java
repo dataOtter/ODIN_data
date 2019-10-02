@@ -88,7 +88,7 @@ public class Constants {
     public static final String STUDYTOSENSOR_BT_INTERVAL_LABEL = "interval";
     
     public static final String HEALTH_CODEBOOK_CSV = "health_codebook.csv";
-    public static final String HEALTH_CODEBOOK_COLUMN_LABELS = "health_report_column_label,variable_tag,variable_description";
+    public static final String HEALTH_CODEBOOK_COLUMN_LABELS = "health_report_column_label,variable_tag,variable_description,variable_related_data";
     public static final String HEALTH_REPORT_CSV = "health_report.csv";
     public static final String HEALTH_REPORT_NO_VALUE = "NA";
 }

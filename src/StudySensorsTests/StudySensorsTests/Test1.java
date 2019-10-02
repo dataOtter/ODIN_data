@@ -1,6 +1,6 @@
 package StudySensorsTests;
         
-import static org.junit.Assert.assertTrue;
+/*import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.text.ParseException;
@@ -14,7 +14,7 @@ import org.junit.Test;
 import Constants.ConstTags;
 import orderedcollection.*;
 import stats.*;
-import studysensors.*;
+import studysensors.*;*/
 
 /**
  *
@@ -31,7 +31,7 @@ expected results:
 
  * @author Maisha
  */
-public class Test1 {
+/*public class Test1 {
     
     static String dir1 = "C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t1";
     static int vers1 = 0;
@@ -92,4 +92,4 @@ public class Test1 {
             assertTrue(oneRep.getValue(ConstTags.REPORTS_RULE_MIN_T) == 10800.0);
         }
     }
-}
+}*/

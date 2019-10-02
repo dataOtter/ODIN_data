@@ -1,6 +1,8 @@
 package studysensors.gps;
 
 import Constants.ConstTags;
+import orderedcollection.IMJ_OC;
+import orderedcollection.MJ_OC_Factory;
 import stats.*;
 import studysensors.*;
 import studysensors.gps.gpsDeepLayer.OneCouponsGpsData;
@@ -24,8 +26,11 @@ public class AnalysisGps implements IAnalysis{
     
     @Override
     public OneReport getAnalysisReport() {
-        
-    	OneReport rep = new OneSensorReport();
+    	
+    	IMJ_OC<String> relatedDataNames = new MJ_OC_Factory<String>().create();
+    	relatedDataNames.add(ConstTags.REPORTS_REL_DATA_GPS);
+    	
+    	OneReport rep = new OneSensorReport(relatedDataNames);
     	
         rep.addValue(ConstTags.REPORTS_COUPONID, _couponId * 1.0);
         rep.addValue(ConstTags.REPORTS_SENSORID, _sensorId * 1.0);

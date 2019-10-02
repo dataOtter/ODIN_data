@@ -59,21 +59,31 @@ public class OutputFileWriter {
 		// must call docs first in order to make list of _allFinalTags
 		
 		// get unique tags and descriptions for the given studyid 
-		IMJ_Map<String, String> tagToDesc = _repsCollection.getTagToDescAndBuildFinalTags(studyId, _allFinalTags);
+		IMJ_Map<String, IMJ_OC<String>> tagToDesc = _repsCollection.getTagToDescAndBuildFinalTags(studyId, _allFinalTags);
 		
 		// add the coupon id and study id tag
 		for (int i = 0; i<2; i++) {
-			tagToDesc.put(_allFinalTags.get(i), "");
+			tagToDesc.put(_allFinalTags.get(i), null);
 		}
 		// for each tag, desc pair
 		for (int i = 0; i<tagToDesc.size(); i++) {
 			String tag = tagToDesc.getKey(i);
-			// only write each unique tag and description to the docs file once 
+			
+			// only write each unique tag to the docs file once 
 			// (if there will be multiple studies in one file)
 			if ( ! _tagsWritten.contains(tag) ) {
-				// get the column index, tag, and description to write to the file
-				String toWrite = Integer.toString(_allFinalTags.indexOf(tag)) + "," + tag + "," 
-				+ tagToDesc.get(tag).replace(",", " ") + "\n";  // replacing commmas as this is not a json
+				
+				// get the column index, tag, description, and relate data names to write to the file
+				IMJ_OC<String> descrAndRelDataNames = tagToDesc.get(tag);
+				String toWrite = Integer.toString(_allFinalTags.indexOf(tag)) + "," + tag;
+				
+				if (descrAndRelDataNames != null) {
+					String descr = descrAndRelDataNames.get(0).replace(",", " "); // replacing commmas so as not to confuse the csv
+					String relDataNames = descrAndRelDataNames.get(1).replace(",", ";");
+					toWrite += "," + descr + "," + relDataNames;  
+				}
+				toWrite += "\n";
+				
 				try {
 					wr.write(toWrite);
 					_tagsWritten.add(tag);

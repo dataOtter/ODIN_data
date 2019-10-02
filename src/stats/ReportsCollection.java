@@ -118,8 +118,8 @@ public class ReportsCollection {
 		return s;
 	}
 	
-	public IMJ_Map<String, String> getTagToDescAndBuildFinalTags(int studyId, IMJ_OC<String> allFinalTags) {
-		return (IMJ_Map<String, String>) getMapOfValues(studyId, false, allFinalTags); 
+	public IMJ_Map<String, IMJ_OC<String>> getTagToDescAndBuildFinalTags(int studyId, IMJ_OC<String> allFinalTags) {
+		return (IMJ_Map<String, IMJ_OC<String>>) getMapOfValues(studyId, false, allFinalTags); 
 	}
 		/*IMJ_Map<String, String> tagToDesc = new MJ_Map_Factory<String, String>().create(); 
 		// for each list of report types
@@ -171,7 +171,8 @@ public class ReportsCollection {
 				}
 				else {
 					addToTagToDescAndToFinalTags(rep, type, studyId, 
-							(IMJ_Map<String, String>) mapOfValues, allFinalTags);
+							(IMJ_Map<String, IMJ_OC<String>>) mapOfValues, allFinalTags);
+					IMJ_OC<String> relatedDataNames = rep.getRelatedDataNames();
 				}
 			} 
 		} 
@@ -179,16 +180,21 @@ public class ReportsCollection {
 	}
 	
 	private void addToTagToDescAndToFinalTags(OneReport rep, String type, int studyId, 
-			IMJ_Map<String, String> tagToDesc, IMJ_OC<String> allFinalTags) {
+			IMJ_Map<String, IMJ_OC<String>> tagToDesc, IMJ_OC<String> allFinalTags) {
+		
 		// get the sensor or rule id and type, to prepend to column names
 		String typeAndId = ConstTags.getTypeAndId(type, rep);
 		// get the vals to add to tagToDesc to write to the file
 		IMJ_Map<String, String> oneRepTagToDesc = rep.getFinalTagToDocs(typeAndId);
+		String relatedDataNames = rep.getRelatedDataNames().toString();
 		
 		// add new unique vals to tagToDesc
 		for (int k = 0; k<oneRepTagToDesc.size(); k++) {
 			String finalTag = oneRepTagToDesc.getKey(k);
 			String descr = oneRepTagToDesc.get(finalTag);
+			IMJ_OC<String> descrAndRelData = new MJ_OC_Factory<String>().create();
+			descrAndRelData.add(descr);
+			descrAndRelData.add(relatedDataNames);
 			
 			// update list of unique tags across all reports
 			if ( ! allFinalTags.contains(finalTag) ) {
@@ -196,10 +202,10 @@ public class ReportsCollection {
 			}
 						
 			if ( ! tagToDesc.containsKey(finalTag)) {
-				tagToDesc.put(finalTag, descr);
+				tagToDesc.put(finalTag, descrAndRelData);
 			}
 			else {
-				String existingDesc = tagToDesc.get(finalTag);
+				String existingDesc = tagToDesc.get(finalTag).get(0);
 				Assertion.test(existingDesc == descr, "Conflicting descriptions of tag " + finalTag);
 			}
 		}

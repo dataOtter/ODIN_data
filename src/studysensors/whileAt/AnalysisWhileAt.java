@@ -1,6 +1,8 @@
 package studysensors.whileAt;
 
 import Constants.ConstTags;
+import orderedcollection.IMJ_OC;
+import orderedcollection.MJ_OC_Factory;
 import stats.*;
 import studysensors.IAnalysis;
 import studysensors.gps.GpsDataCollection;
@@ -20,7 +22,12 @@ public class AnalysisWhileAt implements IAnalysis{
     
     @Override
     public OneReport getAnalysisReport() {
-    	OneReport rep = new OneRuleReport();
+
+    	IMJ_OC<String> relatedDataNames = new MJ_OC_Factory<String>().create();
+    	relatedDataNames.add(ConstTags.REPORTS_REL_DATA_ANSWERS);
+    	relatedDataNames.add(ConstTags.REPORTS_REL_DATA_GPS);
+    	
+    	OneReport rep = new OneRuleReport(relatedDataNames);
     	
     	rep = _eval.getWhileAtPerformanceEvalData(rep);
         return rep;

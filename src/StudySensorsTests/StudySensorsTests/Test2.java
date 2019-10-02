@@ -1,3 +1,4 @@
+package StudySensorsTests;
 //package StudySensorsTests;
 //        
 ///*

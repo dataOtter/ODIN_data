@@ -9,7 +9,12 @@ public abstract class OneReport {
 	private final IMJ_Map<String, String> _docs;
 	private final boolean _isRuleReport;
 	private final boolean _isSensorReport;
+	private IMJ_OC<String> _relatedDataNames;
 	
+	public IMJ_OC<String> getRelatedDataNames() {
+		return _relatedDataNames;
+	}
+
 	public boolean isRuleReport() {
 		return _isRuleReport;
 	}
@@ -18,11 +23,12 @@ public abstract class OneReport {
 		return _isSensorReport;
 	}
 	
-	protected OneReport(boolean isSensorReport, boolean isRuleReport) {
+	protected OneReport(boolean isSensorReport, boolean isRuleReport, IMJ_OC<String> relatedDataNames) {
 		_data = new MJ_Map_Factory<String, Double>().create();
 		_docs = new MJ_Map_Factory<String, String>().create();
 		_isSensorReport = isSensorReport;
 		_isRuleReport = isRuleReport;
+		_relatedDataNames = relatedDataNames;
 	}
 	
 	public Double getValue(String tag) {

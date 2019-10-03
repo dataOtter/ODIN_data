@@ -2,7 +2,7 @@ package Constants;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class Constants {
     

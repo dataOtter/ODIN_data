@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class GpsDataPoint {
     private final Calendar _dateTime;

@@ -4,6 +4,10 @@ import Constants.ConstTags;
 import maps.*;
 import orderedcollection.*;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public abstract class OneReport {
 	private final IMJ_Map<String, Double> _data;
 	private final IMJ_Map<String, String> _docs;

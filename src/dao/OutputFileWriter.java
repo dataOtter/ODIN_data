@@ -9,6 +9,10 @@ import maps.*;
 import orderedcollection.*;
 import stats.ReportsCollection;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class OutputFileWriter {
 	private final ReportsCollection _repsCollection;
 	private IMJ_OC<String> _allFinalTags;

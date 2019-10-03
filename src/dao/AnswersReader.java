@@ -8,15 +8,28 @@ import Constants.Constants;
 import orderedcollection.*;
 import studysensors.rules.AnswersCollection;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class AnswersReader {
 	private final String _path;
 	private final int _formatVersion;
 	
+	/**
+	 * Reads all data from the answers.csv file into an AnswersCollection
+	 * @param path
+	 * @param formatVersion
+	 */
 	public AnswersReader(String path, int formatVersion) {
 		_path = path;
 		_formatVersion = formatVersion;
 	}
 	
+	/**
+	 * @return all data from the answers.csv file as an AnswersCollection
+	 * @throws ParseException
+	 */
 	public AnswersCollection getAllAnswers() throws ParseException {
         Scanner sc = new ScannerHelper(_path, Constants.ANSWERS_CSV, Constants.ANSWERS_NUM_COLS).getScanner();
         
@@ -32,6 +45,10 @@ public class AnswersReader {
         return new AnswersCollection(answers);
 	}
 	
+	/**
+	 * @param sc
+	 * @return the complete next line using the given scanner, as a String[] 
+	 */
 	private String[] getCompleteLineAsArray(Scanner sc){
         int cols = 0;
         String completeLine = "";

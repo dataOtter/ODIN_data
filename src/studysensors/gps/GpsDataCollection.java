@@ -5,7 +5,7 @@ import maps.*;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public final class GpsDataCollection {
     IMJ_Map<Integer, OneCouponsGpsData> _couponToData;

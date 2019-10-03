@@ -10,7 +10,7 @@ import Constants.Constants;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class OneAnswer {
 	private final Integer _couponId;

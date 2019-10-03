@@ -7,7 +7,7 @@ import studysensors.rules.*;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class OneCouponsWhileAtAnswers {
     private final IMJ_Map<Integer, AnswersCollection> _ruleIdToAnswersMap;

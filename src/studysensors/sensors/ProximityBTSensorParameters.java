@@ -2,6 +2,10 @@ package studysensors.sensors;
 
 import Constants.Constants;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class ProximityBTSensorParameters extends AbsSensorParameters {
 	private final double _interval;
 	

@@ -6,7 +6,7 @@ import studysensors.sensors.*;
 /***
  * This file reads the sensor table names
  *  
- * @author Maisha
+ * @author Maisha Jauernig
  *
  */
 public class SensorTblNamesReader {

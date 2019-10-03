@@ -5,7 +5,7 @@ import maps.*;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class OneRule {
     private final Integer _ruleId;

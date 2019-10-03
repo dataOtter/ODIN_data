@@ -3,6 +3,10 @@ package studysensors.rules;
 import dao.OneAnswer;
 import orderedcollection.*;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class AnswersCollection {
 	private IMJ_OC<OneAnswer> _allAnswers;
 

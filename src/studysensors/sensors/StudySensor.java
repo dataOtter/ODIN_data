@@ -2,6 +2,10 @@ package studysensors.sensors;
 
 import dao.SensorType;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class StudySensor {
 	private SensorType _type;
 	private AbsSensorParameters _params;

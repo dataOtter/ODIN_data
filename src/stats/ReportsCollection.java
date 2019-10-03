@@ -1,8 +1,5 @@
 package stats;
 
-import java.io.FileWriter;
-import java.io.IOException;
-
 import maps.IMJ_Map;
 import maps.MJ_Map_Factory;
 import orderedcollection.IMJ_OC;
@@ -10,6 +7,10 @@ import orderedcollection.MJ_OC_Factory;
 import Assert.Assertion;
 import Constants.ConstTags;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class ReportsCollection {
     // String = GPSSensor, WhileAtRule, Stats
 	private final IMJ_Map<String, IMJ_OC<OneReport>> _allReports;

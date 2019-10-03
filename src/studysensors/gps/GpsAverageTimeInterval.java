@@ -6,7 +6,7 @@ import stats.OneReport;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class GpsAverageTimeInterval extends GpsPerformanceEvaluation {
 

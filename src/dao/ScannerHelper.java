@@ -5,6 +5,10 @@ import java.util.Scanner;
 
 import Assert.Assertion;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class ScannerHelper {
 	private final String _path;
 	private Scanner _sc;

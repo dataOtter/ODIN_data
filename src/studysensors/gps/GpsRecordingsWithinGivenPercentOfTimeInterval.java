@@ -7,7 +7,7 @@ import stats.OneReport;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class GpsRecordingsWithinGivenPercentOfTimeInterval extends GpsPerformanceEvaluation {
     private final double _per = Constants.PERCENT_ALLOWED_DEVIATION_FROM_SI;

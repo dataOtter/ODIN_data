@@ -3,6 +3,10 @@ package studysensors.rules;
 import dao.OneRule;
 import orderedcollection.*;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class RulesCollection {
 	private IMJ_OC<OneRule> _allRules;
 	

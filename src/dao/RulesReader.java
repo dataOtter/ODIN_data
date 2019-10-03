@@ -6,6 +6,10 @@ import Constants.Constants;
 import orderedcollection.*;
 import studysensors.rules.RulesCollection;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class RulesReader {
 	private final String _path;
 	private final int _formatVersion;

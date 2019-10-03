@@ -2,6 +2,10 @@ package stats;
 
 import orderedcollection.IMJ_OC;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class StatsOfReportsCollection {
 
 	private ReportsCollection _reps;

@@ -5,6 +5,10 @@ import java.util.Scanner;
 import Constants.Constants;
 import orderedcollection.*;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class CouponReader {
 	private final String _path;
 	private final int _formatVersion;

@@ -8,7 +8,7 @@ import studysensors.rules.*;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class AllWhileAtRuleData {
     // map of cid to answers to questions triggered by whileat rules

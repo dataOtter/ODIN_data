@@ -2,7 +2,7 @@ package studysensors.sensors;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class JsonSensorparams {
     private String time;  // these must not have underscore as they must exactly reflect the naming in the csv

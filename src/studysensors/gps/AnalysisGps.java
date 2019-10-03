@@ -9,7 +9,7 @@ import studysensors.gps.gpsDeepLayer.OneCouponsGpsData;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class AnalysisGps implements IAnalysis{
     private final double _sensorInterval;

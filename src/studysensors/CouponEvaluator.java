@@ -2,7 +2,7 @@ package studysensors;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class CouponEvaluator {
     

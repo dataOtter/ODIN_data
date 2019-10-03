@@ -6,7 +6,7 @@ import stats.OneReport;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class GpsMinTimeInterval extends GpsPerformanceEvaluation {
     

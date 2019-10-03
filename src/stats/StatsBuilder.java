@@ -1,5 +1,9 @@
 package stats;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class StatsBuilder {
     private final String _path;
     private final int _formatVersion;

@@ -7,6 +7,10 @@ import maps.*;
 import orderedcollection.*;
 import studysensors.sensors.*;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class SensorsReader {
     private final String _path;
     private final int _formatVersion;

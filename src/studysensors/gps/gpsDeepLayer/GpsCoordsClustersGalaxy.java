@@ -6,7 +6,7 @@ import orderedcollection.*;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class GpsCoordsClustersGalaxy {
     IMJ_OC<GpsCoordsCluster> _clusters;

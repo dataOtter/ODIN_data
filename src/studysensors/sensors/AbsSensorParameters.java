@@ -3,6 +3,10 @@ package studysensors.sensors;
 import Constants.Constants;
 import maps.*;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public abstract class AbsSensorParameters {
 	IMJ_Map<String, String> _paramNameToVal;
 	

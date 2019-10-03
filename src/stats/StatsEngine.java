@@ -4,6 +4,10 @@ import Constants.ConstTags;
 import dao.CouponReader;
 import orderedcollection.IMJ_OC;
 
+/**
+ * @author Maisha Jauernig
+ *
+ */
 public class StatsEngine {
 
     private final String _path;

@@ -4,6 +4,10 @@ import java.util.Scanner;
 
 import Constants.Constants;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class StudyReader {
     private final String _path;
     private final int _formatVersion;

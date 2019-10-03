@@ -2,7 +2,7 @@ package studysensors.gps.gpsDeepLayer;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class GpsCoordinate {
     private double _lat;

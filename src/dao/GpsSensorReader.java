@@ -11,6 +11,10 @@ import Constants.Constants;
 import studysensors.gps.GpsDataCollection;
 import studysensors.gps.gpsDeepLayer.*;
 
+/**
+ *
+ * @author Maisha Jauernig
+ */
 public class GpsSensorReader {
 	private final String _path;
 	private final int _formatVersion;

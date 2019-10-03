@@ -4,7 +4,7 @@ import stats.OneReport;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public interface IAnalysis {
     OneReport getAnalysisReport();

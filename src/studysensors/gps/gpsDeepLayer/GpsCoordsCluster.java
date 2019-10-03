@@ -4,7 +4,7 @@ import orderedcollection.*;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class GpsCoordsCluster {
     private IMJ_OC<GpsCoordinate> _coords;

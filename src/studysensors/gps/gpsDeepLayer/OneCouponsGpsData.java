@@ -4,7 +4,7 @@ import orderedcollection.*;
 
 /**
  *
- * @author Maisha
+ * @author Maisha Jauernig
  */
 public class OneCouponsGpsData {
     private final IMJ_OC<GpsDataPoint> _data;

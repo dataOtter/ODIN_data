@@ -3,11 +3,11 @@ package dao;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import Constants.ConstTags;
-import Constants.Constants;
+import constants.ConstTags;
+import constants.Constants;
 import maps.*;
 import orderedcollection.*;
-import stats.ReportsCollection;
+import reports.ReportsCollection;
 
 /**
  *

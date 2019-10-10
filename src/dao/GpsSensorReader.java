@@ -7,9 +7,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 
-import Constants.Constants;
-import studysensors.gps.GpsDataCollection;
-import studysensors.gps.gpsDeepLayer.*;
+import constants.Constants;
+import sensors.gps.*;
 
 /**
  *
@@ -42,7 +41,6 @@ public class GpsSensorReader {
                 couponData.addGpsDataPoint(gpsdp);
                 sensorCollection.addCouponAndItsData(cid, couponData);
             }
-            
         }
         sc.close();
         return sensorCollection;

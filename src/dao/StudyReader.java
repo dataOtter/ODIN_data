@@ -2,7 +2,7 @@ package dao;
 
 import java.util.Scanner;
 
-import Constants.Constants;
+import constants.Constants;
 
 /**
  *

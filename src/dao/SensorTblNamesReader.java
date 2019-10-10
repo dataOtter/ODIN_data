@@ -1,7 +1,7 @@
 package dao;
 
 import orderedcollection.*;
-import studysensors.sensors.*;
+import sensors.*;
 
 /***
  * This file reads the sensor table names

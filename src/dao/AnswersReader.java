@@ -4,9 +4,9 @@ import java.text.ParseException;
 import java.util.Scanner;
 
 import Assert.Assertion;
-import Constants.Constants;
+import constants.Constants;
 import orderedcollection.*;
-import studysensors.rules.AnswersCollection;
+import reports.rules.AnswersCollection;
 
 /**
  *

@@ -2,10 +2,10 @@ package dao;
 
 import java.util.Scanner;
 
-import Constants.Constants;
+import constants.Constants;
 import maps.*;
 import orderedcollection.*;
-import studysensors.sensors.*;
+import sensors.*;
 
 /**
  *
@@ -36,7 +36,7 @@ public class SensorsReader {
     }
     
     private StudySensor getStudySensorFromLine(String line, IMJ_Map<Integer, SensorType> sensorTypes) {
-        AbsSensorParameters param = AbsSensorParameters.parseFromString(line);
+        AbsSensorParams param = AbsSensorParams.parseFromString(line);
         
         String[] arr = line.split(",");
     	int studyId = Integer.parseInt(arr[Constants.STUDYTOSENSOR_STUDYID_IDX]);

@@ -1,0 +1,126 @@
+package constants;
+
+/**
+ *
+ * @author Maisha Jauernig
+ */
+public class Constants {
+    
+    public static final String DIRECTORY_PATH = 
+            //"C:\\Users\\Bilal\\Desktop\\eclipseProjects\\Data\\06-04-2019_167";
+            //"C:\\Users\\Bilal\\Desktop\\eclipseProjects\\Data\\08-27-2019_89";  // format v 2
+    		"D:\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
+    		//"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120";
+    
+    // base version is 1
+    public static final int DEFAULT_FORMAT_VERSION = 2;
+    public static final boolean TESTING_GPS_ONLY = true;
+
+    //*********ANALAYSIS VARIABLES*********
+    // for GPS data eval
+    public final static double PERCENT_ALLOWED_DEVIATION_FROM_SI = 0.01;
+    // for while at rules eval
+    public static final double PERCENT_ALLOWED_DEVIATION_FROM_REQ_RULE_FIRE_TIME = 0.1;
+    // when an answer fired too late, after what percentage of the minT 
+    // is it considered missed entirely rather than fired late
+    public static final double PERCENT_CUTOFF_OF_MINT_FOR_LATE_ANS = 0.8;
+    
+    //*********SENSOR IDs*********
+    public static final int SENSORID_SMS = 1;
+    public static final int SENSORID_CLOCK = 2;
+	public static final int SENSORID_BT =  3;
+	public static final int SENSORID_EMOTIVE = 4;
+	public static final int SENSORID_CALLS = 5;
+    public static final int SENSORID_EMPATICA = 6;
+    public static final int SENSORID_ACTIGRAPH = 7;
+    public static final int SENSORID_ACCELEROMETER = 8;
+    public static final int SENSORID_MAGNETOMETER =  9;
+    public static final int SENSORID_BEACON = 10;
+    public static final int SENSORID_LIGHT = 11;
+    public static final int SENSORID_GPS = 12;
+	public static final int SENSORID_ACTIVITY = 13;
+
+    //*********CSV FILE NAMES & COLUMNS*********
+    public static final String STUDY_CSV = "study.csv";
+    public static final int STUDY_NUM_COLS = 15;
+    public static final int STUDY_NUM_COLS_V2 = 18;
+    public static final int STUDY_STUDYID_IDX = 0;
+    
+    public static final String SENSORTYPES_CSV = "sensortypes.csv";
+    public static final int SENSORTYPES_NUM_COLS = 4;
+    public static final int SENSORTYPES_SENSORID_IDX = 0;
+    public static final int SENSORTYPES_SENSORNAME_IDX = 1;
+    public static final int SENSORTYPES_DESCRIPTION_IDX = 2;
+    public static final int SENSORTYPES_SCHEMA_IDX = 3;
+    
+    public static final String COUPON_CSV = "coupon.csv";
+    public static final String COUPON_CONSENTSTATUS_CONSENTAGREED = "consentAgreed"; 
+    public static final int COUPON_NUM_COLS = 21;
+    public static final int COUPON_NUM_COLS_V2 = 23;
+    public static final int COUPON_COUPONID_IDX = 0;
+    public static final int COUPON_CONSENTSTATUS_IDX = 5; 
+    
+    public static final String RULES_CSV = "rules.csv";
+    public static final int RULES_NUM_COLS = 13;
+    public static final int RULES_NUM_COLS_V2 = 14;
+    public static final int RULES_RULEID_IDX = 0;
+    public static final int RULES_QUESTIONID_IDX = 1;
+    public static final int RULES_RULETYPE_IDX = 2;
+    public static final int RULES_RULETEXT_IDX = 3;  // this is broken/weird with commas
+    public static final String RULE_WHILEAT_NOTAT = "whileAt";
+    public static final String RULE_ONARRIVAL = "onArrival";
+    public static final String RULE_ONDEPARTURE = "onDeparture";
+    public static final String RULE_ONBUTTON = "uiObserverRule";
+    public static final String RULE_FOLLOWUP = "questionObserverRule";
+    // rule parameter labels 
+    // while at/while not at rule parameters: whileAt
+    // on arrival/on departure rule parameters: onArrDep
+    // on button press rule parameters: onButton
+    // follow up rule parameters: followUp
+    public static final String RULES_DISTANCE = "distance";  // whileAt, onArrDep
+    public static final String RULES_LATITUDE = "latitude";  // whileAt, onArrDep
+    public static final String RULES_LONGITUDE = "longitude";  // whileAt, onArrDep
+    public static final String RULES_MINTLASTFIRE = "mintimesincelastfire";  // whileAt
+    public static final String RULES_BUTTONID = "buttonId";  // onButton
+    public static final String RULES_BUTTONLABEL = "buttonLabel";  // onButton
+    public static final String RULES_QUESTIONID = "observableQuestionId";  // followUp
+    public static final String RULES_CHOICESLIST = "choicesListForObservableQuestion";  // followUp
+    
+    public static final String ANSWERS_CSV = "answers.csv";
+    public static final int ANSWERS_NUM_COLS = 10;
+    public static final int ANSWERS_COUPONID_IDX = 0;
+    public static final int ANSWERS_RULEID_IDX = 1;
+    public static final int ANSWERS_QUESTIONID_IDX = 2;
+    public static final int ANSWERS_CHOICEID_IDX = 3;
+    public static final int ANSWERS_ANSWERTEXT_IDX = 4;
+    public static final int ANSWERS_RULEFIREDTIME_IDX = 7;
+
+    public static final int SENSOR_NUM_COLS = 5;
+    public static final int SENSOR_COUPONID_IDX = 0;
+    public static final int SENSOR_SENSORID_IDX = 1;
+    public static final int SENSOR_GPS_LAT_IDX = 2;
+    public static final int SENSOR_GPS_LON_IDX = 3;
+    public static final int SENSOR_GPS_TIME_IDX = 4;
+    
+    public static final String STUDYTOSENSOR_CSV = "studytosensor.csv";
+    public static final int STUDYTOSENSOR_NUM_COLS = 4;
+    public static final int STUDYTOSENSOR_STUDYID_IDX = 0;
+    public static final int STUDYTOSENSOR_SENSORID_IDX = 1;
+    public static final int STUDYTOSENSOR_GPS_TIME_IDX = 2;
+    public static final int STUDYTOSENSOR_GPS_DISTANCE_IDX = 3;
+    // sensor parameter labels
+    // GPS, Beacon, BT
+    public static final String STUDYTOSENSOR_DISTANCE = "distance";  // gps
+    public static final String STUDYTOSENSOR_INTERVAL = "interval";  // bt, beacon
+    public static final String STUDYTOSENSOR_TIME = "time";  // gps
+    public static final String STUDYTOSENSOR_MAJOR = "major";  // beacon
+    public static final String STUDYTOSENSOR_MINOR = "minor";  // beacon
+    public static final String STUDYTOSENSOR_PASSWORD = "password";  // beacon
+    public static final String STUDYTOSENSOR_STANDARD = "standard";  // beacon
+    public static final String STUDYTOSENSOR_UUID = "uuid";  // beacon
+    
+    public static final String HEALTH_CODEBOOK_CSV = "health_codebook.csv";
+    public static final String HEALTH_CODEBOOK_COLUMN_LABELS = "health_report_column_label,variable_tag,variable_description,variable_related_data";
+    public static final String HEALTH_REPORT_CSV = "health_report.csv";
+    public static final String HEALTH_REPORT_NO_VALUE = "NA";
+}

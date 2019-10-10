@@ -2,9 +2,10 @@ package dao;
 
 import java.util.Scanner;
 
-import Constants.Constants;
+import constants.Constants;
+import dao.rules.OneRule;
 import orderedcollection.*;
-import studysensors.rules.RulesCollection;
+import reports.rules.RulesCollection;
 
 /**
  *

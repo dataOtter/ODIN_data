@@ -7,9 +7,10 @@ package constants;
 public class Constants {
     
     public static final String DIRECTORY_PATH = 
-            //"C:\\Users\\Bilal\\Desktop\\eclipseProjects\\Data\\06-04-2019_167";
-            //"C:\\Users\\Bilal\\Desktop\\eclipseProjects\\Data\\08-27-2019_89";  // format v 2
-    		"D:\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
+<<<<<<< HEAD:src/constants/Constants.java
+            "C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\06-04-2019_167";  // format v 1
+    		//"C:\\Users\\Maisha\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
+>>>>>>> 5f95f03b14475f3d6609ea42806cfbd19a2f88aa:src/Constants/Constants.java
     		//"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120";
     
     // base version is 1

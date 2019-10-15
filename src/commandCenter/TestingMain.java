@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import constants.Constants;
 import dao.AnswersReader;
 import dao.CouponReader;
-import dao.GpsSensorReader;
 import dao.RulesReader;
 import dao.SensorTblNamesReader;
 import dao.SensorsReader;
@@ -14,25 +13,23 @@ import reports.OneReport;
 import reports.rules.AnswersCollection;
 import reports.rules.RulesCollection;
 import reports.rules.whileAt.AnalysisWhileAt;
-import reports.sensors.gps.GpsAverageTimeInterval;
-import reports.sensors.gps.GpsMaxTimeInterval;
-import reports.sensors.gps.GpsMinTimeInterval;
-import reports.sensors.gps.GpsRecordingsWithinGivenPercentOfTimeInterval;
+import reports.sensors.SensorAverageTimeInterval;
+import reports.sensors.SensorMaxTimeInterval;
+import reports.sensors.SensorMinTimeInterval;
+import reports.sensors.SensorRecordingsWithinGivenPercentOfTimeInterval;
 import sensors.StudySensorsCollection;
 import sensors.gps.GpsCoordinate;
 import sensors.gps.GpsCoordsCluster;
 import sensors.gps.GpsCoordsClusterCenterCalc;
 import sensors.gps.GpsCoordsClustersGalaxiesUniverse;
 import sensors.gps.GpsCoordsClustersGalaxy;
-import sensors.gps.GpsDataCollection;
 import sensors.gps.IGpsCoordsClusterObserver;
-import sensors.gps.OneCouponsGpsData;
 
 /**
  *
  * @author Maisha Jauernig
  */
-public class TestingMain {
+/*public class TestingMain {
     final static int PERCENT_RANGE = 1;
 
     public static void main(String[] args) throws Exception {
@@ -177,4 +174,4 @@ public class TestingMain {
             System.out.println("\n");
         }
     }
-}
+}*/

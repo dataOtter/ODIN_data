@@ -6,6 +6,7 @@ import constants.Constants;
 import maps.*;
 import orderedcollection.*;
 import sensors.*;
+import sensors.params.AbsSensorParams;
 
 /**
  *

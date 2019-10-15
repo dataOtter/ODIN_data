@@ -1,5 +1,7 @@
 package sensors;
 
+import sensors.params.AbsSensorParams;
+
 /**
  *
  * @author Maisha Jauernig

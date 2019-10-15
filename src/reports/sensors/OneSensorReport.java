@@ -1,4 +1,4 @@
-package reports.sensors.gps;
+package reports.sensors;
 
 import orderedcollection.IMJ_OC;
 import reports.OneReport;

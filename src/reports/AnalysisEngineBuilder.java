@@ -3,9 +3,9 @@ package reports;
 import java.text.ParseException;
 
 import constants.Constants;
+import dao.SensorReader;
 import dao.AnswersReader;
 import dao.CouponReader;
-import dao.GpsSensorReader;
 import dao.RulesReader;
 import dao.SensorTblNamesReader;
 import dao.SensorsReader;
@@ -14,9 +14,9 @@ import orderedcollection.MJ_OC_Factory;
 import reports.rules.AnswersCollection;
 import reports.rules.RulesCollection;
 import reports.rules.whileAt.AnalysisWhileAt;
-import reports.sensors.gps.AnalysisGps;
+import reports.sensors.AnalysisSensor;
 import sensors.StudySensorsCollection;
-import sensors.gps.GpsDataCollection;
+import sensors.data.DataCollection;
 
 /**
  *
@@ -30,7 +30,7 @@ public class AnalysisEngineBuilder {
     private final IMJ_OC<Integer> _sids;
     private final RulesCollection _rules;
     private final AnswersCollection _answers;
-    private GpsDataCollection _gpsSensorData;
+    private DataCollection _sensorData;
     private final StudySensorsCollection _studySensors;
     private IMJ_OC<IJob> _jobs;
     
@@ -41,10 +41,9 @@ public class AnalysisEngineBuilder {
     public AnalysisEngineBuilder(String path, int formatVersion) throws ParseException {
         _path = path;
         _formatVersion = formatVersion;
-        for (String tblName: new SensorTblNamesReader(_path, _formatVersion).getSensorTblNames()) {
-        	if (tblName.equals("sensor_GPS")) {
-                _gpsSensorData = new GpsSensorReader(_path, _formatVersion).getAllGpsSensorData(tblName);
-        	}
+        IMJ_OC<String> sensorTblNames = new SensorTblNamesReader(_path, _formatVersion).getSensorTblNames();
+        for (String tblName: sensorTblNames) {
+        	_sensorData = new SensorReader(_path, _formatVersion).getAllSensorData(tblName);
         }
         _studySensors = new SensorsReader(_path, _formatVersion).getStudySensorsCollection();
         _cids = new CouponReader(_path, _formatVersion).getActiveCouponIds();
@@ -60,20 +59,18 @@ public class AnalysisEngineBuilder {
         _jobs = new MJ_OC_Factory<IJob>().create();
     }
     
-    public AnalysisEngineBuilder registerGpsAnalyses() {
+    public AnalysisEngineBuilder registerSensorAnalyses() {
     	IJob j = new IJob() {
 	    	IAnalysis an;
 	    	
     		public void doWork(AnalysisEngine e) {
     			for (int cid: _cids) {
     				for (int sensorId: _sids) {
-    					if (sensorId == Constants.SENSORID_GPS) {
+    					//if (sensorId == Constants.SENSORID_GPS) {
     						double sensorInterval = _studySensors.getSensorInterval(sensorId);
-    	    	            an = new AnalysisGps(cid, sensorId, _gpsSensorData, sensorInterval);
-    					}
-    					else {
-    						an = null;
-    					}
+    	    	            an = new AnalysisSensor(cid, sensorId, _sensorData, sensorInterval);
+    					//}
+    					//else {an = null;}
         	            e.register(an);
     				}
     	        }
@@ -93,7 +90,7 @@ public class AnalysisEngineBuilder {
     	            	// eventually change this and check which rid it is to make the correct analysis 
     	            	double gpsSensorInterval = _studySensors.getSensorInterval(Constants.SENSORID_GPS);
     	                // _answers contains all answers, regardless of cid and rid
-    	                IAnalysis an = new AnalysisWhileAt(_answers, _rules, _gpsSensorData, 
+    	                IAnalysis an = new AnalysisWhileAt(_answers, _rules, _sensorData, 
     	                		gpsSensorInterval, cid, rid);
     	                e.register(an);
     	            }

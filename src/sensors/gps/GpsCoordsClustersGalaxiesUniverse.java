@@ -1,6 +1,7 @@
 package sensors.gps;
 
 import orderedcollection.*;
+import sensors.data.OneCouponsData;
 
 /**
  *
@@ -9,7 +10,7 @@ import orderedcollection.*;
 public class GpsCoordsClustersGalaxiesUniverse {
     IMJ_OC<GpsCoordsClustersGalaxy> _galaxies;
     
-    public GpsCoordsClustersGalaxiesUniverse(OneCouponsGpsData d){
+    public GpsCoordsClustersGalaxiesUniverse(OneCouponsData d){
         //make first galaxy with d.length() clusters and add to _galaxies
         _galaxies = new MJ_OC_Factory<GpsCoordsClustersGalaxy>().create();
         GpsCoordsClustersGalaxy g = new GpsCoordsClustersGalaxy();

@@ -7,11 +7,8 @@ package constants;
 public class Constants {
     
     public static final String DIRECTORY_PATH = 
-<<<<<<< HEAD:src/constants/Constants.java
-            "C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\06-04-2019_167";  // format v 1
-    		//"C:\\Users\\Maisha\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
->>>>>>> 5f95f03b14475f3d6609ea42806cfbd19a2f88aa:src/Constants/Constants.java
-    		//"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120";
+            //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\06-04-2019_167";  // format v 1
+    		"D:\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
     
     // base version is 1
     public static final int DEFAULT_FORMAT_VERSION = 2;
@@ -99,9 +96,33 @@ public class Constants {
     public static final int SENSOR_NUM_COLS = 5;
     public static final int SENSOR_COUPONID_IDX = 0;
     public static final int SENSOR_SENSORID_IDX = 1;
+
+    public static final String SENSOR_GPS_FIRST_DATA_NAME = "latitude";  // v2
     public static final int SENSOR_GPS_LAT_IDX = 2;
     public static final int SENSOR_GPS_LON_IDX = 3;
     public static final int SENSOR_GPS_TIME_IDX = 4;
+    
+    public static final String SENSOR_BT_FIRST_DATA_NAME = "deviceName";  // v2
+    public static final int SENSOR_BT_DEVNAME_IDX = 2;
+    public static final int SENSOR_BT_RAW_IDX = 3;
+    public static final int SENSOR_BT_SMOOTHED_IDX = 4;
+    public static final int SENSOR_BT_TIME_IDX = 5;
+
+    public static final String SENSOR_BEACON_FIRST_DATA_NAME = "";  // v2
+    public static final int SENSOR_BEACON_TIME_IDX = 3;
+
+    public static final String SENSOR_ACTIVITY_FIRST_DATA_NAME = "Unknown";  // v2
+    public static final int SENSOR_ACTIVITY_UNKNOWN_IDX = 2;
+    public static final int SENSOR_ACTIVITY_TILTING_IDX = 3;
+    public static final int SENSOR_ACTIVITY_VEHICLE_IDX = 4;
+    public static final int SENSOR_ACTIVITY_RUNNING_IDX = 5;
+    public static final int SENSOR_ACTIVITY_BICYCLE_IDX = 6;
+    public static final int SENSOR_ACTIVITY_FOOT_IDX = 7;
+    public static final int SENSOR_ACTIVITY_WALKING_IDX = 8;
+    public static final int SENSOR_ACTIVITY_STILL_IDX = 9;
+    public static final int SENSOR_ACTIVITY_TIME_IDX = 10;
+    public static final String[] SENSOR_ACTIVITY_NAMES = {"unknown", "tilting", "inVehicle", "running", "onBicycle", "onFoot", "walking", "still"};
+    public static final int[] SENSOR_ACTIVITY_IDICES = {2,3,4,5,6,7,8,9};
     
     public static final String STUDYTOSENSOR_CSV = "studytosensor.csv";
     public static final int STUDYTOSENSOR_NUM_COLS = 4;

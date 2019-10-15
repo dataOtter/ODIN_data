@@ -3,6 +3,7 @@
  */
 package constants;
 
+import maps.*;
 import reports.OneReport;
 
 /**
@@ -11,10 +12,19 @@ import reports.OneReport;
  */
 public class ConstTags {
 	
-	public static final String REPORT_TYPE_GPS_SENSOR_ANALYSIS = "gpsSensor";
 	public static final String REPORT_TYPE_WHILEAT_RULE_ANALYSIS = "whileAtRule";
 	public static final String REPORT_TYPE_ALL_RULES_ANALYSIS = "allRules";
 	public static final String REPORT_TYPE_ALL_SENSORS_ANALYSIS = "allSensors";
+	public static final IMJ_Map<Integer, String> SENSORID_TO_TYPE = getSidToTypeMap();
+	
+	private static IMJ_Map<Integer, String> getSidToTypeMap() {
+		IMJ_Map<Integer, String> sidToTypeMap = new MJ_Map_Factory<Integer, String>().create();
+		sidToTypeMap.put(12, "gpsSensor");
+		sidToTypeMap.put(3, "bluetoothSensor");
+		sidToTypeMap.put(10, "beaconSensor");
+		sidToTypeMap.put(13, "activitySensor");
+		return sidToTypeMap;
+	}
 
 	// underscore before tag means it is not averageable data - not relevant for full-text descriptions
 	public static final String REPORTS_PERC_ALLW_DEV_FRM_RULE_FIRE_T = "_percAllowedDevFromRuleFireTime";

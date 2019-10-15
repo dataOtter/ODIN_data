@@ -3,6 +3,8 @@ package sensors.gps;
 import Assert.Assertion;
 import maps.*;
 import orderedcollection.*;
+import sensors.data.GpsDataPoint;
+import sensors.data.OneCouponsData;
 
 /**
  *
@@ -37,13 +39,14 @@ public class GpsCoordsClustersGalaxy {
         return g;
     }
     
-    public void makeFirstGalaxy(OneCouponsGpsData d){
+    public void makeFirstGalaxy(OneCouponsData d){
         GpsCoordsCluster cluster;
         GpsCoordinate coord;
         IGpsCoordsClusterObserver obs;
         //loop through d and make a cluster for each GpsDataPoint
         for (int i = 0; i<d.length(); i++){
-            coord = d.getDataAtIdx(i).getGpsCoord();
+        	GpsDataPoint dp = (GpsDataPoint) d.getDataAtIdx(i);
+            coord = dp.getGpsCoord();
             cluster = new GpsCoordsCluster(coord);
             obs = new GpsCoordsClusterCenterCalc();
             cluster.registerObserver(obs);

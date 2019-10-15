@@ -23,7 +23,7 @@ public class Main {
         		
         AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion);
         AnalysisEngine eng = bld.
-				registerGpsAnalyses().registerWhileAtAnalyses().build();
+				registerSensorAnalyses().registerWhileAtAnalyses().build();
         		//registerGpsAnalyses().build();
         
         ReportsCollection allReports = eng.getAllReports();

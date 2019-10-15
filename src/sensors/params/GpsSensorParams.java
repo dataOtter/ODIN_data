@@ -1,4 +1,4 @@
-package sensors;
+package sensors.params;
 
 import constants.Constants;
 

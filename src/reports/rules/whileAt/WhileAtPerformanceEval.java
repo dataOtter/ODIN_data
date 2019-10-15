@@ -13,10 +13,10 @@ import reports.rules.AnswersCollection;
 import reports.rules.Predicate;
 import reports.rules.PredicateInLocRadius;
 import reports.rules.RulesCollection;
+import sensors.data.DataCollection;
+import sensors.data.GpsDataPoint;
+import sensors.data.OneCouponsData;
 import sensors.gps.GpsCoordinate;
-import sensors.gps.GpsDataCollection;
-import sensors.gps.GpsDataPoint;
-import sensors.gps.OneCouponsGpsData;
 
 /**
  *
@@ -42,7 +42,7 @@ public class WhileAtPerformanceEval {
 	private AnswersCollection _allWhileAtAnswers;
 
 	private final OneRule _rule;
-	private final OneCouponsGpsData _gpsData;
+	private final OneCouponsData _gpsData;
 	private final IMJ_OC<OneAnswer> _answersLeft;
 	private final IMJ_OC<OneAnswer> _lateAns;
 	private final IMJ_OC<OneAnswer> _earlyAns;
@@ -50,7 +50,7 @@ public class WhileAtPerformanceEval {
 	private final GpsDataAdapter _ad;
 
     // _answers will contain all answers, regardless of cid and rid
-	public WhileAtPerformanceEval(AnswersCollection answers, RulesCollection rules, GpsDataCollection allGpsSensorData,
+	public WhileAtPerformanceEval(AnswersCollection answers, RulesCollection rules, DataCollection allGpsSensorData,
 			double sensorFireTimeInterval, int cid, int rid) {
 		
 		AllWhileAtRuleData allWhileAtRuleData = new AllWhileAtRuleData(answers, rules);

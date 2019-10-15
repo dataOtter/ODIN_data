@@ -3,6 +3,8 @@ package reports.rules.whileAt;
 import java.util.Calendar;
 
 import reports.rules.Predicate;
+import sensors.data.GpsDataPoint;
+import sensors.data.OneCouponsData;
 import sensors.gps.*;
 
 /**
@@ -11,9 +13,9 @@ import sensors.gps.*;
  */
 public class GpsDataAdapter {
     private final long _sizeGpsBuffer;
-    private final OneCouponsGpsData _data;
+    private final OneCouponsData _data;
     
-    public GpsDataAdapter(OneCouponsGpsData d, double si, double minT){
+    public GpsDataAdapter(OneCouponsData d, double si, double minT){
         _data = d;
         // this will be used for deleting past, already "used" GPS recordings
         // they are deleted up to _sizeGpsBuffer recordings before the given time
@@ -49,7 +51,7 @@ public class GpsDataAdapter {
         int idx = this.getIdxOfLocAtTime(t);
         
         for (int i = idx; i<_data.length(); i++){
-            g = _data.getDataAtIdx(i);
+            g = (GpsDataPoint) _data.getDataAtIdx(i);
             c = g.getGpsCoord();
             if (p.test(c)){
                 Calendar d = _data.getDataAtIdx(i).getDateTime();
@@ -71,12 +73,12 @@ public class GpsDataAdapter {
                 _data.deleteItem(0);
             }
         }
-        return _data.getDataAtIdx(i);
+        return (GpsDataPoint) _data.getDataAtIdx(i);
     }
     
     public GpsDataPoint getLocation(double tInSecs){
         int i = getIdxOfLocAtTime(tInSecs);
-        return _data.getDataAtIdx(i);
+        return (GpsDataPoint) _data.getDataAtIdx(i);
     }
     
     private Integer getIdxOfLocAtTime(double tInSecs){

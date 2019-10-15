@@ -1,19 +1,18 @@
-package reports.sensors.gps;
+package reports.sensors;
 
 import constants.ConstTags;
 import constants.Constants;
 import reports.OneReport;
-import sensors.gps.OneCouponsGpsData;
+import sensors.data.OneCouponsData;
 
 /**
  *
  * @author Maisha Jauernig
  */
-public class GpsRecordingsWithinGivenPercentOfTimeInterval extends AbsGpsPerformanceEval {
+public class SensorRecordingsWithinGivenPercentOfTimeInterval extends AbsSensorPerformanceEval {
     private final double _per = Constants.PERCENT_ALLOWED_DEVIATION_FROM_SI;
     
-    public GpsRecordingsWithinGivenPercentOfTimeInterval
-        (OneCouponsGpsData data, double si) {
+    public SensorRecordingsWithinGivenPercentOfTimeInterval(OneCouponsData data, double si) {
         super(data, si);
     }
 
@@ -49,20 +48,20 @@ public class GpsRecordingsWithinGivenPercentOfTimeInterval extends AbsGpsPerform
         return per;
     }
     
-    public int getTotalNumOfGpsRecs(){
+    private int getTotalNumOfSensorRecs(){
         return _data.length();
     }
     
     @Override
     public void printAll(){
-        System.out.println("\n\tNum GPS recordings (of " + getTotalNumOfGpsRecs() + 
+        System.out.println("\n\tNum sensor recordings (of " + getTotalNumOfSensorRecs() + 
                     ") within " + _per*100 + "% of requested interval: "  + getValue() +
                     "\n\tPercent of recordings within interval: " + getValueInPercent());
     }
 
     @Override
     public OneReport addToMap(OneReport map) {
-        map.addValue(ConstTags.REPORTS_TOTAL_SENSOR_RECS, getTotalNumOfGpsRecs() * 1.0, ConstTags.REPORTS_T_S_R_TEXT);
+        map.addValue(ConstTags.REPORTS_TOTAL_SENSOR_RECS, getTotalNumOfSensorRecs() * 1.0, ConstTags.REPORTS_T_S_R_TEXT);
         map.addValue(ConstTags.REPORTS_PERC_ALLW_DEV_FRM_SI, _per * 100.0, ConstTags.REPORTS_P_A_D_F_SI_TEXT);
         map.addValue(ConstTags.REPORTS_SENSOR_RECS_WITHIN_DEV, getValue() * 1.0, ConstTags.REPORTS_S_R_W_D_TEXT);
         map.addValue(ConstTags.REPORTS_PERC_SENSOR_RECS_WITHIN_DEV, getValueInPercent(), ConstTags.REPORTS_S_R_P_W_D_TEXT);

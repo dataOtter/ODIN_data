@@ -1,21 +1,21 @@
-package reports.sensors.gps;
+package reports.sensors;
 
 import constants.ConstTags;
 import reports.OneReport;
-import sensors.gps.OneCouponsGpsData;
+import sensors.data.OneCouponsData;
 
 /**
  *
  * @author Maisha Jauernig
  */
-public abstract class AbsGpsPerformanceEval{
+public abstract class AbsSensorPerformanceEval{
     
-    final OneCouponsGpsData _data;
-    final int _couponId;
-    Long _val = null;
-    final double _sensorInterval;
+    protected final OneCouponsData _data;
+    protected final int _couponId;
+    protected Long _val = null;
+    protected final double _sensorInterval;
 
-    public AbsGpsPerformanceEval(OneCouponsGpsData data, double si) {
+    public AbsSensorPerformanceEval(OneCouponsData data, double si) {
         _data = data;
         _couponId = _data.getCouponId();
         _sensorInterval = si;     

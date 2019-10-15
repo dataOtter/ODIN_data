@@ -8,7 +8,7 @@ import reports.OneReport;
 import reports.rules.AnswersCollection;
 import reports.rules.OneRuleReport;
 import reports.rules.RulesCollection;
-import sensors.gps.GpsDataCollection;
+import sensors.data.DataCollection;
 /**
  *
  * @author Maisha Jauernig
@@ -18,7 +18,7 @@ public class AnalysisWhileAt implements IAnalysis{
 
     // _answers contains all answers, regardless of cid and rid        
     public AnalysisWhileAt(AnswersCollection answers, RulesCollection rules, 
-    		GpsDataCollection allGpsSensorData, double sensorFireTimeInterval, int cid, int rid) {
+    		DataCollection allGpsSensorData, double sensorFireTimeInterval, int cid, int rid) {
         _eval = new WhileAtPerformanceEval(answers, rules, allGpsSensorData, sensorFireTimeInterval, cid, rid);
     }
     

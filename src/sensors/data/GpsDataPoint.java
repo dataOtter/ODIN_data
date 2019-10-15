@@ -1,17 +1,18 @@
-package sensors.gps;
+package sensors.data;
 
 import java.util.Calendar;
+
+import sensors.gps.GpsCoordinate;
 
 /**
  *
  * @author Maisha Jauernig
  */
-public class GpsDataPoint {
-    private final Calendar _dateTime;
+public class GpsDataPoint extends AbsDataPoint {
     private final GpsCoordinate _coord;
     
     public GpsDataPoint(Calendar dateTime, double lat, double lon) {
-        _dateTime = dateTime;
+    	super(dateTime);
         _coord = new GpsCoordinate(lat, lon);
     }
     
@@ -26,9 +27,4 @@ public class GpsDataPoint {
     public Double getLon(){
         return _coord.getLon();
     } 
-    
-    public Calendar getDateTime(){
-        return _dateTime;
-    }
-    
 }

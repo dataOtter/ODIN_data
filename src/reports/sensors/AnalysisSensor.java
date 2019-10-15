@@ -1,28 +1,26 @@
-package reports.sensors.gps;
+package reports.sensors;
 
-import commandCenter.*;
 import constants.ConstTags;
 import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
 import reports.IAnalysis;
 import reports.OneReport;
-import reports.stats.*;
-import sensors.gps.GpsDataCollection;
-import sensors.gps.OneCouponsGpsData;
+import sensors.data.DataCollection;
+import sensors.data.OneCouponsData;
 
 /**
  *
  * @author Maisha Jauernig
  */
-public class AnalysisGps implements IAnalysis{
+public class AnalysisSensor implements IAnalysis {
     private final double _sensorInterval;
     private final int _sensorId;
     private final int _couponId;
-    private final OneCouponsGpsData _data;
+    private final OneCouponsData _data;
     
-    public AnalysisGps(int cid, int sensorId, GpsDataCollection allGpsData, double si) {
+    public AnalysisSensor(int cid, int sensorId, DataCollection allData, double si) {
         _sensorId = sensorId;
-        _data = allGpsData.getCouponData(cid).getDeepCopy();
+        _data = allData.getCouponData(cid).getDeepCopy();
         _couponId = cid; 
         _sensorInterval = si;
     }
@@ -39,17 +37,17 @@ public class AnalysisGps implements IAnalysis{
         rep.addValue(ConstTags.REPORTS_SENSORID, _sensorId * 1.0);
         rep.addValue(ConstTags.REPORTS_SENSOR_INTERVAL, _sensorInterval);
         
-        GpsAverageTimeInterval avg = new GpsAverageTimeInterval(_data, _sensorInterval);
+        SensorAverageTimeInterval avg = new SensorAverageTimeInterval(_data, _sensorInterval);
         rep = avg.addToMap(rep);
         
-        GpsMinTimeInterval min = new GpsMinTimeInterval(_data, _sensorInterval);
+        SensorMinTimeInterval min = new SensorMinTimeInterval(_data, _sensorInterval);
         rep = min.addToMap(rep);
         
-        GpsMaxTimeInterval max = new GpsMaxTimeInterval(_data, _sensorInterval);
+        SensorMaxTimeInterval max = new SensorMaxTimeInterval(_data, _sensorInterval);
         rep = max.addToMap(rep);
         
-        GpsRecordingsWithinGivenPercentOfTimeInterval numInRange = 
-                new GpsRecordingsWithinGivenPercentOfTimeInterval(_data, _sensorInterval);
+        SensorRecordingsWithinGivenPercentOfTimeInterval numInRange = 
+                new SensorRecordingsWithinGivenPercentOfTimeInterval(_data, _sensorInterval);
         rep = numInRange.addToMap(rep);
         
         return rep;
@@ -57,6 +55,6 @@ public class AnalysisGps implements IAnalysis{
 
 	@Override
 	public String getAnalysisType() {
-		return ConstTags.REPORT_TYPE_GPS_SENSOR_ANALYSIS;
+		return ConstTags.SENSORID_TO_TYPE.get(_sensorId);
 	}
 }

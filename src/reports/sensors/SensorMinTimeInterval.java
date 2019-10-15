@@ -1,16 +1,16 @@
-package reports.sensors.gps;
+package reports.sensors;
 
 import constants.ConstTags;
 import reports.OneReport;
-import sensors.gps.OneCouponsGpsData;
+import sensors.data.OneCouponsData;
 
 /**
  *
  * @author Maisha Jauernig
  */
-public class GpsMinTimeInterval extends AbsGpsPerformanceEval {
+public class SensorMinTimeInterval extends AbsSensorPerformanceEval {
     
-    public GpsMinTimeInterval(OneCouponsGpsData data, double si) {
+    public SensorMinTimeInterval(OneCouponsData data, double si) {
         super(data, si);
     }
     

@@ -14,50 +14,20 @@ import reports.rules.RulesCollection;
  * @author Maisha Jauernig
  */
 public class AllWhileAtRuleData {
-    // map of cid to answers to questions triggered by whileat rules
-    private final IMJ_Map<Integer, AnswersCollection> _cidToAnswersCollection;
-    // just answers to questions triggered by whileat rules
-    private final AnswersCollection _whileAtAnswersCollection;
+    // map of cid to while at answers (answers to questions triggered by whileat rules)
+    AnswersCollection _allAnswers;
+    RulesCollection _rules;
     
     // answers contains all answers, regardless of cid and rid
     public AllWhileAtRuleData(AnswersCollection answers, RulesCollection rules) {
-    	RulesCollection whileAtRulesCollection = rules.getRulesCollectionByType(Constants.RULE_WHILEAT_NOTAT);
-        IMJ_OC<Integer> whileAtRids = whileAtRulesCollection.getAllRids();
-        _whileAtAnswersCollection = answers.getAnswersByRids(whileAtRids);
-
-        _cidToAnswersCollection = new MJ_Map_Factory<Integer, AnswersCollection>().create();
-        buildCidToWhileAtAnswersMaps();
+        _allAnswers = answers;
+        _rules = rules;
     }
 
     /***
-     * Returns just the answers to questions triggered by whileAt rules, for a specific Cid
-     * @return
+     * @return just the answers to questions triggered by whileAt rules, for a specific Cid
      */
     public AnswersCollection getWhileAtAnswersForOneCid(int cid) {
-    	if ( ! _cidToAnswersCollection.containsKey(cid) ) {
-			return new AnswersCollection(new MJ_OC_Factory<OneAnswer>().create());
-		}
-		else {
-			return _cidToAnswersCollection.get(cid);
-		}
-    }
-    
-    private void buildCidToWhileAtAnswersMaps() {
-    	IMJ_OC<OneAnswer> ansOc = _whileAtAnswersCollection.getAnswers();
-    	
-    	for (OneAnswer ans: ansOc) {
-    		int cid = ans.getCouponId();
-    		
-    		if ( ! _cidToAnswersCollection.containsKey(cid) ) {
-    			IMJ_OC<OneAnswer> newAnsOc = new MJ_OC_Factory<OneAnswer>().create();
-    			AnswersCollection newAnswersCollection = new AnswersCollection(newAnsOc);
-    			newAnswersCollection.addAnswer(ans);
-    			_cidToAnswersCollection.put(cid,  newAnswersCollection);
-    		}
-    		else {
-    			AnswersCollection existing = _cidToAnswersCollection.get(cid);
-    			existing.addAnswer(ans);
-    		}
-    	}
+    	return _allAnswers.getOneRuleTypesAnswersForCid(cid, _rules, Constants.RULE_WHILEAT_NOTAT);
     }
 }

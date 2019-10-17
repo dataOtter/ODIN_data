@@ -13,19 +13,19 @@ import constants.ConstTags;
  */
 public class ReportsCollection {
     // String = GPSSensor, WhileAtRule, Stats
-	private final IMJ_Map<String, IMJ_OC<OneReport>> _allReports;
+	private final IMJ_Map<String, IMJ_OC<OneReport>> _typeToReports;
     
 	public ReportsCollection() {
-		_allReports = new MJ_Map_Factory<String, IMJ_OC<OneReport>>().create();
+		_typeToReports = new MJ_Map_Factory<String, IMJ_OC<OneReport>>().create();
 	}
 	
 	public IMJ_OC<OneReport> getAnalysesByType(String type) {
-		if ( ! _allReports.containsKey(type)) {
+		if ( ! _typeToReports.containsKey(type)) {
 			IMJ_OC<OneReport> empty = new MJ_OC_Factory<OneReport>().create();
-			_allReports.put(type,  empty);
+			_typeToReports.put(type,  empty);
 			return empty;
 		}
-		return _allReports.get(type);
+		return _typeToReports.get(type);
 	}
 	
 	public void addAnalysisByType(String type, OneReport rep) {
@@ -45,9 +45,9 @@ public class ReportsCollection {
 
 	public ReportsCollection extractAllSensorReportsForOneCid(int cid) {
 		ReportsCollection sub = new ReportsCollection();
-		for (int i = 0; i<_allReports.size(); i++) {
-			String type = _allReports.getKey(i);
-			IMJ_OC<OneReport> list = _allReports.get(type);
+		for (int i = 0; i<_typeToReports.size(); i++) {
+			String type = _typeToReports.getKey(i);
+			IMJ_OC<OneReport> list = _typeToReports.get(type);
 			for (OneReport rep: list) {
 				if (rep.isSensorReport() && rep.getCid()==cid) {
 					sub.addAnalysisByType(type, rep);
@@ -59,9 +59,9 @@ public class ReportsCollection {
 	
 	public ReportsCollection extractAllRuleReportsForOneCid(int cid) {
 		ReportsCollection sub = new ReportsCollection();
-		for (int i = 0; i<_allReports.size(); i++) {
-			String type = _allReports.getKey(i);
-			IMJ_OC<OneReport> list = _allReports.get(type);
+		for (int i = 0; i<_typeToReports.size(); i++) {
+			String type = _typeToReports.getKey(i);
+			IMJ_OC<OneReport> list = _typeToReports.get(type);
 			for (OneReport rep: list) {
 				if (rep.isRuleReport() && rep.getCid()==cid) {
 					sub.addAnalysisByType(type, rep);
@@ -74,8 +74,8 @@ public class ReportsCollection {
 	public IMJ_OC<String> getAllUniqueTags() {
 		IMJ_OC<String> tagList = new MJ_OC_Factory<String>().create();
 		
-		for (int i = 0; i<_allReports.size(); i++) {
-			IMJ_OC<OneReport> list = _allReports.get( _allReports.getKey(i) );
+		for (int i = 0; i<_typeToReports.size(); i++) {
+			IMJ_OC<OneReport> list = _typeToReports.get( _typeToReports.getKey(i) );
 			for (OneReport rep: list) {
 				IMJ_OC<String> repTags = rep.getAllTags();
 				for (String tag: repTags) {
@@ -91,9 +91,9 @@ public class ReportsCollection {
 	public IMJ_OC<Double> getAllValuesForTag(String tag) {
 		IMJ_OC<Double> valList = new MJ_OC_Factory<Double>().create();
 		
-		for (int i = 0; i<_allReports.size(); i++) {
-			String type = _allReports.getKey(i);
-			IMJ_OC<OneReport> list = _allReports.get(type);
+		for (int i = 0; i<_typeToReports.size(); i++) {
+			String type = _typeToReports.getKey(i);
+			IMJ_OC<OneReport> list = _typeToReports.get(type);
 			for (OneReport rep: list) {
 				Double val = rep.getValue(tag);
 				if (val != null) {
@@ -107,10 +107,10 @@ public class ReportsCollection {
 	@Override
 	public String toString() {
 		String s = "";
-		for (int i = 0; i<_allReports.size(); i++) {
-			String type = _allReports.getKey(i);
+		for (int i = 0; i<_typeToReports.size(); i++) {
+			String type = _typeToReports.getKey(i);
 			s += type + ":\n\n";
-			IMJ_OC<OneReport> list = _allReports.get(type);
+			IMJ_OC<OneReport> list = _typeToReports.get(type);
 			for (OneReport rep: list) {
 				s += rep.toString();
 				s += "\n";
@@ -161,9 +161,9 @@ public class ReportsCollection {
 		}
 		
 		// for each list of report types
-		for (int i = 0; i<_allReports.size(); i++) {
-			String type = _allReports.getKey(i);
-			IMJ_OC<OneReport> reps = _allReports.get(type);  // reports of one type
+		for (int i = 0; i<_typeToReports.size(); i++) {
+			String type = _typeToReports.getKey(i);
+			IMJ_OC<OneReport> reps = _typeToReports.get(type);  // reports of one type
 			// for each report
 			for (OneReport rep: reps) {
 				if (isDataNotDesc) {

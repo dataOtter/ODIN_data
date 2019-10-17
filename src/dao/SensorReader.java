@@ -31,34 +31,33 @@ public class SensorReader {
 		_formatVersion = formatVersion;
 	}
 	
-	public DataCollection getAllSensorData(String sensorTblName) throws ParseException {
+	public void addAllSensorDataToDataColl(String sensorTblName, DataCollection coll) throws ParseException {
         Scanner sc = new ScannerHelper(_path, sensorTblName + ".csv", Constants.SENSOR_NUM_COLS).getScanner();
-        
-        DataCollection collection = new DataCollection();
 		
         while ( sc.hasNextLine() ){
         	String[] line = sc.nextLine().split(",");
             int cid = Integer.parseInt(line[Constants.SENSOR_COUPONID_IDX]);
             AbsDataPoint dp = getDataPoint(line);
             
-            if ( collection.hasCouponEntry(cid) ) {
-            	collection.getCouponData(cid).addDataPoint(dp);
-            }
-            else{
-            	OneCouponsData couponData = new OneCouponsData(cid);
-                couponData.addDataPoint(dp);
-                collection.addCouponAndItsData(cid, couponData);
+            if (dp != null) {
+	            if ( coll.hasCouponEntry(cid) ) {
+	            	coll.addDataPointToCouponData(cid, dp);
+	            }
+	            else{
+	            	OneCouponsData couponData = new OneCouponsData(cid);
+	                couponData.addDataPoint(dp);
+	                coll.addCouponAndItsData(cid, couponData);
+	            }
             }
         }
         sc.close();
-        return collection;
 	}
 	
 	public AbsDataPoint getDataPoint(String[] line) throws ParseException {
 		AbsDataPoint toReturn = null;
 		
 		String firstDataMember = line[Constants.SENSOR_SENSORID_IDX+1];
-		firstDataMember = firstDataMember.replaceAll("\\[", "").replaceAll("\\{", "").replaceAll("\"", "");
+		firstDataMember = firstDataMember.replaceAll("\\[", "").replaceAll("\\{", "").replaceAll("\\]", "").replaceAll("\\}", "").replaceAll("\"", "");
 		firstDataMember = firstDataMember.split(":")[0];
 		
 		if ( firstDataMember.equals(Constants.SENSOR_GPS_FIRST_DATA_NAME) ) {

@@ -8,7 +8,8 @@ public class Constants {
     
     public static final String DIRECTORY_PATH = 
             //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\06-04-2019_167";  // format v 1
-    		"D:\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
+            "C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";
+    		//"D:\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
     
     // base version is 1
     public static final int DEFAULT_FORMAT_VERSION = 2;
@@ -101,7 +102,7 @@ public class Constants {
     public static final int SENSOR_GPS_LAT_IDX = 2;
     public static final int SENSOR_GPS_LON_IDX = 3;
     public static final int SENSOR_GPS_TIME_IDX = 4;
-    
+
     public static final String SENSOR_BT_FIRST_DATA_NAME = "deviceName";  // v2
     public static final int SENSOR_BT_DEVNAME_IDX = 2;
     public static final int SENSOR_BT_RAW_IDX = 3;

@@ -34,16 +34,13 @@ public class AnalysisEngineBuilder {
     private final StudySensorsCollection _studySensors;
     private IMJ_OC<IJob> _jobs;
     
-    public interface IJob {
-    	void doWork(AnalysisEngine e);
-    }
-    
     public AnalysisEngineBuilder(String path, int formatVersion) throws ParseException {
         _path = path;
         _formatVersion = formatVersion;
+        _sensorData = new DataCollection();
         IMJ_OC<String> sensorTblNames = new SensorTblNamesReader(_path, _formatVersion).getSensorTblNames();
         for (String tblName: sensorTblNames) {
-        	_sensorData = new SensorReader(_path, _formatVersion).getAllSensorData(tblName);
+        	new SensorReader(_path, _formatVersion).addAllSensorDataToDataColl(tblName, _sensorData);
         }
         _studySensors = new SensorsReader(_path, _formatVersion).getStudySensorsCollection();
         _cids = new CouponReader(_path, _formatVersion).getActiveCouponIds();
@@ -52,25 +49,21 @@ public class AnalysisEngineBuilder {
         _answers = new AnswersReader(_path, _formatVersion).getAllAnswers();
         _rules = new RulesReader(_path, _formatVersion).getAllRules();
         _rids = _rules.getRulesCollectionByType(Constants.RULE_WHILEAT_NOTAT).getAllRids();
-         //= new RuleIdReader(_path, _formatVersion).getWhileAtRuleIds();
         
         _sids = _studySensors.getSensorIds();
         
         _jobs = new MJ_OC_Factory<IJob>().create();
     }
     
-    public AnalysisEngineBuilder registerSensorAnalyses() {
+    public AnalysisEngineBuilder addSensorJobs() {
     	IJob j = new IJob() {
 	    	IAnalysis an;
 	    	
-    		public void doWork(AnalysisEngine e) {
+    		public void registerAnalysesToEngine(AnalysisEngine e) {
     			for (int cid: _cids) {
     				for (int sensorId: _sids) {
-    					//if (sensorId == Constants.SENSORID_GPS) {
-    						double sensorInterval = _studySensors.getSensorInterval(sensorId);
-    	    	            an = new AnalysisSensor(cid, sensorId, _sensorData, sensorInterval);
-    					//}
-    					//else {an = null;}
+						double sensorInterval = _studySensors.getSensorInterval(sensorId);
+	    	            an = new AnalysisSensor(cid, sensorId, _sensorData, sensorInterval);
         	            e.register(an);
     				}
     	        }
@@ -81,9 +74,9 @@ public class AnalysisEngineBuilder {
         return this;
     }
     
-    public AnalysisEngineBuilder registerWhileAtAnalyses() {
+    public AnalysisEngineBuilder addWhileAtJobs() {
     	IJob j = new IJob() {
-    		public void doWork(AnalysisEngine e) {
+    		public void registerAnalysesToEngine(AnalysisEngine e) {
     			for (int cid: _cids) {
     	            for (int rid: _rids) {
     	            	// currently _rids is already filtered for while at; 
@@ -102,11 +95,15 @@ public class AnalysisEngineBuilder {
         return this;
     }
     
-    public AnalysisEngine build() {
+    public AnalysisEngine buildEngine() {
     	AnalysisEngine eng = new AnalysisEngine();
     	for (IJob j: _jobs) {
-    		j.doWork(eng);
+    		j.registerAnalysesToEngine(eng);
     	}
     	return eng;
+    }
+    
+    private interface IJob {
+    	void registerAnalysesToEngine(AnalysisEngine e);
     }
 }

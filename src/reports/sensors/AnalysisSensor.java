@@ -20,7 +20,7 @@ public class AnalysisSensor implements IAnalysis {
     
     public AnalysisSensor(int cid, int sensorId, DataCollection allData, double si) {
         _sensorId = sensorId;
-        _data = allData.getCouponData(cid).getDeepCopy();
+        _data = allData.getCouponDataOfType(cid, getAnalysisType()).getDeepCopy();
         _couponId = cid; 
         _sensorInterval = si;
     }

@@ -10,6 +10,12 @@ public class OneCouponsData {
         _couponId = cid;
         _data = new MJ_OC_Factory<AbsDataPoint>().create();
     }
+    
+    public OneCouponsData(int cid, AbsDataPoint dp){
+        _couponId = cid;
+        _data = new MJ_OC_Factory<AbsDataPoint>().create();
+        _data.add(dp);
+    }
 
     private OneCouponsData(int cid, IMJ_OC<AbsDataPoint> data){
         _couponId = cid;
@@ -20,8 +26,8 @@ public class OneCouponsData {
     	return new OneCouponsData(_couponId, _data.getDeepCopy());
     }
     
-    public void addDataPoint(AbsDataPoint gdp){
-        _data.add(gdp);
+    public void addDataPoint(AbsDataPoint dp){
+        _data.add(dp);
     }
     
     public AbsDataPoint getDataAtIdx(int i){
@@ -38,5 +44,14 @@ public class OneCouponsData {
     
     public void deleteItem(int idx){
         _data.remove(idx);
+    }
+    
+    public String getDataType() {
+    	String s = null;
+    	try {
+    		s = _data.get(0).getDataType();
+    	} 
+    	catch (Exception e) {}
+    	return s;
     }
 }

@@ -25,6 +25,7 @@ import sensors.gps.GpsCoordinate;
 public class WhileAtPerformanceEval {
 	private final int _cid;
 	private final int _rid;
+	private final int _sensorId = 12;
 	private final int _numRuleFiresTotal;
 	private int _goodAnsCount = 0;
 	private int _lateAnsCount = 0;
@@ -43,39 +44,42 @@ public class WhileAtPerformanceEval {
 
 	private final OneRule _rule;
 	private final OneCouponsData _gpsData;
-	private final IMJ_OC<OneAnswer> _answersLeft;
+	private final AnswersCollection _answersLeft;
 	private final IMJ_OC<OneAnswer> _lateAns;
 	private final IMJ_OC<OneAnswer> _earlyAns;
 	private final Predicate _pred;
 	private final GpsDataAdapter _ad;
 
-    // _answers will contain all answers, regardless of cid and rid
+    // _answers contain all answers, regardless of cid and rid
 	public WhileAtPerformanceEval(AnswersCollection answers, RulesCollection rules, DataCollection allGpsSensorData,
 			double sensorFireTimeInterval, int cid, int rid) {
-		
-		AllWhileAtRuleData allWhileAtRuleData = new AllWhileAtRuleData(answers, rules);
-		// will contain all whileAt answers for this Cid (regardless of rid)
-		_allWhileAtAnswers = allWhileAtRuleData.getWhileAtAnswersForOneCid(cid);
 		_cid = cid;
 		_rid = rid;
 		_rule = rules.getRuleById(_rid);
 		_sensorFireTimeInterval = sensorFireTimeInterval;
+		
+		// will contain all whileAt answers for this Cid (regardless of rid)
+		_allWhileAtAnswers = answers.getOneRuleTypesAnswersForCid(_cid, rules, Constants.RULE_WHILEAT_NOTAT);
 
 		Assertion.test(allGpsSensorData.length() > 0, "No GPS data found");
-		_gpsData = allGpsSensorData.getCouponData(_cid).getDeepCopy();
+		_gpsData = allGpsSensorData.getCouponDataOfType(_cid, ConstTags.SENSORID_TO_TYPE.get(_sensorId)).getDeepCopy();
 		Assertion.test(_gpsData.length() > 0, "No GPS data found for coupon ID " + _cid);
 		
 		// minimum time that must pass between rule fires
     	WhileAtRuleParams param = (WhileAtRuleParams) _rule.getParams();
 		_minTReq = param.getMinTimeSinceLastFire() * 1.0;
+
+		
+		AllWhileAtRuleData allWhileAtRuleData = new AllWhileAtRuleData(answers, rules);
+		
 		
 		OneCouponsWhileAtAnswers oneCidWhileAtAns = new OneCouponsWhileAtAnswers(allWhileAtRuleData, cid);
 
 		if (_allWhileAtAnswers != null) {
 			AnswersCollection oneRuleAnsers = oneCidWhileAtAns.getOneRulesAnswersCollection(_rid);
-			_answersLeft = oneRuleAnsers.getAnswers().getDeepCopy();
+			_answersLeft = oneRuleAnsers.getDeepCopy();
 		} else {
-			_answersLeft = new MJ_OC_Factory<OneAnswer>().create();
+			_answersLeft = new AnswersCollection(new MJ_OC_Factory<OneAnswer>().create());
 		}
 		_numRuleFiresTotal = _answersLeft.size();
 		_earlyAns = new MJ_OC_Factory<OneAnswer>().create();
@@ -203,7 +207,7 @@ public class WhileAtPerformanceEval {
 
 		// loop through answers
 		for (int i = 0; i < _answersLeft.size(); i++) {
-			ans = _answersLeft.get(i);
+			ans = _answersLeft.getAnsAtIdx(i);
 
 			_trueFireT = ans.getRuleFiredTime().getTimeInMillis() / 1000.0;
 
@@ -229,7 +233,7 @@ public class WhileAtPerformanceEval {
 					// System.out.println("here is a late answer");
 				}
 				// remove this answer from the list of answers to avoid counting it again
-				_answersLeft.remove(i);
+				_answersLeft.removeAnsAtIdx(i);
 				Assertion.test(lenBefore == _answersLeft.size() + 1, "delete did not work");
 				break;
 			}
@@ -241,7 +245,7 @@ public class WhileAtPerformanceEval {
 					// if this is too early now, it will only be earlier still for the next rule
 					// fire time
 					// remove this answer from the list of answers to avoid counting it again
-					_answersLeft.remove(i);
+					_answersLeft.removeAnsAtIdx(i);
 					Assertion.test(lenBefore == _answersLeft.size() + 1, "delete did not work");
 					// System.out.println("new early answer");
 					i--;
@@ -255,7 +259,7 @@ public class WhileAtPerformanceEval {
 		double gpsMaxT = _ad.getLastRecordingTime();
 		double ansMaxT = 0.0;
 		if (_answersLeft.size() > 0) {
-			ansMaxT = _answersLeft.get(_answersLeft.size() - 1).getRuleFiredTime().getTimeInMillis() / 1000.0;
+			ansMaxT = _answersLeft.getAnsAtIdx(_answersLeft.size() - 1).getRuleFiredTime().getTimeInMillis() / 1000.0;
 		}
 		return Math.max(gpsMaxT, ansMaxT);
 	}

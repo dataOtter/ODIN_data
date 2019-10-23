@@ -8,11 +8,12 @@ public class Constants {
     
     public static final String DIRECTORY_PATH = 
             //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\06-04-2019_167";  // format v 1
-            "C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";
+            //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";
     		//"D:\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
+    		"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2";  // format v0
     
     // base version is 1
-    public static final int DEFAULT_FORMAT_VERSION = 2;
+    public static final int DEFAULT_FORMAT_VERSION = 0;
     public static final boolean TESTING_GPS_ONLY = true;
 
     //*********ANALAYSIS VARIABLES*********
@@ -60,7 +61,8 @@ public class Constants {
     public static final int COUPON_CONSENTSTATUS_IDX = 5; 
     
     public static final String RULES_CSV = "rules.csv";
-    public static final int RULES_NUM_COLS = 13;
+    public static final int RULES_NUM_COLS_V0 = 11;
+    public static final int RULES_NUM_COLS_V1 = 13;
     public static final int RULES_NUM_COLS_V2 = 14;
     public static final int RULES_RULEID_IDX = 0;
     public static final int RULES_QUESTIONID_IDX = 1;

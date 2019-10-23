@@ -2,22 +2,19 @@ package reports.sensors;
 
 import constants.ConstTags;
 import reports.OneReport;
-import sensors.data.OneCouponsData;
+import sensors.data.SensorDataOfOneType;
 
 /**
  *
  * @author Maisha Jauernig
  */
 public abstract class AbsSensorPerformanceEval{
-    
-    protected final OneCouponsData _data;
-    protected final int _couponId;
+    protected final SensorDataOfOneType _data;
     protected Long _val = null;
     protected final double _sensorInterval;
 
-    public AbsSensorPerformanceEval(OneCouponsData data, double si) {
+    public AbsSensorPerformanceEval(SensorDataOfOneType data, double si) {
         _data = data;
-        _couponId = _data.getCouponId();
         _sensorInterval = si;     
     }
     

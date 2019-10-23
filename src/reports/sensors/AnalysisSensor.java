@@ -6,7 +6,7 @@ import orderedcollection.MJ_OC_Factory;
 import reports.IAnalysis;
 import reports.OneReport;
 import sensors.data.DataCollection;
-import sensors.data.OneCouponsData;
+import sensors.data.SensorDataOfOneType;
 
 /**
  *
@@ -16,7 +16,7 @@ public class AnalysisSensor implements IAnalysis {
     private final double _sensorInterval;
     private final int _sensorId;
     private final int _couponId;
-    private final OneCouponsData _data;
+    private final SensorDataOfOneType _data;
     
     public AnalysisSensor(int cid, int sensorId, DataCollection allData, double si) {
         _sensorId = sensorId;

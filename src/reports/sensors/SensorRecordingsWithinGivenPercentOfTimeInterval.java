@@ -3,7 +3,7 @@ package reports.sensors;
 import constants.ConstTags;
 import constants.Constants;
 import reports.OneReport;
-import sensors.data.OneCouponsData;
+import sensors.data.SensorDataOfOneType;
 
 /**
  *
@@ -12,7 +12,7 @@ import sensors.data.OneCouponsData;
 public class SensorRecordingsWithinGivenPercentOfTimeInterval extends AbsSensorPerformanceEval {
     private final double _per = Constants.PERCENT_ALLOWED_DEVIATION_FROM_SI;
     
-    public SensorRecordingsWithinGivenPercentOfTimeInterval(OneCouponsData data, double si) {
+    public SensorRecordingsWithinGivenPercentOfTimeInterval(SensorDataOfOneType data, double si) {
         super(data, si);
     }
 

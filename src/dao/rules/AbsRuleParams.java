@@ -1,8 +1,7 @@
 package dao.rules;
 
 import constants.Constants;
-import maps.IMJ_Map;
-import maps.MJ_Map_Factory;
+import maps.*;
 
 public abstract class AbsRuleParams {
 	IMJ_Map<String, String> _paramNameToVal;
@@ -10,12 +9,7 @@ public abstract class AbsRuleParams {
 	
 	AbsRuleParams (String ruleRow, int formatVersion){
     	_formatVersion = formatVersion;
-		String[] params = extractParameters(ruleRow);
-		_paramNameToVal = new MJ_Map_Factory<String, String>().create();
-		for (String s: params) {
-			String[] kv = s.split(":");
-			_paramNameToVal.put(kv[0],  kv[1]);
-		}
+    	_paramNameToVal = extractParameters(ruleRow);
 	}
 	
 	public static AbsRuleParams parseFromString(String ruleRow, String ruleType, int formatVersion) {
@@ -35,13 +29,27 @@ public abstract class AbsRuleParams {
 		return ruleParam;
 	}
 	
-	private String[] extractParameters(String ruleRow) {
+	private IMJ_Map<String, String> extractParameters(String ruleRow) {
         int paramIdx = 1; // default/format version 1
         if (_formatVersion == 2) {
         	paramIdx = 2;
         }
         String paramSection = ruleRow.split("\\{")[paramIdx].split("\\}")[0];
-    	String[] params = paramSection.replaceAll("\\\\",  "").replaceAll("\"", "").split(",");
+
+        paramSection = paramSection.replaceAll("\\\\",  "").replaceAll("\"", "");
+        IMJ_Map<String, String> params = new MJ_Map_Factory<String, String>().create();
+        
+        while (paramSection.length() > 0) {
+	        int i = paramSection.lastIndexOf(":");
+	        String val = paramSection.substring(i+1);
+	        paramSection = paramSection.substring(0, i);
+	        int j = paramSection.lastIndexOf(",");
+	        String key = paramSection.substring(j+1);
+	        if (j < 0) { j = 0; }
+	        paramSection = paramSection.substring(0, j);
+	        params.put(key,  val); 
+        }
+        
     	return params;
     }
 }

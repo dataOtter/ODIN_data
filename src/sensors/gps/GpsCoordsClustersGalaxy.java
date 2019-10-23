@@ -4,7 +4,7 @@ import Assert.Assertion;
 import maps.*;
 import orderedcollection.*;
 import sensors.data.GpsDataPoint;
-import sensors.data.OneCouponsData;
+import sensors.data.SensorDataOfOneType;
 
 /**
  *
@@ -39,7 +39,7 @@ public class GpsCoordsClustersGalaxy {
         return g;
     }
     
-    public void makeFirstGalaxy(OneCouponsData d){
+    public void makeFirstGalaxy(SensorDataOfOneType d){
         GpsCoordsCluster cluster;
         GpsCoordinate coord;
         IGpsCoordsClusterObserver obs;

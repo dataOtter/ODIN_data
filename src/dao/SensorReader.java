@@ -16,7 +16,7 @@ import sensors.data.BeaconDataPoint;
 import sensors.data.BtDataPoint;
 import sensors.data.DataCollection;
 import sensors.data.GpsDataPoint;
-import sensors.data.OneCouponsData;
+import sensors.data.SensorDataOfOneType;
 
 /**
  *
@@ -44,8 +44,7 @@ public class SensorReader {
 	            	coll.addDataPointToCouponData(cid, dp);
 	            }
 	            else{
-	            	OneCouponsData couponData = new OneCouponsData(cid);
-	                couponData.addDataPoint(dp);
+	            	SensorDataOfOneType couponData = new SensorDataOfOneType(dp);
 	                coll.addCouponAndItsData(cid, couponData);
 	            }
             }
@@ -80,13 +79,13 @@ public class SensorReader {
         double latitude = -1;
         double longitude = -1;
         
-        if (_formatVersion <= 1) {
+        if (_formatVersion == 1) {
             String lat = line[Constants.SENSOR_GPS_LAT_IDX].replaceAll("\"","");
             String lon = line[Constants.SENSOR_GPS_LON_IDX].replaceAll("\"","");
             latitude = Double.parseDouble(lat);
             longitude = Double.parseDouble(lon);
         }
-        else if (_formatVersion <= 2) {
+        else if (_formatVersion == 2 || _formatVersion == 0) {
         	latitude = Double.parseDouble(line[Constants.SENSOR_GPS_LAT_IDX]
             		.replaceAll("\\[", "").replaceAll("\\{", "").replaceAll("\"", "").replaceAll("\\}", "").replaceAll("\\]", "")
             		.split(":")[1]);

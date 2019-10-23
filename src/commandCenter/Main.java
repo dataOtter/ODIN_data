@@ -5,6 +5,7 @@ import java.text.ParseException;
 
 import constants.Constants;
 import dao.OutputFileWriter;
+import filters.FilterTime;
 import reports.AnalysisEngine;
 import reports.AnalysisEngineBuilder;
 import reports.ReportsCollection;
@@ -21,10 +22,8 @@ public class Main {
         String path = Constants.DIRECTORY_PATH;
         int formatVersion = Constants.DEFAULT_FORMAT_VERSION;
         		
-        AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion);
-        AnalysisEngine eng = bld.
-				addSensorJobs().addWhileAtJobs().buildEngine();
-        		//registerGpsAnalyses().build();
+        AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion, new FilterTime());
+        AnalysisEngine eng = bld.addSensorJobs().addWhileAtJobs().buildEngine();
         
         ReportsCollection allReports = eng.getAllReports();
         

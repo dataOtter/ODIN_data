@@ -20,6 +20,10 @@ public class AnswersCollection implements Iterable<OneAnswer> {
 		computeCids();
 	}
     
+    public AnswersCollection getAnsForRuleAndCid(int cid, int rid) {
+    	return this.getAnswersByRids(rid).getAnswersByCids(cid);
+    }
+    
     /***
      * @return just the answers to questions triggered by whileAt rules, for a specific Cid
      */

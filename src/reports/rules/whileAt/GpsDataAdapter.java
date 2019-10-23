@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 import reports.rules.Predicate;
 import sensors.data.GpsDataPoint;
-import sensors.data.OneCouponsData;
+import sensors.data.SensorDataOfOneType;
 import sensors.gps.*;
 
 /**
@@ -13,9 +13,9 @@ import sensors.gps.*;
  */
 public class GpsDataAdapter {
     private final long _sizeGpsBuffer;
-    private final OneCouponsData _data;
+    private final SensorDataOfOneType _data;
     
-    public GpsDataAdapter(OneCouponsData d, double si, double minT){
+    public GpsDataAdapter(SensorDataOfOneType d, double si, double minT){
         _data = d;
         // this will be used for deleting past, already "used" GPS recordings
         // they are deleted up to _sizeGpsBuffer recordings before the given time

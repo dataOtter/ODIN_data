@@ -6,6 +6,7 @@ import constants.Constants;
 import dao.OneAnswer;
 import dao.rules.OneRule;
 import dao.rules.WhileAtRuleParams;
+import filters.FilterTime;
 import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
 import reports.OneReport;
@@ -15,7 +16,7 @@ import reports.rules.PredicateInLocRadius;
 import reports.rules.RulesCollection;
 import sensors.data.DataCollection;
 import sensors.data.GpsDataPoint;
-import sensors.data.OneCouponsData;
+import sensors.data.SensorDataOfOneType;
 import sensors.gps.GpsCoordinate;
 
 /**
@@ -40,53 +41,37 @@ public class WhileAtPerformanceEval {
 	private double _prevIdealFireT = 0.0;
 	private double _trueFireT = 0.0;
 
-	private AnswersCollection _allWhileAtAnswers;
-
-	private final OneRule _rule;
-	private final OneCouponsData _gpsData;
 	private final AnswersCollection _answersLeft;
 	private final IMJ_OC<OneAnswer> _lateAns;
 	private final IMJ_OC<OneAnswer> _earlyAns;
 	private final Predicate _pred;
 	private final GpsDataAdapter _ad;
+	
+	private final FilterTime _filter;
 
     // _answers contain all answers, regardless of cid and rid
-	public WhileAtPerformanceEval(AnswersCollection answers, RulesCollection rules, DataCollection allGpsSensorData,
-			double sensorFireTimeInterval, int cid, int rid) {
+	public WhileAtPerformanceEval(AnswersCollection answers, RulesCollection rules, DataCollection allSensorData,
+			double sensorFireTimeInterval, int cid, int rid, FilterTime filter) {
 		_cid = cid;
 		_rid = rid;
-		_rule = rules.getRuleById(_rid);
 		_sensorFireTimeInterval = sensorFireTimeInterval;
+		_filter = filter;
 		
-		// will contain all whileAt answers for this Cid (regardless of rid)
-		_allWhileAtAnswers = answers.getOneRuleTypesAnswersForCid(_cid, rules, Constants.RULE_WHILEAT_NOTAT);
-
-		Assertion.test(allGpsSensorData.length() > 0, "No GPS data found");
-		_gpsData = allGpsSensorData.getCouponDataOfType(_cid, ConstTags.SENSORID_TO_TYPE.get(_sensorId)).getDeepCopy();
-		Assertion.test(_gpsData.length() > 0, "No GPS data found for coupon ID " + _cid);
-		
+		OneRule rule = rules.getRuleById(_rid);
 		// minimum time that must pass between rule fires
-    	WhileAtRuleParams param = (WhileAtRuleParams) _rule.getParams();
+    	WhileAtRuleParams param = (WhileAtRuleParams) rule.getParams();
 		_minTReq = param.getMinTimeSinceLastFire() * 1.0;
+		_pred = new PredicateInLocRadius(rule);
 
-		
-		AllWhileAtRuleData allWhileAtRuleData = new AllWhileAtRuleData(answers, rules);
-		
-		
-		OneCouponsWhileAtAnswers oneCidWhileAtAns = new OneCouponsWhileAtAnswers(allWhileAtRuleData, cid);
-
-		if (_allWhileAtAnswers != null) {
-			AnswersCollection oneRuleAnsers = oneCidWhileAtAns.getOneRulesAnswersCollection(_rid);
-			_answersLeft = oneRuleAnsers.getDeepCopy();
-		} else {
-			_answersLeft = new AnswersCollection(new MJ_OC_Factory<OneAnswer>().create());
-		}
+		_answersLeft = answers.getAnsForRuleAndCid(_cid, _rid);  // a new AnswersCollection is already a deep copy
+			
 		_numRuleFiresTotal = _answersLeft.size();
 		_earlyAns = new MJ_OC_Factory<OneAnswer>().create();
 		_lateAns = new MJ_OC_Factory<OneAnswer>().create();
-
-		_pred = new PredicateInLocRadius(_rule);
-		_ad = new GpsDataAdapter(_gpsData, _sensorFireTimeInterval, _minTReq);
+		
+		SensorDataOfOneType gpsData = allSensorData.getCouponDataOfType(_cid, ConstTags.SENSORID_TO_TYPE.get(_sensorId)).getDeepCopy();
+		Assertion.test(gpsData != null, "No GPS data found for coupon ID " + _cid);
+		_ad = new GpsDataAdapter(gpsData, _sensorFireTimeInterval, _minTReq);
 	}
 
 	public OneReport getWhileAtPerformanceEvalData(OneReport map) {
@@ -125,16 +110,13 @@ public class WhileAtPerformanceEval {
 				atLocConsecCount++;
 				locWithinRadius(fireT, atLocConsecCount);
 				// set fireT to when it actually fired
-				
-				Assertion.test(_trueFireT >= fireT, "moving back!!! from " 
-						+ fireT + " to " + _trueFireT + " by " + (fireT - _trueFireT));
-
+				Assertion.test(_trueFireT >= fireT, "moving BACK from " + fireT + " to " + _trueFireT + " by " + (fireT - _trueFireT));
 				fireT = _trueFireT;
-
-			} else {
+			} 
+			else {
 				atLoc = false;
 				atLocConsecCount = 0;
-				locNotWithinRadius();
+				locNotWithinRadius(fireT);
 				// set fireT to the time of the next gps recording at the location
 				fireT = _ad.getNextStartTime(fireT, _pred);
 				if (fireT <= 0.0) { // if there are no more recordings at the location
@@ -142,62 +124,73 @@ public class WhileAtPerformanceEval {
 				}
 			}
 		}
+		
 		// if the last minT interval time was at the location, round off the
 		// calculations of time spent there
 		if (atLoc) {
-			locNotWithinRadius();
+			locNotWithinRadius(_trueFireT);
 		}
 		Assertion.test(
 				_earlyAns.size() + _answersLeft.size() + _goodAnsCount + _lateAns.size() == _numRuleFiresTotal,
 				"not all answers are accounted for");
 	}
 
-	private void locNotWithinRadius() {
-		// presence at the location is counted until just before the first GPS recording
-		// not at the location
-		// the below calculation not quite accurate, as we do not know the exact time we
-		// switched location,
-		// just that the next time we check based on the minT intervals was not at the
-		// location.
-		// to get a rough estimate, taking half of the minT interval during which we
-		// switched locations
+	private void locNotWithinRadius(double tNowAndIdealFireT) {
+		// presence at the location is counted until just before the first GPS recording not at the location
+		// the below calculation is not quite accurate, as we do not know the exact time we switched location,
+		// just that the next time we check based on the minT intervals was not at the location.
+		// to get a rough estimate, taking half of the minT interval during which we switched locations
 		_totalTimeAtLoc += _curMinTBetweenFires / 2.0;
 		_curMinTBetweenFires = 2 * _sensorFireTimeInterval;
 		// if the time spent at this location is more than 2 * SI
-		// (i.e. there should be at least one rule fire at this location),
+		// (i.e. there should be at least one rule fire at this location, not taking filters into account),
 		if (_totalTimeAtLoc >= _sensorFireTimeInterval * 2) {
-			// subtract 2*SI from total time because the first minT between rule fires is
-			// 2*SI
+			// subtract 2*SI from total time because the first minT between rule fires is 2*SI
 			_totalTimeAtLoc -= _sensorFireTimeInterval * 2;
-			// and add that first rule fire to the counter,
-			_idealWorldNumRuleFires++;
+			// and add that first rule fire to the counter if the filter conditions are also met,
+			if (_filter.checkFilterCondition(tNowAndIdealFireT)) {
+				_idealWorldNumRuleFires++;
+			}
 			// then get the remaining count of times it should have fired, if any
-			_idealWorldNumRuleFires += Math.floor(_totalTimeAtLoc / _minTReq);
+			for (double i = tNowAndIdealFireT; i >= (tNowAndIdealFireT-_totalTimeAtLoc); i-=_minTReq) {
+				if (_filter.checkFilterCondition(i)) {
+					_idealWorldNumRuleFires++;
+				}
+			}
+			// then get the remaining count of times it should have fired, if any
+			//_idealWorldNumRuleFires += Math.floor(_totalTimeAtLoc / _minTReq);
 		}
 		_totalTimeAtLoc = 0.0;
 	}
 
 	private void locWithinRadius(double tNowAndIdealFireT, int count) {
-		_shouldFireCount++;
-		_curMinTBetweenFires = _minTReq;
-
-		if (_answersLeft.size() > 0) {
-			findGoodAnswer(tNowAndIdealFireT);
-		} else {
-			// dummy true fire time when there are no answers left
-			// to be able to continue looping through all the times it should fire
+		// do this regardless of filter conditions
+		_curMinTBetweenFires = _minTReq; 
+		boolean shouldFire = _filter.checkFilterCondition(tNowAndIdealFireT);
+		
+		if ( shouldFire ) {
+			_shouldFireCount++;  
+			if (_answersLeft.size() > 0) {
+				findGoodAnswer(tNowAndIdealFireT);
+			}
+		}
+		// dummy true fire time when the filter condition was not met and/or there are no answers left
+		// to be able to continue looping through all the times it should fire
+		if ( ! shouldFire || _answersLeft.size() <= 0){
 			_trueFireT = tNowAndIdealFireT;
 		}
-		// if this is the first time the rule should fire,
-		// add 2*SI to the total time as there is no previous fire time yet
-		// if this fire was late, also add the amount it was late by
+		
+		// do this regardless of filter conditions:
+		
+		// if this is the first time the rule should fire as per the location predicate,
+		// add 2*SI to the total time spent there as no previous fire time exists yet
+		// and in case this fire was late, also add the amount it was late by (+ _trueFireT - tNowAndIdealFireT)
 		if (count == 1) {
 			_totalTimeAtLoc += 2 * _sensorFireTimeInterval + _trueFireT - tNowAndIdealFireT;
 		} else {
 			_totalTimeAtLoc += _trueFireT - _prevIdealFireT;
 		}
 		_prevIdealFireT = _trueFireT;
-
 	}
 
 	private void findGoodAnswer(double tNowAndIdealFireT) {

@@ -9,15 +9,15 @@ import orderedcollection.*;
  */
 public class DataCollection {
 	//IMJ_Map<Integer, OneCouponsData> _couponToData;
-	IMJ_Map<Integer, IMJ_OC<OneCouponsData>> _couponToData;
+	IMJ_Map<Integer, IMJ_OC<SensorDataOfOneType>> _couponToData;
     
     public DataCollection() {
-        _couponToData = new MJ_Map_Factory<Integer, IMJ_OC<OneCouponsData>>().create();
+        _couponToData = new MJ_Map_Factory<Integer, IMJ_OC<SensorDataOfOneType>>().create();
     }
 
-    public void addCouponAndItsData(int couponId, OneCouponsData data){
+    public void addCouponAndItsData(int couponId, SensorDataOfOneType data){
     	if ( ! _couponToData.containsKey(couponId) ) {
-    		IMJ_OC<OneCouponsData> dataList = new MJ_OC_Factory<OneCouponsData>().create();
+    		IMJ_OC<SensorDataOfOneType> dataList = new MJ_OC_Factory<SensorDataOfOneType>().create();
     		dataList.add(data);
     		_couponToData.put(couponId, dataList);
     	}
@@ -26,15 +26,13 @@ public class DataCollection {
     	}
     }
     
-    public IMJ_OC<OneCouponsData> getCouponData(int couponId) {
+    public IMJ_OC<SensorDataOfOneType> getCouponData(int couponId) {
         return _couponToData.get(couponId);
     }
     
-    public OneCouponsData getCouponDataOfType(int couponId, String type) {
-
-    	//at this point not all data has been entered, and there seems to be 2 of gps and bt but no beacon
-    	IMJ_OC<OneCouponsData> allData = _couponToData.get(couponId);
-    	for (OneCouponsData d: allData) {
+    public SensorDataOfOneType getCouponDataOfType(int couponId, String type) {
+    	IMJ_OC<SensorDataOfOneType> allData = _couponToData.get(couponId);
+    	for (SensorDataOfOneType d: allData) {
     		if (d.getDataType().equals(type)) {
     			return d;
     		}
@@ -50,11 +48,11 @@ public class DataCollection {
     public void addDataPointToCouponData(int cid, AbsDataPoint data) {
     	// if the coupon already has an entry i.e. already has some data 
     	if (_couponToData.containsKey(cid)) {
-    		IMJ_OC<OneCouponsData> allCouponData = _couponToData.get(cid);
+    		IMJ_OC<SensorDataOfOneType> allCouponData = _couponToData.get(cid);
     		
     		// if the coupon has data of the desired type, add the given data point
         	String type = data.getDataType();
-    		for (OneCouponsData d: allCouponData) {
+    		for (SensorDataOfOneType d: allCouponData) {
         		if (d.getDataType().equals(type)) {
         			d.addDataPoint(data);
         			return;
@@ -62,13 +60,13 @@ public class DataCollection {
         	}
     		// if the coupon does not have data of the desired type
     		// add a new list of data with the given data point
-        	allCouponData.add(new OneCouponsData(cid, data));
+        	allCouponData.add(new SensorDataOfOneType(data));
     	}
     	
     	// if the coupon does not have an entry yet, make one
     	else {
-        	IMJ_OC<OneCouponsData> allCouponData = new MJ_OC_Factory<OneCouponsData>().create();
-        	allCouponData.add(new OneCouponsData(cid, data));
+        	IMJ_OC<SensorDataOfOneType> allCouponData = new MJ_OC_Factory<SensorDataOfOneType>().create();
+        	allCouponData.add(new SensorDataOfOneType(data));
         	_couponToData.put(cid, allCouponData);
     	}
     }

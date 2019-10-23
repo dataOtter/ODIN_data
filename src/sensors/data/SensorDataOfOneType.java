@@ -1,41 +1,40 @@
 package sensors.data;
 
+import Assert.Assertion;
 import orderedcollection.*;
 
-public class OneCouponsData {
+public class SensorDataOfOneType {
     private final IMJ_OC<AbsDataPoint> _data;
-    private final int _couponId;
+    private String _type;
     
-    public OneCouponsData(int cid){
-        _couponId = cid;
+    public SensorDataOfOneType(String type){
         _data = new MJ_OC_Factory<AbsDataPoint>().create();
+        _type = type;
     }
     
-    public OneCouponsData(int cid, AbsDataPoint dp){
-        _couponId = cid;
+    public SensorDataOfOneType(AbsDataPoint dp){
         _data = new MJ_OC_Factory<AbsDataPoint>().create();
         _data.add(dp);
+        _type = dp.getDataType();
     }
 
-    private OneCouponsData(int cid, IMJ_OC<AbsDataPoint> data){
-        _couponId = cid;
+    private SensorDataOfOneType(IMJ_OC<AbsDataPoint> data){
         _data = data;
+        _type = data.get(0).getDataType();
     }
     
-    public OneCouponsData getDeepCopy(){
-    	return new OneCouponsData(_couponId, _data.getDeepCopy());
+    public SensorDataOfOneType getDeepCopy(){
+    	return new SensorDataOfOneType(_data.getDeepCopy());
     }
     
     public void addDataPoint(AbsDataPoint dp){
+    	String dpType = dp.getDataType();
+    	Assertion.test( _type.equals(dpType), "AbsDataPoint type does not match type of this");
         _data.add(dp);
     }
     
     public AbsDataPoint getDataAtIdx(int i){
         return _data.get(i);
-    }
-    
-    public int getCouponId(){
-        return _couponId;
     }
     
     public int length(){
@@ -47,11 +46,6 @@ public class OneCouponsData {
     }
     
     public String getDataType() {
-    	String s = null;
-    	try {
-    		s = _data.get(0).getDataType();
-    	} 
-    	catch (Exception e) {}
-    	return s;
+    	return _type;
     }
 }

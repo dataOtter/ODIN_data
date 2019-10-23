@@ -25,11 +25,18 @@ public class RulesReader {
 	public RulesCollection getAllRules() {
 		if (_rules == null) {
 	    	int numCols;
-	    	if (_formatVersion == 2) {
+	    	switch (_formatVersion) {
+	    	case 0:
+	    		numCols = Constants.RULES_NUM_COLS_V0;
+	    		break;
+	    	case 1:
+	    		numCols = Constants.RULES_NUM_COLS_V1;
+	    		break;
+	    	case 2:
 	    		numCols = Constants.RULES_NUM_COLS_V2;
-	    	}
-	    	else {
-	    		numCols = Constants.RULES_NUM_COLS;
+	    		break;
+    		default:
+				numCols = Constants.RULES_NUM_COLS_V0;
 	    	}
 			Scanner sc = new ScannerHelper(_path, Constants.RULES_CSV, numCols).getScanner();
 

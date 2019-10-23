@@ -9,6 +9,7 @@ import dao.CouponReader;
 import dao.RulesReader;
 import dao.SensorTblNamesReader;
 import dao.SensorsReader;
+import filters.FilterTime;
 import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
 import reports.rules.AnswersCollection;
@@ -33,8 +34,10 @@ public class AnalysisEngineBuilder {
     private DataCollection _sensorData;
     private final StudySensorsCollection _studySensors;
     private IMJ_OC<IJob> _jobs;
+    private FilterTime _filter;
     
-    public AnalysisEngineBuilder(String path, int formatVersion) throws ParseException {
+    public AnalysisEngineBuilder(String path, int formatVersion, FilterTime filter) throws ParseException {
+    	_filter = filter;
         _path = path;
         _formatVersion = formatVersion;
         _sensorData = new DataCollection();
@@ -84,7 +87,7 @@ public class AnalysisEngineBuilder {
     	            	double gpsSensorInterval = _studySensors.getSensorInterval(Constants.SENSORID_GPS);
     	                // _answers contains all answers, regardless of cid and rid
     	                IAnalysis an = new AnalysisWhileAt(_answers, _rules, _sensorData, 
-    	                		gpsSensorInterval, cid, rid);
+    	                		gpsSensorInterval, cid, rid, _filter);
     	                e.register(an);
     	            }
     	        }

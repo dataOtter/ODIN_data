@@ -17,7 +17,7 @@ public class SensorRecordingsWithinGivenPercentOfTimeInterval extends AbsSensorP
     }
 
     @Override
-    public long getValue() {
+    protected long getValue() {
         if (_val != null){
             return _val;
         }
@@ -25,13 +25,12 @@ public class SensorRecordingsWithinGivenPercentOfTimeInterval extends AbsSensorP
         long upperBound = Math.round((_sensorInterval + (_per * _sensorInterval)) * 1000);
         long lowerBound = Math.round((_sensorInterval - (_per * _sensorInterval)) * 1000);
         long t1 = _data.getDataAtIdx(0).getDateTime().getTimeInMillis();
-        long t2, tempDiff;
         int numDataPoints = _data.length();
-        long count = 0;
+        long count = 1;
         
         for (int i = 1; i<numDataPoints; i++){
-            t2 = _data.getDataAtIdx(i).getDateTime().getTimeInMillis();
-            tempDiff = t2-t1;
+            long t2 = _data.getDataAtIdx(i).getDateTime().getTimeInMillis();
+            long tempDiff = t2-t1;
             if (tempDiff >= lowerBound && tempDiff <= upperBound){
                 count += 1;
             }

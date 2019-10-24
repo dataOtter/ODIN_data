@@ -32,17 +32,16 @@ public class AnswersReader {
 	 */
 	public AnswersCollection getAllAnswers() throws ParseException {
         Scanner sc = new ScannerHelper(_path, Constants.ANSWERS_CSV, Constants.ANSWERS_NUM_COLS).getScanner();
-        
-		IMJ_OC<OneAnswer> answers = new MJ_OC_Factory<OneAnswer>().create();
+        AnswersCollection ans = new AnswersCollection();
 		
         while ( sc.hasNextLine() ){
         	String[] line = getCompleteLineAsArray(sc);
             OneAnswer oneAns = new OneAnswer(_formatVersion, line);
-            answers.add(oneAns);
+            ans.addAnswer(oneAns);
         } 
         sc.close();
         
-        return new AnswersCollection(answers);
+        return ans;
 	}
 	
 	/**

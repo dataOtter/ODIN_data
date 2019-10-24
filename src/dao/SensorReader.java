@@ -14,7 +14,7 @@ import sensors.data.AbsDataPoint;
 import sensors.data.ActivityDataPoint;
 import sensors.data.BeaconDataPoint;
 import sensors.data.BtDataPoint;
-import sensors.data.DataCollection;
+import sensors.data.SensorDataCollection;
 import sensors.data.GpsDataPoint;
 import sensors.data.SensorDataOfOneType;
 
@@ -31,7 +31,7 @@ public class SensorReader {
 		_formatVersion = formatVersion;
 	}
 	
-	public void addAllSensorDataToDataColl(String sensorTblName, DataCollection coll) throws ParseException {
+	public void addAllSensorDataToDataColl(String sensorTblName, SensorDataCollection coll) throws ParseException {
         Scanner sc = new ScannerHelper(_path, sensorTblName + ".csv", Constants.SENSOR_NUM_COLS).getScanner();
 		
         while ( sc.hasNextLine() ){

@@ -42,8 +42,6 @@ public class GpsDataAdapter {
         return d.getTimeInMillis() / 1000.0;
     }
     
-    //public double getDurationatLocOfTimeT(double t){}
-    
     public double getNextStartTime(double t, Predicate p){
         // this expects a t of a location that is not the predicate location
         GpsDataPoint g;

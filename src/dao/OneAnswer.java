@@ -18,7 +18,7 @@ public class OneAnswer {
 	private final Integer _questionId;
 	private final Integer _choiceId;
     private final String _answerText;
-    private final Calendar _ruleFiredDateTime;  //(dateTime) 
+    private final Calendar _ruleFiredDateTime;
     private final int _formatVersion;
     
     public OneAnswer(int formatVersion, String[] answerRow) throws ParseException{
@@ -54,4 +54,18 @@ public class OneAnswer {
         dateTime.setTime(d);
         return dateTime;
     }
+
+	/**
+	 * @return the _questionId
+	 */
+	public Integer getQuestionId() {
+		return _questionId;
+	}
+
+	/**
+	 * @return the _choiceId
+	 */
+	public Integer getChoiceId() {
+		return _choiceId;
+	}
 }

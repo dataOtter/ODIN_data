@@ -1,7 +1,7 @@
 package reports.rules.whileAt;
 
 import constants.ConstTags;
-import filters.FilterTime;
+import filters.Filter;
 import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
 import reports.IAnalysis;
@@ -9,7 +9,7 @@ import reports.OneReport;
 import reports.rules.AnswersCollection;
 import reports.rules.OneRuleReport;
 import reports.rules.RulesCollection;
-import sensors.data.DataCollection;
+import sensors.data.SensorDataCollection;
 /**
  *
  * @author Maisha Jauernig
@@ -19,8 +19,8 @@ public class AnalysisWhileAt implements IAnalysis{
 
     // _answers contains all answers, regardless of cid and rid        
     public AnalysisWhileAt(AnswersCollection answers, RulesCollection rules, 
-    		DataCollection allSensorData, double sensorFireTimeInterval, int cid, int rid, FilterTime filter) {
-        _eval = new WhileAtPerformanceEval(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, filter);
+    		SensorDataCollection allSensorData, double sensorFireTimeInterval, int cid, int rid, IMJ_OC<Filter> filters) {
+        _eval = new WhileAtPerformanceEval(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, filters);
     }
     
     @Override

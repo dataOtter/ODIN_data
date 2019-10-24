@@ -18,6 +18,11 @@ public class PredicateInLocRadius extends Predicate {
         _dist = param.getDist();
     }
     
+    public PredicateInLocRadius(GpsCoordinate locReq, double dist){
+        _coordReq = locReq;
+        _dist = dist;
+    }
+    
     @Override
     public boolean test(GpsCoordinate c){
         return getCoordsDistance(_coordReq, c) <= _dist;

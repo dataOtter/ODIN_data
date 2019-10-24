@@ -26,7 +26,7 @@ public abstract class AbsSensorPerformanceEval{
         return _sensorInterval;
     }
     
-    public abstract long getValue();
+    protected abstract long getValue();
     
     public abstract void printAll();
     

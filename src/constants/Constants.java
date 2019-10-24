@@ -9,8 +9,9 @@ public class Constants {
     public static final String DIRECTORY_PATH = 
             //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\06-04-2019_167";  // format v 1
             //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";
+    		"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2";
     		//"D:\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
-    		"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2";  // format v0
+    		//"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2";  // format v0
     
     // base version is 1
     public static final int DEFAULT_FORMAT_VERSION = 0;
@@ -39,6 +40,11 @@ public class Constants {
     public static final int SENSORID_LIGHT = 11;
     public static final int SENSORID_GPS = 12;
 	public static final int SENSORID_ACTIVITY = 13;
+	
+	//*********FILTER TYPE NAMES*********
+	public static final String FILTER_TIME = "time";
+	public static final String FILTER_LOCATION = "location";
+	public static final String FILTER_QUESTION = "question";
 
     //*********CSV FILE NAMES & COLUMNS*********
     public static final String STUDY_CSV = "study.csv";

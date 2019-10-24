@@ -9,7 +9,7 @@ import dao.CouponReader;
 import dao.RulesReader;
 import dao.SensorTblNamesReader;
 import dao.SensorsReader;
-import filters.FilterTime;
+import filters.Filter;
 import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
 import reports.rules.AnswersCollection;
@@ -17,7 +17,7 @@ import reports.rules.RulesCollection;
 import reports.rules.whileAt.AnalysisWhileAt;
 import reports.sensors.AnalysisSensor;
 import sensors.StudySensorsCollection;
-import sensors.data.DataCollection;
+import sensors.data.SensorDataCollection;
 
 /**
  *
@@ -31,16 +31,15 @@ public class AnalysisEngineBuilder {
     private final IMJ_OC<Integer> _sids;
     private final RulesCollection _rules;
     private final AnswersCollection _answers;
-    private DataCollection _sensorData;
+    private SensorDataCollection _sensorData;
     private final StudySensorsCollection _studySensors;
     private IMJ_OC<IJob> _jobs;
-    private FilterTime _filter;
+    private IMJ_OC<Filter> _filters;
     
-    public AnalysisEngineBuilder(String path, int formatVersion, FilterTime filter) throws ParseException {
-    	_filter = filter;
+    public AnalysisEngineBuilder(String path, int formatVersion) throws ParseException {
         _path = path;
         _formatVersion = formatVersion;
-        _sensorData = new DataCollection();
+        _sensorData = new SensorDataCollection();
         IMJ_OC<String> sensorTblNames = new SensorTblNamesReader(_path, _formatVersion).getSensorTblNames();
         for (String tblName: sensorTblNames) {
         	new SensorReader(_path, _formatVersion).addAllSensorDataToDataColl(tblName, _sensorData);
@@ -54,6 +53,9 @@ public class AnalysisEngineBuilder {
         _rids = _rules.getRulesCollectionByType(Constants.RULE_WHILEAT_NOTAT).getAllRids();
         
         _sids = _studySensors.getSensorIds();
+        
+        get filters here
+        _filters = null;
         
         _jobs = new MJ_OC_Factory<IJob>().create();
     }
@@ -87,7 +89,7 @@ public class AnalysisEngineBuilder {
     	            	double gpsSensorInterval = _studySensors.getSensorInterval(Constants.SENSORID_GPS);
     	                // _answers contains all answers, regardless of cid and rid
     	                IAnalysis an = new AnalysisWhileAt(_answers, _rules, _sensorData, 
-    	                		gpsSensorInterval, cid, rid, _filter);
+    	                		gpsSensorInterval, cid, rid, _filters);
     	                e.register(an);
     	            }
     	        }

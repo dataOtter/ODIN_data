@@ -30,7 +30,8 @@ public class ConstTags {
 	public static final String REPORTS_PERC_ALLW_DEV_FRM_RULE_FIRE_T = "_percAllowedDevFromRuleFireTime";
 	public static final String REPORTS_P_A_D_F_R_F_T_TEXT = "Allowed time deviation from minimum time between fires";
 	public static final String REPORTS_PERC_CUTOFF_MINT_LATE_ANS = "_percTimeAllowedToBeLate";
-	public static final String REPORTS_P_C_M_L_A_TEXT = "Percent of minimum time between rule fires cutoff for being late allowance";
+	public static final String REPORTS_P_C_M_L_A_TEXT = "Rule fires are only considered late if the fire time is (given % * minT) "
+									+ "later than it should be. Where minT = minimum time between rule fires";
 	public static final String REPORTS_PERC_ALLW_DEV_FRM_SI = "_percAllowedDevFromSI";
 	public static final String REPORTS_P_A_D_F_SI_TEXT = "Maximum percent deviation from requested sensor interval";
 	
@@ -47,7 +48,8 @@ public class ConstTags {
 	public static final String REPORTS_G_F_P_O_T_TEXT = "Good rule fire percentage out of all rule fires";
 	public static final String REPORTS_AVERAGE_RULES = "avgRulesAsPercentGoodFires";  // values close to 100 are good  // averageable
 	public static final String REPORTS_AVERAGE_ONE_SENSOR = "avgOneSensorAsPercOfSi";  // values close to 100 are good  // averageable
-	public static final String REPORTS_A_O_S_TEXT = "Average percent deviation of actual time between GPS recordings from sensor interval";
+	public static final String REPORTS_A_O_S_TEXT = "Average percent accuracy of actual time between GPS recordings to sensor interval, "
+															+ "values bigger or smaller than 100 are more or less accurate";
 	public static final String REPORTS_AVERAGE_ONE_SENSOR_IN_SECS = "avgOneSensorInSecs";  // averageable
 	public static final String REPORTS_A_O_S_I_S_TEXT = "Average time in seconds between actual GPS recordings";
 	public static final String REPORTS_AVERAGE_ALL_SENSORS = "avgAllSensorAsPercOfSi";  // averageable
@@ -74,13 +76,13 @@ public class ConstTags {
 	public static final String REPORTS_TOTAL_RULE_FIRES = "_numTotalRuleFires";
 	public static final String REPORTS_T_R_F_TEXT = "Number of total rule fires";
 	public static final String REPORTS_LATE_RULE_FIRES = "numLateRuleFires";  // averageable
-	public static final String REPORTS_L_R_F_TEXT = "Number of late rule fires (late by at most given % of minimum time between fires)";
+	public static final String REPORTS_L_R_F_TEXT = "Number of late rule fires (late by at most given % * minT)";
 	public static final String REPORTS_EARLY_RULE_FIRES = "numEarlyRuleFires";  // averageable
 	public static final String REPORTS_E_R_F_TEXT = "Number of early rule fires";
 	public static final String REPORTS_MISSED_RULE_FIRES = "numMissedRuleFires";  // averageable
-	public static final String REPORTS_M_R_F_TEXT = "Number of missed rule fires (later than given % of minimum time between fires)";
+	public static final String REPORTS_M_R_F_TEXT = "Number of missed rule fires (late by more than given % * minT)";
 	public static final String REPORTS_OTHER_RULE_FIRES = "numNotMissedLateEarlyGoodRuleFires";  // averageable
-	public static final String REPORTS_O_R_F_TEXT = "Number of rule fires that were not early, late, missed, or on time";
+	public static final String REPORTS_O_R_F_TEXT = "Number of rule fires that were not early, late, missed, or on time - related to filters";
 	public static String REPORTS_LATEORMISSED_ANS(int i) {return "_lateOrMissedAns#" + i;}
 	public static String REPORTS_LOM_A_TEXT(int i) {return "Late or missed answer occurence " + i + ", time in milliseconds";}
 	public static String REPORTS_EARLY_ANS(int i) {return "_earlyAns#" + i;}
@@ -95,11 +97,13 @@ public class ConstTags {
 	public static final String REPORTS_MINT_BTW_SENSOR_RECS = "_minTimeBetweenSensorRecordings";
 	public static final String REPORTS_MIN_B_S_R_TEXT = "Minimum/smallest time in seconds between actual GPS recordings";
 	public static final String REPORTS_MINT_BTW_SENSOR_RECS_AS_PERC = "minTimeBetweenSensorRecsAsPercOfSi";  // averageable
-	public static final String REPORTS_MIN_B_S_R_A_P_TEXT = "Percent deviation of smallest actual time between GPS recordings from sensor interval";
+	public static final String REPORTS_MIN_B_S_R_A_P_TEXT = "Percent accuracy of smallest actual time between GPS recordings to sensor interval, " 
+																	+ "values bigger or smaller than 100 are more or less accurate";
 	public static final String REPORTS_MAXT_BTW_SENSOR_RECS = "_maxTimeBetweenSensorRecordings";
 	public static final String REPORTS_MAX_B_S_R_TEXT = "Maximum/largest time in seconds between actual GPS recordings";
 	public static final String REPORTS_MAXT_BTW_SENSOR_RECS_AS_PERC = "maxTimeBetweenSensorRecsAsPercOfSi";  // averageable
-	public static final String REPORTS_MAX_B_S_R_A_P_TEXT = "Percent deviation of largest actual time between GPS recordings from sensor interval";
+	public static final String REPORTS_MAX_B_S_R_A_P_TEXT = "Percent accuracy of largest actual time between GPS recordings to sensor interval, " 
+																	+ "values bigger or smaller than 100 are more or less accurate";
 	
 	public static final String REPORTS_REL_DATA_GPS = "GPS_sensor";
 	public static final String REPORTS_REL_DATA_ANSWERS = "answers";

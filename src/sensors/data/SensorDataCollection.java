@@ -4,14 +4,13 @@ import maps.*;
 import orderedcollection.*;
 
 /**
- *
+ * This class contains all sensor data for all coupons
  * @author Maisha Jauernig
  */
-public class DataCollection {
-	//IMJ_Map<Integer, OneCouponsData> _couponToData;
+public class SensorDataCollection {
 	IMJ_Map<Integer, IMJ_OC<SensorDataOfOneType>> _couponToData;
     
-    public DataCollection() {
+    public SensorDataCollection() {
         _couponToData = new MJ_Map_Factory<Integer, IMJ_OC<SensorDataOfOneType>>().create();
     }
 

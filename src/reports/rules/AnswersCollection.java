@@ -4,8 +4,6 @@ import dao.OneAnswer;
 import orderedcollection.*;
 import java.util.Iterator;
 
-import constants.Constants;
-
 /**
  *
  * @author Maisha Jauernig
@@ -13,15 +11,39 @@ import constants.Constants;
 public class AnswersCollection implements Iterable<OneAnswer> {
 	private IMJ_OC<OneAnswer> _allAnswers;
 	private IMJ_OC<Integer> _rids = null;
-	private IMJ_OC<Integer> _cids;
+	private IMJ_OC<Integer> _cids = null;
 
-    public AnswersCollection(IMJ_OC<OneAnswer> answers) {
-		_allAnswers = answers.getDeepCopy();
-		computeCids();
+    public AnswersCollection() {
+		_allAnswers = new MJ_OC_Factory<OneAnswer>().create();
 	}
+    
+    private AnswersCollection(IMJ_OC<OneAnswer> answers) {
+		_allAnswers = answers.getDeepCopy();
+	}
+    
+    public void addOneAnser(OneAnswer a) {
+    	_allAnswers.add(a);
+    }
     
     public AnswersCollection getAnsForRuleAndCid(int cid, int rid) {
     	return this.getAnswersByRids(rid).getAnswersByCids(cid);
+    }
+    
+    public OneAnswer getMostRecentAnsToQid(int qid, double timeNow) {
+    	double t = 0.0;
+    	OneAnswer a;
+    	OneAnswer toReturn = null;
+    	Iterator<OneAnswer> iter = _allAnswers.iterator();
+    	
+    	while (t <= timeNow && iter.hasNext()) {
+    		a = iter.next();
+    		t = a.getRuleFiredTime().getTimeInMillis() / 1000.0;
+    		if (a.getQuestionId() == qid) {
+    			toReturn = a;
+    		}
+    	}
+    	
+    	return toReturn;
     }
     
     /***
@@ -32,8 +54,12 @@ public class AnswersCollection implements Iterable<OneAnswer> {
         IMJ_OC<Integer> ruleRids = oneRuleTypeRulesCollection.getAllRids();
     	AnswersCollection ruleAns = this.getAnswersByRids(ruleRids);
     	
+    	if (_cids == null) {
+    		computeCids();
+    	}
+  
     	if ( ! _cids.contains(cid) ) {
-			return new AnswersCollection(new MJ_OC_Factory<OneAnswer>().create());
+			return new AnswersCollection();
 		}
 		else {
 			return ruleAns.getAnswersByCids(cid);
@@ -56,53 +82,37 @@ public class AnswersCollection implements Iterable<OneAnswer> {
     }
 	
 	public AnswersCollection getAnswersByRids(IMJ_OC<Integer> rids) {
-		IMJ_OC<OneAnswer> newAnswers = new MJ_OC_Factory<OneAnswer>().create();
+		AnswersCollection ans = new AnswersCollection();
 		
 		for (OneAnswer a: _allAnswers) {
-			int thisRid = a.getRuleId();
-    		if (rids.contains(thisRid)) {
-    			newAnswers.add(a);
+    		if ( rids.contains(a.getRuleId()) ) {
+    			ans.addAnswer(a);
     		}
 		}
-		
-		return new AnswersCollection(newAnswers);
+		return ans;
 	}
 	
 	public AnswersCollection getAnswersByRids(int rid) {
-		IMJ_OC<OneAnswer> newAnswers = new MJ_OC_Factory<OneAnswer>().create();
-		
-		for (OneAnswer a: _allAnswers) {
-			int thisRid = a.getRuleId();
-    		if (rid == thisRid) {
-    			newAnswers.add(a);
-    		}
-		}
-		return new AnswersCollection(newAnswers);
+		IMJ_OC<Integer> rids = new MJ_OC_Factory<Integer>().create();
+		rids.add(rid);
+		return getAnswersByRids(rids);
 	}
 	
 	public AnswersCollection getAnswersByCids(IMJ_OC<Integer> cids) {
-		IMJ_OC<OneAnswer> newAnswers = new MJ_OC_Factory<OneAnswer>().create();
+		AnswersCollection ans = new AnswersCollection();
 		
 		for (OneAnswer a: _allAnswers) {
-			int thisCid = a.getCouponId();
-    		if (cids.contains(thisCid)) {
-    			newAnswers.add(a);
+    		if ( cids.contains(a.getCouponId()) ) {
+    			ans.addAnswer(a);
     		}
 		}
-		
-		return new AnswersCollection(newAnswers);
+		return ans;
 	}
 	
 	public AnswersCollection getAnswersByCids(int cid) {
-		IMJ_OC<OneAnswer> newAnswers = new MJ_OC_Factory<OneAnswer>().create();
-		
-		for (OneAnswer a: _allAnswers) {
-			int thisCid = a.getCouponId();
-    		if (cid == thisCid) {
-    			newAnswers.add(a);
-    		}
-		}
-		return new AnswersCollection(newAnswers);
+		IMJ_OC<Integer> cids = new MJ_OC_Factory<Integer>().create();
+		cids.add(cid);
+		return getAnswersByCids(cids);
 	}
 	
 	public OneAnswer getAnsAtIdx(int i) {

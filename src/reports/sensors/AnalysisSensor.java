@@ -5,7 +5,7 @@ import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
 import reports.IAnalysis;
 import reports.OneReport;
-import sensors.data.DataCollection;
+import sensors.data.SensorDataCollection;
 import sensors.data.SensorDataOfOneType;
 
 /**
@@ -18,7 +18,7 @@ public class AnalysisSensor implements IAnalysis {
     private final int _couponId;
     private final SensorDataOfOneType _data;
     
-    public AnalysisSensor(int cid, int sensorId, DataCollection allData, double si) {
+    public AnalysisSensor(int cid, int sensorId, SensorDataCollection allData, double si) {
         _sensorId = sensorId;
         _data = allData.getCouponDataOfType(cid, getAnalysisType()).getDeepCopy();
         _couponId = cid; 

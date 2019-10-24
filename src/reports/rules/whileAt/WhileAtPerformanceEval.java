@@ -6,7 +6,7 @@ import constants.Constants;
 import dao.OneAnswer;
 import dao.rules.OneRule;
 import dao.rules.WhileAtRuleParams;
-import filters.FilterTime;
+import filters.*;
 import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
 import reports.OneReport;
@@ -14,7 +14,7 @@ import reports.rules.AnswersCollection;
 import reports.rules.Predicate;
 import reports.rules.PredicateInLocRadius;
 import reports.rules.RulesCollection;
-import sensors.data.DataCollection;
+import sensors.data.SensorDataCollection;
 import sensors.data.GpsDataPoint;
 import sensors.data.SensorDataOfOneType;
 import sensors.gps.GpsCoordinate;
@@ -47,15 +47,15 @@ public class WhileAtPerformanceEval {
 	private final Predicate _pred;
 	private final GpsDataAdapter _ad;
 	
-	private final FilterTime _filter;
+	private final IMJ_OC<Filter> _filters;
 
     // _answers contain all answers, regardless of cid and rid
-	public WhileAtPerformanceEval(AnswersCollection answers, RulesCollection rules, DataCollection allSensorData,
-			double sensorFireTimeInterval, int cid, int rid, FilterTime filter) {
+	public WhileAtPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
+			double sensorFireTimeInterval, int cid, int rid, IMJ_OC<Filter> filters) {
 		_cid = cid;
 		_rid = rid;
 		_sensorFireTimeInterval = sensorFireTimeInterval;
-		_filter = filter;
+		_filters = filters;
 		
 		OneRule rule = rules.getRuleById(_rid);
 		// minimum time that must pass between rule fires
@@ -97,6 +97,7 @@ public class WhileAtPerformanceEval {
 		int atLocConsecCount = 0;
 		double maxT = getMaxTimeToCheck();
 		double veryFirstFireT = getVeryFirstShouldFireTime();
+		double firstFireT = veryFirstFireT;
 		
 		// loop through time by minT intervals, skipping absences from the rule location
 		for (double fireT = veryFirstFireT; fireT <= maxT; fireT += _curMinTBetweenFires) {
@@ -106,17 +107,22 @@ public class WhileAtPerformanceEval {
 
 			// if we are roughly at the required location
 			if (_pred.test(c)) {
-				atLoc = true;
 				atLocConsecCount++;
 				locWithinRadius(fireT, atLocConsecCount);
 				// set fireT to when it actually fired
 				Assertion.test(_trueFireT >= fireT, "moving BACK from " + fireT + " to " + _trueFireT + " by " + (fireT - _trueFireT));
 				fireT = _trueFireT;
+				if (atLoc == false) {  // if this is the first occurrence of being at this loc (again)
+					firstFireT = fireT;  // set the first fire time at this loc to the ideal fire time
+				}
+				atLoc = true;
 			} 
 			else {
 				atLoc = false;
 				atLocConsecCount = 0;
-				locNotWithinRadius(fireT);
+				// use fireT as ideal fire time to get count of ideal world fires, note that
+				// this may still not be entirely accurate as each fireT is based on the previous trueFireT and is not an absolute measure
+				locNotWithinRadius(firstFireT);  
 				// set fireT to the time of the next gps recording at the location
 				fireT = _ad.getNextStartTime(fireT, _pred);
 				if (fireT <= 0.0) { // if there are no more recordings at the location
@@ -125,48 +131,66 @@ public class WhileAtPerformanceEval {
 			}
 		}
 		
-		// if the last minT interval time was at the location, round off the
-		// calculations of time spent there
+		// if the last recording was at the location, round off the calculations of total time spent there
 		if (atLoc) {
-			locNotWithinRadius(_trueFireT);
+			locNotWithinRadius(firstFireT);
 		}
 		Assertion.test(
 				_earlyAns.size() + _answersLeft.size() + _goodAnsCount + _lateAns.size() == _numRuleFiresTotal,
 				"not all answers are accounted for");
 	}
 
-	private void locNotWithinRadius(double tNowAndIdealFireT) {
+	private void locNotWithinRadius(double firstFireT) {
 		// presence at the location is counted until just before the first GPS recording not at the location
 		// the below calculation is not quite accurate, as we do not know the exact time we switched location,
 		// just that the next time we check based on the minT intervals was not at the location.
 		// to get a rough estimate, taking half of the minT interval during which we switched locations
 		_totalTimeAtLoc += _curMinTBetweenFires / 2.0;
-		_curMinTBetweenFires = 2 * _sensorFireTimeInterval;
 		// if the time spent at this location is more than 2 * SI
 		// (i.e. there should be at least one rule fire at this location, not taking filters into account),
 		if (_totalTimeAtLoc >= _sensorFireTimeInterval * 2) {
 			// subtract 2*SI from total time because the first minT between rule fires is 2*SI
 			_totalTimeAtLoc -= _sensorFireTimeInterval * 2;
-			// and add that first rule fire to the counter if the filter conditions are also met,
-			if (_filter.checkFilterCondition(tNowAndIdealFireT)) {
-				_idealWorldNumRuleFires++;
-			}
-			// then get the remaining count of times it should have fired, if any
-			for (double i = tNowAndIdealFireT; i >= (tNowAndIdealFireT-_totalTimeAtLoc); i-=_minTReq) {
-				if (_filter.checkFilterCondition(i)) {
+			// then get the count of times it should have fired
+			// by looping from the first fire time to the last fire time, by minTReq
+			for (double i = firstFireT; i <= (firstFireT+_totalTimeAtLoc); i+=_minTReq) {
+				boolean add = true;
+				IMJ_OC<AbsFilterInput> conds = getFilterConds(i);
+				for (Filter f: _filters) {
+					if (! f.checkFilterCondition(conds) ) {
+						add = false;
+						break;
+					}
+				}
+				if (add) {
 					_idealWorldNumRuleFires++;
 				}
 			}
 			// then get the remaining count of times it should have fired, if any
 			//_idealWorldNumRuleFires += Math.floor(_totalTimeAtLoc / _minTReq);
 		}
+		_curMinTBetweenFires = 2 * _sensorFireTimeInterval;
 		_totalTimeAtLoc = 0.0;
+	}
+	
+	private IMJ_OC<AbsFilterInput> getFilterConds(double tNow) {
+		IMJ_OC<AbsFilterInput> conds = new MJ_OC_Factory<AbsFilterInput>().create();
+		conds.add(new LocFilterInput(tNow, _ad));
+		conds.add(new TimeFilterInput(tNow));
+		return conds;
 	}
 
 	private void locWithinRadius(double tNowAndIdealFireT, int count) {
-		// do this regardless of filter conditions
 		_curMinTBetweenFires = _minTReq; 
-		boolean shouldFire = _filter.checkFilterCondition(tNowAndIdealFireT);
+		
+		boolean shouldFire = true;
+		IMJ_OC<AbsFilterInput> conds = getFilterConds(tNowAndIdealFireT);
+		for (Filter f: _filters) {
+			if (! f.checkFilterCondition(conds) ) {
+				shouldFire = false;
+				break;
+			}
+		}
 		
 		if ( shouldFire ) {
 			_shouldFireCount++;  
@@ -299,12 +323,12 @@ public class WhileAtPerformanceEval {
 	}
 
 	private OneReport getLateAndMissedFireCounts(OneReport map) {
-		// counts of late and missed fires
-		map.addValue(ConstTags.REPORTS_LATE_RULE_FIRES, _lateAnsCount * 1.0, ConstTags.REPORTS_L_R_F_TEXT);
-		map.addValue(ConstTags.REPORTS_MISSED_RULE_FIRES, _likelyMissedAnsCount * 1.0, ConstTags.REPORTS_M_R_F_TEXT);
 		// cutoff for deciding if late or missed
 		map.addValue(ConstTags.REPORTS_PERC_CUTOFF_MINT_LATE_ANS, Constants.PERCENT_CUTOFF_OF_MINT_FOR_LATE_ANS * 100.0,
 				ConstTags.REPORTS_P_C_M_L_A_TEXT);
+		// counts of late and missed fires
+		map.addValue(ConstTags.REPORTS_LATE_RULE_FIRES, _lateAnsCount * 1.0, ConstTags.REPORTS_L_R_F_TEXT);
+		map.addValue(ConstTags.REPORTS_MISSED_RULE_FIRES, _likelyMissedAnsCount * 1.0, ConstTags.REPORTS_M_R_F_TEXT);
 		// all late or missed answer times
 		if (_lateAnsCount > 0) {
 			for (int i = 0; i < _lateAns.size(); i++) {

@@ -14,23 +14,27 @@ import orderedcollection.IMJ_OC;
  *
  */
 public class TimeFilterParams extends AbsFilterParams {
-	private final double _startTime;
-	private final double _endTime;
+	private double _startTime;  // start of time frame as time of day in seconds 
+	private double _endTime;  // end of time frame as time of day in seconds
 	
 	/**
-	 * @param start - start of time frame as time of day in seconds 
-	 * @param end - end of time frame as time of day in seconds 
+	 * @param params - parameters of the filter 
 	 */
-	public TimeFilterParams(double start, double end) {  // times come in as hour of day, at least in ui, so convert to sec of day
+	public TimeFilterParams(String params) {  // times come in as hour of day, so convert to sec of day
 		super(Constants.FILTER_TIME);
-		_startTime = start * 60.0 * 60.0;
-		_endTime = end * 60.0 * 60.0;
-	}
-	
-	public TimeFilterParams() {
-		super(Constants.FILTER_TIME);
-		_startTime = 52200;  // 14.5
-		_endTime = 68400;  // 19
+		_startTime = 0.0;
+		_endTime = 0.0;
+		
+		String[] p = params.split(",");
+		for (String s: p) {
+			double t = Double.parseDouble(s.substring(s.indexOf(':')+1)) * 60.0 * 60.0;
+			if (s.contains(Constants.FILTER_TIME_START)) {
+				_startTime = t;
+			}
+			else if (s.contains(Constants.FILTER_TIME_END)) {
+				_endTime = t;
+			}
+		}
 	}
 
 	@Override
@@ -38,7 +42,7 @@ public class TimeFilterParams extends AbsFilterParams {
 		double timeNowSecs = 0.0;
 		for (AbsFilterInput i: inputs) {
 			if (i.getType().equals(this.getType())) {
-				timeNowSecs = ((TimeFilterInput) i).getTimeNowSecs();
+				timeNowSecs = i.getTimeNowSecs();
 				break;
 			}
 		}

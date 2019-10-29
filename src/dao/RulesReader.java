@@ -3,8 +3,8 @@ package dao;
 import java.util.Scanner;
 
 import constants.Constants;
-import dao.rules.OneRule;
 import orderedcollection.*;
+import reports.rules.OneRule;
 import reports.rules.RulesCollection;
 
 /**

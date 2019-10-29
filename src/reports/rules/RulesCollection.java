@@ -1,6 +1,5 @@
 package reports.rules;
 
-import dao.rules.OneRule;
 import orderedcollection.*;
 
 /**

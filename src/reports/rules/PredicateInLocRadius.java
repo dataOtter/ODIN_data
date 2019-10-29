@@ -1,7 +1,6 @@
 package reports.rules;
 
-import dao.rules.OneRule;
-import dao.rules.WhileAtRuleParams;
+import reports.rules.whileAt.WhileAtRuleParams;
 import sensors.gps.GpsCoordinate;
 
 /**

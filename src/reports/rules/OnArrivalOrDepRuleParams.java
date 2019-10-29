@@ -1,4 +1,4 @@
-package dao.rules;
+package reports.rules;
 
 import constants.Constants;
 
@@ -7,11 +7,11 @@ public class OnArrivalOrDepRuleParams extends AbsRuleParams {
     private final Double _lat;
     private final Double _lon;
 
-    OnArrivalOrDepRuleParams(String ruleRow, int formatVersion) {
+    public OnArrivalOrDepRuleParams(String ruleRow, int formatVersion) {
 		super(ruleRow, formatVersion);
-        _dist = Integer.parseInt(_paramNameToVal.get(Constants.RULES_DISTANCE));
-        _lat = Double.parseDouble(_paramNameToVal.get(Constants.RULES_LATITUDE));
-        _lon = Double.parseDouble(_paramNameToVal.get(Constants.RULES_LONGITUDE));
+        _dist = Integer.parseInt(this.getParamVal(Constants.RULES_DISTANCE));
+        _lat = Double.parseDouble(this.getParamVal(Constants.RULES_LATITUDE));
+        _lon = Double.parseDouble(this.getParamVal(Constants.RULES_LONGITUDE));
 	}
 
 	public Integer getDist() {

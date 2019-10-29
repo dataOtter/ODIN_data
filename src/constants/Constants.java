@@ -9,12 +9,12 @@ public class Constants {
     public static final String DIRECTORY_PATH = 
             //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\06-04-2019_167";  // format v 1
             //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";
-    		"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2";
+    		"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2fv2";
     		//"D:\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
     		//"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2";  // format v0
     
     // base version is 1
-    public static final int DEFAULT_FORMAT_VERSION = 0;
+    public static final int DEFAULT_FORMAT_VERSION = 2;
     public static final boolean TESTING_GPS_ONLY = true;
 
     //*********ANALAYSIS VARIABLES*********
@@ -42,9 +42,17 @@ public class Constants {
 	public static final int SENSORID_ACTIVITY = 13;
 	
 	//*********FILTER TYPE NAMES*********
-	public static final String FILTER_TIME = "time";
-	public static final String FILTER_LOCATION = "location";
-	public static final String FILTER_QUESTION = "question";
+	public static final String FILTERS_LIST = "filtersList";
+	public static final String FILTER_PARAM_TO_VAL = "filterParamToValue";
+	public static final String FILTER_TYPE = "filterType";
+	public static final String FILTER_TIME = "timeFilter";
+	public static final String FILTER_TIME_START = "minTime";
+	public static final String FILTER_TIME_END = "maxTime";
+	public static final String FILTER_LOCATION = "locationFilter";
+	public static final String FILTER_LOCATION_DIST = "distance";
+	public static final String FILTER_LOCATION_LAT = "latitude";
+	public static final String FILTER_LOCATION_LON = "longitude";
+	public static final String FILTER_QUESTION = "answerFilter";
 
     //*********CSV FILE NAMES & COLUMNS*********
     public static final String STUDY_CSV = "study.csv";

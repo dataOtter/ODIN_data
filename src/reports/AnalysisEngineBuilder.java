@@ -3,15 +3,8 @@ package reports;
 import java.text.ParseException;
 
 import constants.Constants;
-import dao.SensorReader;
-import dao.AnswersReader;
-import dao.CouponReader;
-import dao.RulesReader;
-import dao.SensorTblNamesReader;
-import dao.SensorsReader;
-import filters.Filter;
-import orderedcollection.IMJ_OC;
-import orderedcollection.MJ_OC_Factory;
+import dao.*;
+import orderedcollection.*;
 import reports.rules.AnswersCollection;
 import reports.rules.RulesCollection;
 import reports.rules.whileAt.AnalysisWhileAt;
@@ -34,7 +27,6 @@ public class AnalysisEngineBuilder {
     private SensorDataCollection _sensorData;
     private final StudySensorsCollection _studySensors;
     private IMJ_OC<IJob> _jobs;
-    private IMJ_OC<Filter> _filters;
     
     public AnalysisEngineBuilder(String path, int formatVersion) throws ParseException {
         _path = path;
@@ -54,8 +46,8 @@ public class AnalysisEngineBuilder {
         
         _sids = _studySensors.getSensorIds();
         
-        get filters here
-        _filters = null;
+        //get filters here
+        //_filters = null;
         
         _jobs = new MJ_OC_Factory<IJob>().create();
     }
@@ -89,7 +81,7 @@ public class AnalysisEngineBuilder {
     	            	double gpsSensorInterval = _studySensors.getSensorInterval(Constants.SENSORID_GPS);
     	                // _answers contains all answers, regardless of cid and rid
     	                IAnalysis an = new AnalysisWhileAt(_answers, _rules, _sensorData, 
-    	                		gpsSensorInterval, cid, rid, _filters);
+    	                		gpsSensorInterval, cid, rid);
     	                e.register(an);
     	            }
     	        }

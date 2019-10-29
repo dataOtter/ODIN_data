@@ -13,40 +13,41 @@ import reports.rules.AnswersCollection;
  *
  */
 public class QuestionFilterParams extends AbsFilterParams {
-	private final AnswersCollection _allAns;
+	private int _qid;
+	private int _chid;
 	
-	public QuestionFilterParams(AnswersCollection allAns) {
+	public QuestionFilterParams(String params) {
 		super(Constants.FILTER_QUESTION);
-		_allAns = allAns;
-	}
 
-	/**
-	 * @return the _allAns
-	 */
-	public AnswersCollection getAllAns() {
-		return _allAns;
+		String[] p = params.split(",");
+		for (String s: p) {
+			int id = Integer.parseInt(s.substring(s.indexOf(':')+1));
+			if (s.contains("questionId")) {
+				_qid = id;
+			}
+			else if (s.contains("choiceId")) {
+				_chid = id;
+			}
+		}
 	}
 
 	@Override
 	public boolean testInput(IMJ_OC<AbsFilterInput> inputs) {
-		Integer qid = null;
-		Integer choiceId = null;
+		AnswersCollection allAns = null;
 		Double timeNow = null;
 		
 		for (AbsFilterInput i: inputs) {
 			if (i.getType().equals(this.getType())) {
-				qid = ((QuestionFilterInput) i).getQid();
-				choiceId = ((QuestionFilterInput) i).getChoiceId();
-				timeNow = ((QuestionFilterInput) i).getTimeNowSecs();
+				timeNow = i.getTimeNowSecs();
+				allAns = ((QuestionFilterInput) i).getAllAns();
 				break;
 			}
 		}
 		
-		OneAnswer mostRecentAnsToQid = _allAns.getMostRecentAnsToQid(qid, timeNow);
-		if (mostRecentAnsToQid.getChoiceId() == choiceId) {
+		OneAnswer mostRecentAnsToQid = allAns.getMostRecentAnsToQid(_qid, timeNow);
+		if (mostRecentAnsToQid.getChoiceId() == _chid) {
 			return true;
 		}
 		return false;
 	}
-
 }

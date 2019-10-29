@@ -4,13 +4,12 @@ import Assert.Assertion;
 import constants.ConstTags;
 import constants.Constants;
 import dao.OneAnswer;
-import dao.rules.OneRule;
-import dao.rules.WhileAtRuleParams;
 import filters.*;
 import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
 import reports.OneReport;
 import reports.rules.AnswersCollection;
+import reports.rules.OneRule;
 import reports.rules.Predicate;
 import reports.rules.PredicateInLocRadius;
 import reports.rules.RulesCollection;
@@ -51,17 +50,17 @@ public class WhileAtPerformanceEval {
 
     // _answers contain all answers, regardless of cid and rid
 	public WhileAtPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
-			double sensorFireTimeInterval, int cid, int rid, IMJ_OC<Filter> filters) {
+			double sensorFireTimeInterval, int cid, int rid) {
 		_cid = cid;
 		_rid = rid;
 		_sensorFireTimeInterval = sensorFireTimeInterval;
-		_filters = filters;
 		
 		OneRule rule = rules.getRuleById(_rid);
 		// minimum time that must pass between rule fires
     	WhileAtRuleParams param = (WhileAtRuleParams) rule.getParams();
 		_minTReq = param.getMinTimeSinceLastFire() * 1.0;
 		_pred = new PredicateInLocRadius(rule);
+		_filters = rule.getFilters();
 
 		_answersLeft = answers.getAnsForRuleAndCid(_cid, _rid);  // a new AnswersCollection is already a deep copy
 			
@@ -156,10 +155,12 @@ public class WhileAtPerformanceEval {
 			for (double i = firstFireT; i <= (firstFireT+_totalTimeAtLoc); i+=_minTReq) {
 				boolean add = true;
 				IMJ_OC<AbsFilterInput> conds = getFilterConds(i);
-				for (Filter f: _filters) {
-					if (! f.checkFilterCondition(conds) ) {
-						add = false;
-						break;
+				if (_filters != null) {
+					for (Filter f: _filters) {
+						if (! f.checkFilterCondition(conds) ) {
+							add = false;
+							break;
+						}
 					}
 				}
 				if (add) {
@@ -185,10 +186,12 @@ public class WhileAtPerformanceEval {
 		
 		boolean shouldFire = true;
 		IMJ_OC<AbsFilterInput> conds = getFilterConds(tNowAndIdealFireT);
-		for (Filter f: _filters) {
-			if (! f.checkFilterCondition(conds) ) {
-				shouldFire = false;
-				break;
+		if (_filters != null) {
+			for (Filter f: _filters) {
+				if (! f.checkFilterCondition(conds) ) {
+					shouldFire = false;
+					break;
+				}
 			}
 		}
 		

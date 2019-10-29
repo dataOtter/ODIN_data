@@ -1,6 +1,8 @@
-package dao.rules;
+package reports.rules;
 
 import constants.Constants;
+import filters.Filter;
+import orderedcollection.*;
 
 /**
  *
@@ -11,6 +13,7 @@ public class OneRule {
     private final Integer _questionId;
     private final String _ruleType;
     private final AbsRuleParams _params;
+    private final IMJ_OC<Filter> _filters;
     private final int _formatVersion;
     
     public OneRule(int formatVersion, String ruleRow) {
@@ -20,6 +23,7 @@ public class OneRule {
         _questionId = Integer.parseInt(line[Constants.RULES_QUESTIONID_IDX]);
         _ruleType = line[Constants.RULES_RULETYPE_IDX];
     	_params = AbsRuleParams.parseFromString(ruleRow, _ruleType, _formatVersion);
+    	_filters = Filter.parseFromString(ruleRow);
     }
     
     public String getRuleType() {
@@ -37,4 +41,11 @@ public class OneRule {
     public int getQuestionId() {
     	return _questionId;
     }
+
+	/**
+	 * @return the _filters
+	 */
+	public IMJ_OC<Filter> getFilters() {
+		return _filters;
+	}
 }

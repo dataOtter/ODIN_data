@@ -4,14 +4,14 @@
 package filters;
 
 import constants.Constants;
+import reports.rules.AnswersCollection;
 
 /**
  * @author Maisha Jauernig
  *
  */
 public class QuestionFilterInput extends AbsFilterInput {
-	private final int _qid;
-	private final int _choiceId;
+	private final AnswersCollection _allAns;
 	
 	/* the most recent response to question A was B.
 		A = dropdown (question tag)  - field "alias" in "questions.csv", get "questionid"
@@ -19,23 +19,15 @@ public class QuestionFilterInput extends AbsFilterInput {
 	AnswersCollection contains OneAnswers in chronological order, so can walk backward through it
 	so need a time too and walk backward*/ 
 	
-	public QuestionFilterInput(int qid, int choiceId, double timeNow) {
+	public QuestionFilterInput(AnswersCollection allAns, double timeNow) {
 		super(Constants.FILTER_QUESTION, timeNow);
-		_qid = qid;
-		_choiceId = choiceId;
+		_allAns = allAns;
 	}
 
 	/**
-	 * @return the _qid
+	 * @return the _allAns
 	 */
-	public int getQid() {
-		return _qid;
-	}
-
-	/**
-	 * @return the _choiceId
-	 */
-	public int getChoiceId() {
-		return _choiceId;
+	public AnswersCollection getAllAns() {
+		return _allAns;
 	}
 }

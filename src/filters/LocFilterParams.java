@@ -13,16 +13,32 @@ import sensors.gps.GpsCoordinate;
  *
  */
 public class LocFilterParams extends AbsFilterParams {
-	private final PredicateInLocRadius _pred;
-	
-	public LocFilterParams(GpsCoordinate loc, double dist) {
-		super(Constants.FILTER_LOCATION);
-		_pred = new PredicateInLocRadius(loc, dist);
-	}
+	private PredicateInLocRadius _pred;
 	
 	public LocFilterParams() {
 		super(Constants.FILTER_LOCATION);
 		_pred = new PredicateInLocRadius(new GpsCoordinate(41.819484, -97.6990014), 10.0);
+	}
+	
+	public LocFilterParams(String params) {
+		super(Constants.FILTER_LOCATION);
+		_pred = null;
+		double dist = 0.0, lat = 0.0, lon = 0.0;
+		
+		String[] p = params.split(",");
+		for (String s: p) {
+			double val = Double.parseDouble(s.substring(s.indexOf(':')+1));
+			if (s.contains(Constants.FILTER_LOCATION_DIST)) {
+				dist = val;
+			}
+			else if (s.contains(Constants.FILTER_LOCATION_LAT)){
+				lat = val;
+			}
+			else  if (s.contains(Constants.FILTER_LOCATION_LAT)){
+				lon = val;
+			}
+		}
+		_pred = new PredicateInLocRadius(new GpsCoordinate(lat, lon), dist);
 	}
 
 	@Override

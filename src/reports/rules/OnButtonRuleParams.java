@@ -1,4 +1,4 @@
-package dao.rules;
+package reports.rules;
 
 import constants.Constants;
 
@@ -6,10 +6,10 @@ public class OnButtonRuleParams extends AbsRuleParams {
     private final Integer _id;
     private final String _label;
 
-	OnButtonRuleParams(String ruleRow, int formatVersion) {
+	public OnButtonRuleParams(String ruleRow, int formatVersion) {
 		super(ruleRow, formatVersion);
-		_id = Integer.parseInt(_paramNameToVal.get(Constants.RULES_BUTTONID));
-		_label = _paramNameToVal.get(Constants.RULES_BUTTONLABEL);
+		_id = Integer.parseInt(this.getParamVal(Constants.RULES_BUTTONID));
+		_label = this.getParamVal(Constants.RULES_BUTTONLABEL);
 	}
 
 	public Integer getId() {

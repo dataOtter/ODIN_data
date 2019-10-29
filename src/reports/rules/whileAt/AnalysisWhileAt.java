@@ -19,8 +19,8 @@ public class AnalysisWhileAt implements IAnalysis{
 
     // _answers contains all answers, regardless of cid and rid        
     public AnalysisWhileAt(AnswersCollection answers, RulesCollection rules, 
-    		SensorDataCollection allSensorData, double sensorFireTimeInterval, int cid, int rid, IMJ_OC<Filter> filters) {
-        _eval = new WhileAtPerformanceEval(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, filters);
+    		SensorDataCollection allSensorData, double sensorFireTimeInterval, int cid, int rid) {
+        _eval = new WhileAtPerformanceEval(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid);
     }
     
     @Override

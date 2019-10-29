@@ -1,13 +1,14 @@
-package dao.rules;
+package reports.rules;
 
 import constants.Constants;
 import maps.*;
+import reports.rules.whileAt.WhileAtRuleParams;
 
 public abstract class AbsRuleParams {
 	IMJ_Map<String, String> _paramNameToVal;
     private final int _formatVersion;
 	
-	AbsRuleParams (String ruleRow, int formatVersion){
+	protected AbsRuleParams (String ruleRow, int formatVersion){
     	_formatVersion = formatVersion;
     	_paramNameToVal = extractParameters(ruleRow);
 	}
@@ -29,14 +30,24 @@ public abstract class AbsRuleParams {
 		return ruleParam;
 	}
 	
+	protected void addParam(String key, String val) {
+		_paramNameToVal.put(key, val);
+	}
+	
+	protected String getParamVal(String key) {
+		return _paramNameToVal.get(key);
+	}
+	
 	private IMJ_Map<String, String> extractParameters(String ruleRow) {
         int paramIdx = 1; // default/format version 1
         if (_formatVersion == 2) {
-        	paramIdx = 2;
+        	ruleRow = ruleRow.split("\\[")[1].split("]")[1];
         }
-        String paramSection = ruleRow.split("\\{")[paramIdx].split("\\}")[0];
-
+        
+        String paramSection = ruleRow.split("\\{")[paramIdx];
+        paramSection = paramSection.split("\\}")[0];
         paramSection = paramSection.replaceAll("\\\\",  "").replaceAll("\"", "");
+        
         IMJ_Map<String, String> params = new MJ_Map_Factory<String, String>().create();
         
         while (paramSection.length() > 0) {

@@ -73,6 +73,8 @@ public class ConstTags {
 	public static final String REPORTS_G_R_F_TEXT = "Number of good rule fires";
 	public static final String REPORTS_IDEAL_RULE_FIRES = "_numIdealRuleFires";
 	public static final String REPORTS_I_R_F_TEXT = "Number of ideal world rule fires";
+	public static final String REPORTS_RULE_TRUE_FILTER_FALSE = "ruleTrueFilterFalse";
+	public static final String REPORTS_R_T_F_F = "Number of times rule condition(s) were met, but filter condition(s) were not met";
 	public static final String REPORTS_TOTAL_RULE_FIRES = "_numTotalRuleFires";
 	public static final String REPORTS_T_R_F_TEXT = "Number of total rule fires";
 	public static final String REPORTS_LATE_RULE_FIRES = "numLateRuleFires";  // averageable

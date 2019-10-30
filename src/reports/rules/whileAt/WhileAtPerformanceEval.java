@@ -32,6 +32,7 @@ public class WhileAtPerformanceEval {
 	private int _likelyMissedAnsCount = 0;
 	private int _idealWorldNumRuleFires = 0;
 	private int _shouldFireCount = 0;
+	private int _ruleTrueFilterFalseCount = 0;
 
 	private final double _sensorFireTimeInterval;
 	private final double _minTReq;
@@ -189,6 +190,7 @@ public class WhileAtPerformanceEval {
 		if (_filters != null) {
 			for (Filter f: _filters) {
 				if (! f.checkFilterCondition(conds) ) {
+					_ruleTrueFilterFalseCount++;
 					shouldFire = false;
 					break;
 				}
@@ -276,7 +278,8 @@ public class WhileAtPerformanceEval {
 	}
 
 	private double getMaxTimeToCheck() {
-		double gpsMaxT = _ad.getLastRecordingTime();
+		// presence at the last locations can be assumed until just before another sensor recording should happen
+		double gpsMaxT = _ad.getLastRecordingTime() + _sensorFireTimeInterval - 1;  
 		double ansMaxT = 0.0;
 		if (_answersLeft.size() > 0) {
 			ansMaxT = _answersLeft.getAnsAtIdx(_answersLeft.size() - 1).getRuleFiredTime().getTimeInMillis() / 1000.0;
@@ -321,6 +324,8 @@ public class WhileAtPerformanceEval {
 			ans2 = 0.0;
 		}
 		map.addValue(ConstTags.REPORTS_GOOD_FIRE_PERCENT_OF_TOTAL, ans2, ConstTags.REPORTS_G_F_P_O_T_TEXT);
+		
+		map.addValue(ConstTags.REPORTS_RULE_TRUE_FILTER_FALSE, _ruleTrueFilterFalseCount*1.0, ConstTags.REPORTS_R_T_F_F);
 
 		return map;
 	}

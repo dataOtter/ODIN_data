@@ -24,7 +24,7 @@ public class Filter {
 	}
 	
 	public static IMJ_OC<Filter> parseFromString(String ruleRow) {
-		ruleRow = ruleRow.replace("\\", "").replace("\"", "");
+		ruleRow = ruleRow.replaceAll("\\\\", "").replaceAll("\"", "");
 		if ( ! ruleRow.contains(Constants.FILTERS_LIST)) {
 			return null;
 		}

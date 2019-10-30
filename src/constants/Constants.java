@@ -9,9 +9,9 @@ public class Constants {
     public static final String DIRECTORY_PATH = 
             //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\06-04-2019_167";  // format v 1
             //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";
-    		"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2fv2";
+    		//"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2fv2";
     		//"D:\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
-    		//"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2";  // format v0
+    		"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\\\t4.2fv2"; 
     
     // base version is 1
     public static final int DEFAULT_FORMAT_VERSION = 2;
@@ -82,6 +82,7 @@ public class Constants {
     public static final int RULES_QUESTIONID_IDX = 1;
     public static final int RULES_RULETYPE_IDX = 2;
     public static final int RULES_RULETEXT_IDX = 3;  // this is broken/weird with commas
+    public static final String RULE_PARAM_TO_VAL = "ruleParamToValue";
     public static final String RULE_WHILEAT_NOTAT = "whileAt";
     public static final String RULE_ONARRIVAL = "onArrival";
     public static final String RULE_ONDEPARTURE = "onDeparture";

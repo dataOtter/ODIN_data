@@ -8,16 +8,9 @@ import java.util.Locale;
 import java.util.Scanner;
 
 import constants.Constants;
-import maps.IMJ_Map;
-import maps.MJ_Map_Factory;
-import sensors.data.AbsDataPoint;
-import sensors.data.ActivityDataPoint;
-import sensors.data.BeaconDataPoint;
-import sensors.data.BtDataPoint;
-import sensors.data.SensorDataCollection;
-import sensors.data.GpsDataPoint;
-import sensors.data.SensorDataOfOneType;
-
+import maps.*;
+import orderedcollection.*;
+import sensors.data.*;
 /**
  *
  * @author Maisha Jauernig
@@ -33,23 +26,35 @@ public class SensorReader {
 	
 	public void addAllSensorDataToDataColl(String sensorTblName, SensorDataCollection coll) throws ParseException {
         Scanner sc = new ScannerHelper(_path, sensorTblName + ".csv", Constants.SENSOR_NUM_COLS).getScanner();
-		
+		int lineCount = 0;
+		IMJ_OC<Integer> lines = new MJ_OC_Factory<Integer>().create();
         while ( sc.hasNextLine() ){
-        	String[] line = sc.nextLine().split(",");
-            int cid = Integer.parseInt(line[Constants.SENSOR_COUPONID_IDX]);
-            AbsDataPoint dp = getDataPoint(line);
-            
-            if (dp != null) {
-	            if ( coll.hasCouponEntry(cid) ) {
-	            	coll.addDataPointToCouponData(cid, dp);
+        	lineCount++;
+        	if (sensorTblName.equals("sensor_ProximityBluetooth")) {
+        		if (sc.nextLine().length() > 200) {
+                	lines.add(lineCount);
+            	}
+        	}
+        	else {
+	        	String[] line = sc.nextLine().split(",");
+	            int cid = Integer.parseInt(line[Constants.SENSOR_COUPONID_IDX]);
+	            AbsDataPoint dp = getDataPoint(line);
+	            
+	            if (dp != null) {
+		            if ( coll.hasCouponEntry(cid) ) {
+		            	coll.addDataPointToCouponData(cid, dp);
+		            }
+		            else{
+		            	SensorDataOfOneType couponData = new SensorDataOfOneType(dp);
+		                coll.addCouponAndItsData(cid, couponData);
+		            }
 	            }
-	            else{
-	            	SensorDataOfOneType couponData = new SensorDataOfOneType(dp);
-	                coll.addCouponAndItsData(cid, couponData);
-	            }
-            }
+        	}
         }
         sc.close();
+        if (lines.size() > 0) {
+        	System.out.println(lines);
+        }
 	}
 	
 	public AbsDataPoint getDataPoint(String[] line) throws ParseException {
@@ -146,7 +151,11 @@ public class SensorReader {
 		Calendar dateTime = Calendar.getInstance();
         //SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy hh:mm aa", Locale.US);
         SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss.S", Locale.US);
-        Date d = sdf.parse(line[idx]);
+        String date = line[idx];
+        if (date.contains("ODIN")) {
+        	System.out.println(line);
+        }
+        Date d = sdf.parse(date);
         dateTime.setTime(d);
         return dateTime;
 	}

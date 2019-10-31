@@ -35,7 +35,7 @@ public class AnswersReader {
         AnswersCollection ans = new AnswersCollection();
 		
         while ( sc.hasNextLine() ){
-        	String[] line = getCompleteLineAsArray(sc);
+        	IMJ_OC<String> line = getCompleteLine(sc);
             OneAnswer oneAns = new OneAnswer(_formatVersion, line);
             ans.addAnswer(oneAns);
         } 
@@ -48,54 +48,47 @@ public class AnswersReader {
 	 * @param sc
 	 * @return the complete next line using the given scanner, as a String[] 
 	 */
-	private String[] getCompleteLineAsArray(Scanner sc){
+	private IMJ_OC<String> getCompleteLine(Scanner sc){
         int cols = 0;
-        String completeLine = "";
+        IMJ_OC<String> completeLine = new MJ_OC_Factory<String>().create();
 
         do {
           String oneline = sc.nextLine();
           // if this hits it came from the while loop, and so this subsequent 
           // partial line needs to be attached to the previous partial line
           if (cols > 0) {
-            // throw away everything upto and including the first comma
+            // throw away everything up to and including the first comma
             oneline = oneline.substring(oneline.indexOf(",") + 1);
           }
-          completeLine += oneline;  // merge the two partial lines
-          cols += getNumCols(oneline);
+          completeLine.addAll(getLineOc(oneline));  // merge the two partial lines
+          cols = completeLine.size();
         }
         // while the column count does not match (indicating lines incorrectly broken up)
         while (cols < Constants.ANSWERS_NUM_COLS);
         
-        Assertion.test(cols == Constants.ANSWERS_NUM_COLS, 
-                "Not the right number of columns in this row");
+        Assertion.test(cols == Constants.ANSWERS_NUM_COLS, "Not the right number of columns in this row");
         
-        return completeLine.split(",");
+        return completeLine;
     }
 	
-	private int getNumCols(String oneLine) {
+	private IMJ_OC<String> getLineOc(String oneLine) {
+		IMJ_OC<String> line = new MJ_OC_Factory<String>().create();
         boolean inQuotes = false;
-        int commas = 0;
+        int prevCommaIdx = -1;
 
         for (int i=0; i<oneLine.length(); i++) {
            // if this is the beginning or end of a sub-string that is in quotes
            if (oneLine.charAt(i)=='\"') {  
-               inQuotes = true; 
+               inQuotes = ! inQuotes; 
            }
-           // if we are not inside a sub-string that is in quotes, count any commas
+           // if we are not inside a sub-string that is in quotes, add any comma separated elements to the OC
            if ( ! inQuotes) {
               if (oneLine.charAt(i)==',') { 
-                  commas++; 
+            	  line.add(oneLine.substring(prevCommaIdx+1, i));
+            	  prevCommaIdx = i;
               }
            }
         }
-        // if the last character in this string was not a closing quote, comma count is correct
-        if ( ! inQuotes) {
-            return commas;
-        }
-        // if the last character in this string was a closing quote, add a comma count 
-        // because lines end with a comma in CSVs (num commas = num columns)
-        else {
-            return commas+1;
-        }
+        return line;
     }
 }

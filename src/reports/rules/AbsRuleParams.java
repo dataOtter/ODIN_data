@@ -18,7 +18,8 @@ public abstract class AbsRuleParams {
 		if (ruleType.contains(Constants.RULE_WHILEAT_NOTAT)) {
 			ruleParam =  new WhileAtRuleParams(ruleRow, formatVersion);
 		}
-		else if (ruleType.contains(Constants.RULE_ONARRIVAL) || ruleType.contains(Constants.RULE_ONDEPARTURE)) {
+		else if ((ruleType.contains(Constants.RULE_ONARRIVAL) || ruleType.contains(Constants.RULE_ONDEPARTURE)) 
+				&& ! ruleType.contains(Constants.RULE_BLUETOOTH)) {
 			ruleParam =  new OnArrivalOrDepRuleParams(ruleRow, formatVersion);
 		}
 		else if (ruleType.contains(Constants.RULE_ONBUTTON)) {

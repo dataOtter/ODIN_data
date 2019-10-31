@@ -41,6 +41,7 @@ public class WhileAtPerformanceEval {
 	private double _prevIdealFireT = 0.0;
 	private double _trueFireT = 0.0;
 
+	private final AnswersCollection _allAnswers;
 	private final AnswersCollection _answersLeft;
 	private final IMJ_OC<OneAnswer> _lateAns;
 	private final IMJ_OC<OneAnswer> _earlyAns;
@@ -55,6 +56,7 @@ public class WhileAtPerformanceEval {
 		_cid = cid;
 		_rid = rid;
 		_sensorFireTimeInterval = sensorFireTimeInterval;
+		_allAnswers = answers;
 		
 		OneRule rule = rules.getRuleById(_rid);
 		// minimum time that must pass between rule fires
@@ -179,6 +181,7 @@ public class WhileAtPerformanceEval {
 		IMJ_OC<AbsFilterInput> conds = new MJ_OC_Factory<AbsFilterInput>().create();
 		conds.add(new LocFilterInput(tNow, _ad));
 		conds.add(new TimeFilterInput(tNow));
+		conds.add(new QuestionFilterInput(_allAnswers, tNow));
 		return conds;
 	}
 
@@ -259,7 +262,7 @@ public class WhileAtPerformanceEval {
 				Assertion.test(lenBefore == _answersLeft.size() + 1, "delete did not work");
 				break;
 			}
-			// if this answer's fire time is too early,
+			// if this answer's fire time is too early (this also counts "early" answers due a time filter
 			else {
 				if (!_earlyAns.contains(ans)) {
 					// keep track of answers/rule fires that were too early

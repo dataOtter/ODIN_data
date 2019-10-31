@@ -80,7 +80,7 @@ public class ConstTags {
 	public static final String REPORTS_LATE_RULE_FIRES = "numLateRuleFires";  // averageable
 	public static final String REPORTS_L_R_F_TEXT = "Number of late rule fires (late by at most given % * minT)";
 	public static final String REPORTS_EARLY_RULE_FIRES = "numEarlyRuleFires";  // averageable
-	public static final String REPORTS_E_R_F_TEXT = "Number of early rule fires";
+	public static final String REPORTS_E_R_F_TEXT = "Number of early rule fires (including early as per the rule and early as per the filter(s))";
 	public static final String REPORTS_MISSED_RULE_FIRES = "numMissedRuleFires";  // averageable
 	public static final String REPORTS_M_R_F_TEXT = "Number of missed rule fires (late by more than given % * minT)";
 	public static final String REPORTS_OTHER_RULE_FIRES = "numNotMissedLateEarlyGoodRuleFires";  // averageable

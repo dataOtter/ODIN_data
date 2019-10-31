@@ -34,7 +34,7 @@ public class LocFilterParams extends AbsFilterParams {
 			else if (s.contains(Constants.FILTER_LOCATION_LAT)){
 				lat = val;
 			}
-			else  if (s.contains(Constants.FILTER_LOCATION_LAT)){
+			else  if (s.contains(Constants.FILTER_LOCATION_LON)){
 				lon = val;
 			}
 		}

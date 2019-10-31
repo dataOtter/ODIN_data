@@ -11,7 +11,7 @@ public class Constants {
             //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";
     		//"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2fv2";
     		//"D:\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
-    		"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\\\t4.2fv2"; 
+    		"D:\\Dropbox\\MB_various\\UNL\\Data\\10-29-2019_116"; 
     
     // base version is 1
     public static final int DEFAULT_FORMAT_VERSION = 2;
@@ -53,6 +53,8 @@ public class Constants {
 	public static final String FILTER_LOCATION_LAT = "latitude";
 	public static final String FILTER_LOCATION_LON = "longitude";
 	public static final String FILTER_QUESTION = "answerFilter";
+	public static final String FILTER_QUESTION_QID = "questionId";
+	public static final String FILTER_QUESTION_CHID = "choiceId";
 
     //*********CSV FILE NAMES & COLUMNS*********
     public static final String STUDY_CSV = "study.csv";
@@ -82,6 +84,7 @@ public class Constants {
     public static final int RULES_QUESTIONID_IDX = 1;
     public static final int RULES_RULETYPE_IDX = 2;
     public static final int RULES_RULETEXT_IDX = 3;  // this is broken/weird with commas
+    public static final String RULE_BLUETOOTH = "Bluetooth";
     public static final String RULE_PARAM_TO_VAL = "ruleParamToValue";
     public static final String RULE_WHILEAT_NOTAT = "whileAt";
     public static final String RULE_ONARRIVAL = "onArrival";

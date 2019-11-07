@@ -1,6 +1,7 @@
-package reports.rules;
+package reports.rules.OnArrival;
 
 import constants.Constants;
+import reports.rules.AbsRuleParams;
 
 public class OnArrivalOrDepRuleParams extends AbsRuleParams {
 	private final Integer _dist;

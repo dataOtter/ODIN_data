@@ -48,17 +48,17 @@ public class ConstTags {
 	public static final String REPORTS_G_F_P_O_T_TEXT = "Good rule fire percentage out of all rule fires";
 	public static final String REPORTS_AVERAGE_RULES = "avgRulesAsPercentGoodFires";  // values close to 100 are good  // averageable
 	public static final String REPORTS_AVERAGE_ONE_SENSOR = "avgOneSensorAsPercOfSi";  // values close to 100 are good  // averageable
-	public static final String REPORTS_A_O_S_TEXT = "Average percent accuracy of actual time between GPS recordings to sensor interval, "
+	public static final String REPORTS_A_O_S_TEXT = "Average percent accuracy of actual time between sensor recordings to sensor interval, "
 															+ "values bigger or smaller than 100 are more or less accurate";
 	public static final String REPORTS_AVERAGE_ONE_SENSOR_IN_SECS = "avgOneSensorInSecs";  // averageable
-	public static final String REPORTS_A_O_S_I_S_TEXT = "Average time in seconds between actual GPS recordings";
+	public static final String REPORTS_A_O_S_I_S_TEXT = "Average time in seconds between actual sensor recordings";
 	public static final String REPORTS_AVERAGE_ALL_SENSORS = "avgAllSensorAsPercOfSi";  // averageable
 	// e.g. avg is 88% with std dev 3 percent points
 	public static final String REPORTS_STANDARD_DEVS_RULES = "stdevRulesAsDevFromGoodFiresPerc";  // averageable
 	// as true percent of SI, e.g. avg is 102% of SI with stdev of 50% of SI, 
 	// so if e.g. SI is 300 secs, avg is 306 secs and stdev is 150 secs
 	public static final String REPORTS_STANDARD_DEV_ONE_SENSOR = "stdevOneSensorAsPercentOfSi";  // averageable
-	public static final String REPORTS_S_D_O_S_TEXT = "Standard deviation (in percent of SI) between actual GPS recordings";
+	public static final String REPORTS_S_D_O_S_TEXT = "Standard deviation (in percent of SI) between actual sensor recordings";
 	public static final String REPORTS_STANDARD_DEV_ALL_SENSORS = "stdevAllSensorsAsPercentOfSi";  // averageable
 	
 	//public static final String REPORTS_ALL_CIDS_DATA = "allCidsData";
@@ -91,20 +91,20 @@ public class ConstTags {
 	public static String REPORTS_E_A_TEXT(int i) {return "Early answer occurence " + i + ", time in milliseconds";}
 
 	public static final String REPORTS_TOTAL_SENSOR_RECS = "_numTotalSensorRecordings";
-	public static final String REPORTS_T_S_R_TEXT = "Total GPS recordings";
+	public static final String REPORTS_T_S_R_TEXT = "Total sensor recordings";
 	public static final String REPORTS_SENSOR_RECS_WITHIN_DEV = "_numSensorRecsWithinAllowedDevOFSi";
-	public static final String REPORTS_S_R_W_D_TEXT = "Number of GPS recordings within given allowed deviation of sensor interval";
+	public static final String REPORTS_S_R_W_D_TEXT = "Number of sensor recordings within given allowed deviation of sensor interval";
 	public static final String REPORTS_PERC_SENSOR_RECS_WITHIN_DEV = "perSensorRecsWithinAllowedDevOFSi";  // averageable
-	public static final String REPORTS_S_R_P_W_D_TEXT = "Percent of GPS recordings within given allowed deviation of sensor interval";
+	public static final String REPORTS_S_R_P_W_D_TEXT = "Percent of sensor recordings within given allowed deviation of sensor interval";
 	public static final String REPORTS_MINT_BTW_SENSOR_RECS = "_minTimeBetweenSensorRecordings";
-	public static final String REPORTS_MIN_B_S_R_TEXT = "Minimum/smallest time in seconds between actual GPS recordings";
+	public static final String REPORTS_MIN_B_S_R_TEXT = "Minimum/smallest time in seconds between actual sensor recordings";
 	public static final String REPORTS_MINT_BTW_SENSOR_RECS_AS_PERC = "minTimeBetweenSensorRecsAsPercOfSi";  // averageable
-	public static final String REPORTS_MIN_B_S_R_A_P_TEXT = "Percent accuracy of smallest actual time between GPS recordings to sensor interval, " 
+	public static final String REPORTS_MIN_B_S_R_A_P_TEXT = "Percent accuracy of smallest actual time between sensor recordings to sensor interval, " 
 																	+ "values bigger or smaller than 100 are more or less accurate";
 	public static final String REPORTS_MAXT_BTW_SENSOR_RECS = "_maxTimeBetweenSensorRecordings";
-	public static final String REPORTS_MAX_B_S_R_TEXT = "Maximum/largest time in seconds between actual GPS recordings";
+	public static final String REPORTS_MAX_B_S_R_TEXT = "Maximum/largest time in seconds between actual sensor recordings";
 	public static final String REPORTS_MAXT_BTW_SENSOR_RECS_AS_PERC = "maxTimeBetweenSensorRecsAsPercOfSi";  // averageable
-	public static final String REPORTS_MAX_B_S_R_A_P_TEXT = "Percent accuracy of largest actual time between GPS recordings to sensor interval, " 
+	public static final String REPORTS_MAX_B_S_R_A_P_TEXT = "Percent accuracy of largest actual time between sensor recordings to sensor interval, " 
 																	+ "values bigger or smaller than 100 are more or less accurate";
 	
 	public static final String REPORTS_REL_DATA_GPS = "GPS_sensor";

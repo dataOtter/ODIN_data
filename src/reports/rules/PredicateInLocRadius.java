@@ -1,6 +1,5 @@
 package reports.rules;
 
-import reports.rules.whileAt.WhileAtRuleParams;
 import sensors.gps.GpsCoordinate;
 
 /**
@@ -10,13 +9,7 @@ import sensors.gps.GpsCoordinate;
 public class PredicateInLocRadius extends Predicate {
     private final GpsCoordinate _coordReq;
     private final double _dist;
-    
-    public PredicateInLocRadius(OneRule r){
-    	WhileAtRuleParams param = (WhileAtRuleParams) r.getParams();
-        _coordReq = new GpsCoordinate(param.getLat(), param.getLon());
-        _dist = param.getDist();
-    }
-    
+
     public PredicateInLocRadius(GpsCoordinate locReq, double dist){
         _coordReq = locReq;
         _dist = dist;
@@ -24,6 +17,9 @@ public class PredicateInLocRadius extends Predicate {
     
     @Override
     public boolean test(GpsCoordinate c){
+    	if (c == null) {
+    		return false;
+    	}
         return getCoordsDistance(_coordReq, c) <= _dist;
     }
     

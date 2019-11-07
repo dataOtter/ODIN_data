@@ -1,11 +1,9 @@
-package reports.rules.whileAt;
+package reports.rules;
 
 import java.util.Calendar;
 
-import reports.rules.Predicate;
 import sensors.data.GpsDataPoint;
 import sensors.data.SensorDataOfOneType;
-import sensors.gps.*;
 
 /**
  *
@@ -42,18 +40,14 @@ public class GpsDataAdapter {
         return d.getTimeInMillis() / 1000.0;
     }
     
-    public double getNextStartTime(double t, Predicate p){
-        // this expects a t of a location that is not the predicate location
-        GpsDataPoint g;
-        GpsCoordinate c;
-        int idx = this.getIdxOfLocAtTime(t);
-        
-        for (int i = idx; i<_data.length(); i++){
-            g = (GpsDataPoint) _data.getDataAtIdx(i);
-            c = g.getGpsCoord();
-            if (p.test(c)){
-                Calendar d = _data.getDataAtIdx(i).getDateTime();
-                if (d != null){
+    public double getNextStartTime(double t, Predicate p) {  
+        for (int i = this.getIdxOfLocAtTime(t); i<_data.length(); i++) {
+        	GpsDataPoint g = (GpsDataPoint) _data.getDataAtIdx(i);
+        	
+            if ( p.test(g.getGpsCoord()) ) {
+                Calendar d = g.getDateTime();
+                
+                if (d != null) {
                     return d.getTimeInMillis() / 1000.0;
                 }
             }

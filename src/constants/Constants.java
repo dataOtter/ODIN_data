@@ -124,9 +124,9 @@ public class Constants {
     public static final int SENSOR_GPS_TIME_IDX = 4;
 
     public static final String SENSOR_BT_FIRST_DATA_NAME = "deviceName";  // v2
-    public static final int SENSOR_BT_DEVNAME_IDX = 2;
-    public static final int SENSOR_BT_RAW_IDX = 3;
-    public static final int SENSOR_BT_SMOOTHED_IDX = 4;
+    public static final int SENSOR_BT_FIRST_DEVNAME_IDX = 2;
+    public static final int SENSOR_BT_FIRST_RAW_IDX = 3;
+    public static final int SENSOR_BT_FIRST_SMOOTHED_IDX = 4;
     public static final int SENSOR_BT_TIME_IDX = 5;
 
     public static final String SENSOR_BEACON_FIRST_DATA_NAME = "";  // v2

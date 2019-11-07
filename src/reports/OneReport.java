@@ -69,17 +69,21 @@ public abstract class OneReport {
 		for (int i = 0; i<_data.size(); i++) {
 			String tag = _data.getKey(i);
 			
-			double val = _data.get(tag);
-			String valAsString = "";
-			if (val < 1.0 && val > 0.0) {
-				valAsString = String.format("%.1f", val);
-			}
-			else {
-				valAsString = String.format("%.0f", val);
-			}
+			if (! tag.contains("__") || tag.contains(ConstTags.REPORTS_COUPONID)) {
+				
+				double val = _data.get(tag);
+				String valAsString = "";
+				if (val < 1.0 && val > 0.0) {
+					valAsString = String.format("%.1f", val);
+				}
+				else {
+					valAsString = String.format("%.0f", val);
+				}
 
-			s += _docs.get(tag) + " (" + tag + ") : " + valAsString + "\n";
+				s += _docs.get(tag) + " (" + tag + ") : " + valAsString + "\n";
+			}
 		}
+			
 		return s;
 	}
 

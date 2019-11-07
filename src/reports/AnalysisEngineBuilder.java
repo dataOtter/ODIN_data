@@ -7,6 +7,7 @@ import dao.*;
 import orderedcollection.*;
 import reports.rules.AnswersCollection;
 import reports.rules.RulesCollection;
+import reports.rules.OnArrival.AnalysisOnArrival;
 import reports.rules.whileAt.AnalysisWhileAt;
 import reports.sensors.AnalysisSensor;
 import sensors.StudySensorsCollection;
@@ -59,11 +60,9 @@ public class AnalysisEngineBuilder {
     		public void registerAnalysesToEngine(AnalysisEngine e) {
     			for (int cid: _cids) {
     				for (int sensorId: _sids) {
-    					if (sensorId != 3) {
-							double sensorInterval = _studySensors.getSensorInterval(sensorId);
-		    	            an = new AnalysisSensor(cid, sensorId, _sensorData, sensorInterval);
-	        	            e.register(an);
-    					}
+						double sensorInterval = _studySensors.getSensorInterval(sensorId);
+	    	            an = new AnalysisSensor(cid, sensorId, _sensorData, sensorInterval);
+        	            e.register(an);
     				}
     	        }
     		}
@@ -78,12 +77,31 @@ public class AnalysisEngineBuilder {
     		public void registerAnalysesToEngine(AnalysisEngine e) {
     			for (int cid: _cids) {
     	            for (int rid: _rids) {
-    	            	// currently _rids is already filtered for while at; 
+    	            	// STARTHERE currently _rids is already filtered for while at; 
     	            	// eventually change this and check which rid it is to make the correct analysis 
     	            	double gpsSensorInterval = _studySensors.getSensorInterval(Constants.SENSORID_GPS);
     	                // _answers contains all answers, regardless of cid and rid
-    	                IAnalysis an = new AnalysisWhileAt(_answers, _rules, _sensorData, 
-    	                		gpsSensorInterval, cid, rid);
+    	                IAnalysis an = new AnalysisWhileAt(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
+    	                e.register(an);
+    	            }
+    	        }
+    		}
+    	};
+        _jobs.add(j);
+
+        return this;
+    }
+    
+    public AnalysisEngineBuilder addOnArrivalJobs() {
+    	IJob j = new IJob() {
+    		public void registerAnalysesToEngine(AnalysisEngine e) {
+    			for (int cid: _cids) {
+    	            for (int rid: _rids) {
+    	            	// start here continue this currently _rids is already filtered for while at; 
+    	            	// eventually change this and check which rid it is to make the correct analysis 
+    	            	double gpsSensorInterval = _studySensors.getSensorInterval(Constants.SENSORID_GPS);
+    	                // _answers contains all answers, regardless of cid and rid
+    	                IAnalysis an = new AnalysisOnArrival(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
     	                e.register(an);
     	            }
     	        }

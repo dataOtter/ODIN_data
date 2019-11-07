@@ -9,6 +9,7 @@ import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
 import reports.OneReport;
 import reports.rules.AnswersCollection;
+import reports.rules.GpsDataAdapter;
 import reports.rules.OneRule;
 import reports.rules.Predicate;
 import reports.rules.PredicateInLocRadius;
@@ -25,7 +26,7 @@ import sensors.gps.GpsCoordinate;
 public class WhileAtPerformanceEval {
 	private final int _cid;
 	private final int _rid;
-	private final int _sensorId = 12;
+	private final int _sensorId = Constants.SENSORID_GPS;
 	private final int _numRuleFiresTotal;
 	private int _goodAnsCount = 0;
 	private int _lateAnsCount = 0;
@@ -62,7 +63,7 @@ public class WhileAtPerformanceEval {
 		// minimum time that must pass between rule fires
     	WhileAtRuleParams param = (WhileAtRuleParams) rule.getParams();
 		_minTReq = param.getMinTimeSinceLastFire() * 1.0;
-		_pred = new PredicateInLocRadius(rule);
+		_pred = new PredicateInLocRadius(new GpsCoordinate(param.getLat(), param.getLon()), param.getDist());
 		_filters = rule.getFilters();
 
 		_answersLeft = answers.getAnsForRuleAndCid(_cid, _rid);  // a new AnswersCollection is already a deep copy
@@ -88,7 +89,7 @@ public class WhileAtPerformanceEval {
 				Constants.PERCENT_ALLOWED_DEVIATION_FROM_REQ_RULE_FIRE_TIME * 100, ConstTags.REPORTS_P_A_D_F_R_F_T_TEXT);
 		// 2*SI and minTReq
 		map.addValue(ConstTags.REPORTS_SENSOR_INTERVAL, _sensorFireTimeInterval);
-		map.addValue(ConstTags.REPORTS_RULE_MIN_T, getMinTReq(), ConstTags.REPORTS_R_M_T_TEXT);
+		map.addValue(ConstTags.REPORTS_RULE_MIN_T, _minTReq, ConstTags.REPORTS_R_M_T_TEXT);
 		return map;
 	}
 
@@ -291,6 +292,19 @@ public class WhileAtPerformanceEval {
 	}
 
 	private double getVeryFirstShouldFireTime() {
+		/*// get the time for the first recording
+		double t = _ad.getFirstRecordingTime();
+		GpsCoordinate c = null;
+
+		// check if the second recording is also at the rule location
+		while (! _pred.test(c)) {
+			// get the time for the next first recording at the rule location, and add 2*SI
+			t = _ad.getNextStartTime(t, _pred) + _2si;
+			// get the location at that time to check if it is also at the rule location
+			c = _ad.getLocationAndClearPreceeding(t).getGpsCoord();
+		}
+		
+		return t;*/
 		double t = _ad.getFirstRecordingTime();
 		GpsDataPoint p = _ad.getLocationAndClearPreceeding(t);
 		// GpsDataPoint p = _ad.getLocation(t);

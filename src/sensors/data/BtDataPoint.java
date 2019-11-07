@@ -1,34 +1,22 @@
 package sensors.data;
 
 import java.util.Calendar;
-import constants.*;
+import orderedcollection.*;
 
 /**
  *
  * @author Maisha Jauernig
  */
 public class BtDataPoint extends AbsDataPoint {
-	private final String _deviceName;
-	private final int _rawRSSI;
-	private final double _smoothedRSSI;
+	private final IMJ_OC<BtDeviceData> _data;
     private final static int _sensorId = 3;
-	
-	public BtDataPoint(Calendar dateTime, String name, int raw, double smoothed) {
+    
+	public BtDataPoint(Calendar dateTime, IMJ_OC<BtDeviceData> data) {
         super(dateTime, _sensorId);
-        _deviceName = name;
-    	_rawRSSI = raw;
-    	_smoothedRSSI = smoothed;
+        _data = data;
     }
 
-	public String getDeviceName() {
-		return _deviceName;
-	}
-
-	public int getRawRSSI() {
-		return _rawRSSI;
-	}
-
-	public double getSmoothedRSSI() {
-		return _smoothedRSSI;
+	public IMJ_OC<BtDeviceData> getData() {
+		return _data;
 	}
 }

@@ -1,7 +1,6 @@
 package reports.rules.whileAt;
 
 import constants.ConstTags;
-import filters.Filter;
 import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
 import reports.IAnalysis;
@@ -14,7 +13,7 @@ import sensors.data.SensorDataCollection;
  *
  * @author Maisha Jauernig
  */
-public class AnalysisWhileAt implements IAnalysis{
+public class AnalysisWhileAt implements IAnalysis {
     private final WhileAtPerformanceEval _eval;
 
     // _answers contains all answers, regardless of cid and rid        

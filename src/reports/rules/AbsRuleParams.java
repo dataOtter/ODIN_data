@@ -2,6 +2,7 @@ package reports.rules;
 
 import constants.Constants;
 import maps.*;
+import reports.rules.OnArrival.OnArrivalOrDepRuleParams;
 import reports.rules.whileAt.WhileAtRuleParams;
 
 public abstract class AbsRuleParams {

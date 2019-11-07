@@ -26,35 +26,22 @@ public class SensorReader {
 	
 	public void addAllSensorDataToDataColl(String sensorTblName, SensorDataCollection coll) throws ParseException {
         Scanner sc = new ScannerHelper(_path, sensorTblName + ".csv", Constants.SENSOR_NUM_COLS).getScanner();
-		int lineCount = 0;
-		IMJ_OC<Integer> lines = new MJ_OC_Factory<Integer>().create();
         while ( sc.hasNextLine() ){
-        	lineCount++;
-        	if (sensorTblName.equals("sensor_ProximityBluetooth")) {
-        		if (sc.nextLine().length() > 200) {
-                	lines.add(lineCount);
-            	}
-        	}
-        	else {
-	        	String[] line = sc.nextLine().split(",");
-	            int cid = Integer.parseInt(line[Constants.SENSOR_COUPONID_IDX]);
-	            AbsDataPoint dp = getDataPoint(line);
-	            
-	            if (dp != null) {
-		            if ( coll.hasCouponEntry(cid) ) {
-		            	coll.addDataPointToCouponData(cid, dp);
-		            }
-		            else{
-		            	SensorDataOfOneType couponData = new SensorDataOfOneType(dp);
-		                coll.addCouponAndItsData(cid, couponData);
-		            }
+        	String[] line = sc.nextLine().split(",");
+            int cid = Integer.parseInt(line[Constants.SENSOR_COUPONID_IDX]);
+            AbsDataPoint dp = getDataPoint(line);
+            
+            if (dp != null) {
+	            if ( coll.hasCouponEntry(cid) ) {
+	            	coll.addDataPointToCouponData(cid, dp);
 	            }
-        	}
+	            else{
+	            	SensorDataOfOneType couponData = new SensorDataOfOneType(dp);
+	                coll.addCouponAndItsData(cid, couponData);
+	            }
+            }
         }
         sc.close();
-        if (lines.size() > 0) {
-        	System.out.println(lines);
-        }
 	}
 	
 	public AbsDataPoint getDataPoint(String[] line) throws ParseException {
@@ -124,23 +111,36 @@ public class SensorReader {
 	}
 	
 	private BtDataPoint getBtDataPoint(String[] line) throws ParseException {
-        String name = "";
-        int rawRSSI = -1;
-        double smoothedRSSI = -1.0;
+		IMJ_OC<BtDeviceData> data = new MJ_OC_Factory<BtDeviceData>().create();
+        int timeIdx = Constants.SENSOR_BT_TIME_IDX;
         
-        if (_formatVersion == 2) {
-            name = line[Constants.SENSOR_BT_DEVNAME_IDX]
-            		.replaceAll("\\[", "").replaceAll("\\{", "").replaceAll("\"", "").replaceAll("\\}", "").replaceAll("\\]", "")
-            		.split(":")[1];
-            rawRSSI = Integer.parseInt(line[Constants.SENSOR_BT_RAW_IDX]
-            		.replaceAll("\\[", "").replaceAll("\\{", "").replaceAll("\"", "").replaceAll("\\}", "").replaceAll("\\]", "")
-            		.split(":")[1]);
-            smoothedRSSI = Double.parseDouble(line[Constants.SENSOR_BT_RAW_IDX]
-            		.replaceAll("\\[", "").replaceAll("\\{", "").replaceAll("\"", "").replaceAll("\\}", "").replaceAll("\\]", "")
-            		.split(":")[1]);
-        }
+		if (_formatVersion == 2) {
+	        int nameIdx = Constants.SENSOR_BT_FIRST_DEVNAME_IDX;
+	        int rawIdx = Constants.SENSOR_BT_FIRST_RAW_IDX;
+	        int smoothIdx = Constants.SENSOR_BT_FIRST_SMOOTHED_IDX;
+	        
+	    	do {
+	        	String name = line[nameIdx]
+	            		.replaceAll("\\[", "").replaceAll("\\{", "").replaceAll("\"", "").replaceAll("\\}", "").replaceAll("\\]", "")
+	            		.split(":")[1];
+	            int rawRSSI = Integer.parseInt(line[rawIdx]
+	            		.replaceAll("\\[", "").replaceAll("\\{", "").replaceAll("\"", "").replaceAll("\\}", "").replaceAll("\\]", "")
+	            		.split(":")[1]);
+	            double smoothedRSSI = Double.parseDouble(line[smoothIdx]
+	            		.replaceAll("\\[", "").replaceAll("\\{", "").replaceAll("\"", "").replaceAll("\\}", "").replaceAll("\\]", "")
+	            		.split(":")[1]);
+	            
+	            data.add(new BtDeviceData(name, rawRSSI, smoothedRSSI));
+	            
+	            nameIdx += 3;
+	            rawIdx += 3;
+	            smoothIdx += 3;
+	            
+	        } while (line[nameIdx].contains(Constants.SENSOR_BT_FIRST_DATA_NAME));
+			timeIdx = nameIdx;
+		}
         
-        return new BtDataPoint(getDateTime(line, Constants.SENSOR_BT_TIME_IDX), name, rawRSSI, smoothedRSSI);
+        return new BtDataPoint(getDateTime(line, timeIdx), data);
 	}
 	
 	private BeaconDataPoint getBeaconDataPoint(String[] line) throws ParseException {

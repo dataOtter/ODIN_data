@@ -4,7 +4,7 @@
 package filters;
 
 import constants.Constants;
-import reports.rules.whileAt.GpsDataAdapter;
+import reports.rules.GpsDataAdapter;
 import sensors.gps.GpsCoordinate;
 
 /**

@@ -20,4 +20,9 @@ public abstract class AbsDataPoint {
 	public String getDataType() {
 		return _dataType;
 	}
+	
+	@Override
+	public String toString() {
+		return "date in millis: " + _dateTime.getTime() + " type: " + _dataType;
+	}
 }

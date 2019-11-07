@@ -39,4 +39,9 @@ public class AnalysisWhileAt implements IAnalysis {
 	public String getAnalysisType() {
 		return ConstTags.REPORT_TYPE_WHILEAT_RULE_ANALYSIS;
 	}
+	
+	@Override
+	public String toString() {
+		return "contains WhileAtPerformanceEval";
+	}
 }

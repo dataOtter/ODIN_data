@@ -3,7 +3,6 @@ package sensors.data;
 import java.util.Calendar;
 
 import sensors.gps.GpsCoordinate;
-import constants.*;
 
 /**
  *
@@ -19,6 +18,9 @@ public class GpsDataPoint extends AbsDataPoint {
     }
     
     public GpsCoordinate getGpsCoord() {
+    	if (this.equals(null)) {
+    		return null;
+    	}
     	return _coord;
     }
     

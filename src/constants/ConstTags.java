@@ -13,6 +13,7 @@ import reports.OneReport;
 public class ConstTags {
 	
 	public static final String REPORT_TYPE_WHILEAT_RULE_ANALYSIS = "whileAtRule";
+	public static final String REPORT_TYPE_ONARRIVAL_RULE_ANALYSIS = "onArrivalRule";
 	public static final String REPORT_TYPE_ALL_RULES_ANALYSIS = "allRules";
 	public static final String REPORT_TYPE_ALL_SENSORS_ANALYSIS = "allSensors";
 	public static final IMJ_Map<Integer, String> SENSORID_TO_TYPE = getSidToTypeMap();

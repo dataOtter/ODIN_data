@@ -40,16 +40,24 @@ public class GpsDataAdapter {
         return d.getTimeInMillis() / 1000.0;
     }
     
-    public double getNextStartTime(double t, Predicate p) {  
+    public double getNextStartTime(double t, Predicate p) { 
+    	boolean stillThere = true;
+    	if ( t == 0.0) {
+    		stillThere = false;
+    	}
+    	
         for (int i = this.getIdxOfLocAtTime(t); i<_data.length(); i++) {
         	GpsDataPoint g = (GpsDataPoint) _data.getDataAtIdx(i);
         	
-            if ( p.test(g.getGpsCoord()) ) {
+            if ( p.test(g.getGpsCoord()) && ! stillThere) {
                 Calendar d = g.getDateTime();
                 
                 if (d != null) {
                     return d.getTimeInMillis() / 1000.0;
                 }
+            }
+            else if ( ! p.test(g.getGpsCoord() )) {
+            	stillThere = false;
             }
         }
         return 0.0;
@@ -70,12 +78,17 @@ public class GpsDataAdapter {
     
     public GpsDataPoint getLocation(double tInSecs){
         int i = getIdxOfLocAtTime(tInSecs);
+        if (i < 0) {
+        	return null;
+        }
         return (GpsDataPoint) _data.getDataAtIdx(i);
     }
     
-    private Integer getIdxOfLocAtTime(double tInSecs){
+    private int getIdxOfLocAtTime(double tInSecs){
+    	if (tInSecs==0.0) {
+    		return 0;
+    	}
         double t = _data.getDataAtIdx(_data.length()-1).getDateTime().getTimeInMillis()/1000.0;
-        
         if (tInSecs >= t){
             return _data.length()-1;
         }
@@ -86,6 +99,6 @@ public class GpsDataAdapter {
                 return i-1;
             }
         }
-        return null;
+        return -1;
     }
 }

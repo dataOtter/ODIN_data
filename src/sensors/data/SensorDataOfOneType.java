@@ -48,4 +48,9 @@ public class SensorDataOfOneType {
     public String getDataType() {
     	return _type;
     }
+    
+    @Override
+    public String toString() {
+    	return "type: " + _type + " data: " + _data.toString();
+    }
 }

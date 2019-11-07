@@ -32,7 +32,7 @@ public class GpsCoordsClustersGalaxy {
         //update map by removing those 2 and adding the new cluster
         centerToCluster.remove(closestCenterCoords[0]);
         centerToCluster.remove(closestCenterCoords[1]);
-        centerToCluster.put(new GpsCoordinate(0, 0), cluster);
+        centerToCluster.put(new GpsCoordinate(0.0, 0.0), cluster);
         
         //put all clusters from the updated map into a new galaxy
         GpsCoordsClustersGalaxy g = makeGalaxyFromMapOfCentersToClusters(centerToCluster);

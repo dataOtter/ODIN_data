@@ -43,7 +43,7 @@ public class AnalysisEngineBuilder {
         // _answers will contain all answers, regardless of cid and rid
         _answers = new AnswersReader(_path, _formatVersion).getAllAnswers();
         _rules = new RulesReader(_path, _formatVersion).getAllRules();
-        _rids = _rules.getRulesCollectionByType(Constants.RULE_WHILEAT_NOTAT).getAllRids();
+        _rids = _rules.getAllRids();
         
         _sids = _studySensors.getSensorIds();
         
@@ -72,37 +72,22 @@ public class AnalysisEngineBuilder {
         return this;
     }
     
-    public AnalysisEngineBuilder addWhileAtJobs() {
+    public AnalysisEngineBuilder addRuleJobs() {
     	IJob j = new IJob() {
     		public void registerAnalysesToEngine(AnalysisEngine e) {
     			for (int cid: _cids) {
     	            for (int rid: _rids) {
-    	            	// STARTHERE currently _rids is already filtered for while at; 
-    	            	// eventually change this and check which rid it is to make the correct analysis 
     	            	double gpsSensorInterval = _studySensors.getSensorInterval(Constants.SENSORID_GPS);
-    	                // _answers contains all answers, regardless of cid and rid
-    	                IAnalysis an = new AnalysisWhileAt(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
-    	                e.register(an);
-    	            }
-    	        }
-    		}
-    	};
-        _jobs.add(j);
-
-        return this;
-    }
-    
-    public AnalysisEngineBuilder addOnArrivalJobs() {
-    	IJob j = new IJob() {
-    		public void registerAnalysesToEngine(AnalysisEngine e) {
-    			for (int cid: _cids) {
-    	            for (int rid: _rids) {
-    	            	// start here continue this currently _rids is already filtered for while at; 
-    	            	// eventually change this and check which rid it is to make the correct analysis 
-    	            	double gpsSensorInterval = _studySensors.getSensorInterval(Constants.SENSORID_GPS);
-    	                // _answers contains all answers, regardless of cid and rid
-    	                IAnalysis an = new AnalysisOnArrival(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
-    	                e.register(an);
+    	            	String type = _rules.getRuleById(rid).getRuleType();
+    	            	IAnalysis an;
+    	            	if (type.contains(Constants.RULE_WHILEAT_NOTAT)) {
+	            			an = new AnalysisWhileAt(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
+	            			e.register(an);
+    	            	}
+    	            	else if (type.contains(Constants.RULE_ONARRIVAL)) {
+	            			an = new AnalysisOnArrival(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
+	            			e.register(an);
+    	            	}
     	            }
     	        }
     		}

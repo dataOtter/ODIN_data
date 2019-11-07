@@ -57,4 +57,10 @@ public class AnalysisSensor implements IAnalysis {
 	public String getAnalysisType() {
 		return ConstTags.SENSORID_TO_TYPE.get(_sensorId);
 	}
+	
+	@Override
+	public String toString() {
+		return "SI: " + _sensorInterval + " sid: " + _sensorId + " cid: " + _couponId 
+				+ " " + _data.toString();
+	}
 }

@@ -7,6 +7,7 @@ import filters.*;
 import orderedcollection.*;
 import reports.OneReport;
 import reports.rules.*;
+import sensors.data.GpsDataPoint;
 import sensors.data.SensorDataCollection;
 import sensors.data.SensorDataOfOneType;
 import sensors.gps.GpsCoordinate;
@@ -85,7 +86,7 @@ public class OnArrivalPerformanceEval {
 		double maxT = getMaxTimeToCheck();
 		// step through time by each next time having been at the rule location for at least 2si
 		// after not having been at rule location for at least 2si
-		for (double fireT = getVeryFirstShouldFireTime(maxT); fireT <= maxT; fireT = getNextShouldFireTime(fireT, maxT)) {
+		for (double fireT = getVeryFirstShouldFireTime(maxT); fireT < maxT; fireT = getNextShouldFireTime(fireT, maxT)) {
 			locWithinRadius(fireT);
 			// set fireT to when it actually fired
 			Assertion.test(_trueFireT >= fireT, "moving BACK from " + fireT + " to " + _trueFireT + " by " + (fireT - _trueFireT));
@@ -99,8 +100,8 @@ public class OnArrivalPerformanceEval {
 
 	private void locWithinRadius(double tNowAndIdealFireT) {
 		boolean shouldFire = true;
-		IMJ_OC<AbsFilterInput> conds = getFilterConds(tNowAndIdealFireT);
 		if (_filters != null) {
+			IMJ_OC<AbsFilterInput> conds = getFilterConds(tNowAndIdealFireT);
 			for (Filter f: _filters) {
 				if (! f.checkFilterCondition(conds) ) {
 					_ruleTrueFilterFalseCount++;
@@ -196,7 +197,8 @@ public class OnArrivalPerformanceEval {
 
 	private double getVeryFirstShouldFireTime(double maxTToCheck) {
 		// get next should fire time after first recording time and after not being at rule location for at least 2si
-		return getNextShouldFireTime(_ad.getFirstRecordingTime(), maxTToCheck);
+		//return getNextShouldFireTime(_ad.getFirstRecordingTime(), maxTToCheck);
+		return getNextShouldFireTime(0.0, maxTToCheck);
 	}
 	
 	private double getNextShouldFireTime(double tNow, double maxTToCheck) {
@@ -204,19 +206,36 @@ public class OnArrivalPerformanceEval {
 		while (t <= maxTToCheck) {
 			// get the time for the next first recording at the rule location
 			double firstT = _ad.getNextStartTime(t, _pred);
-			// and add 2*SI to get the potential should fire time
-			t = firstT + _2si;
-			// get the location at that second time
-			GpsCoordinate c = _ad.getLocation(t).getGpsCoord();
+			if (firstT <= 0.0) {
+				return maxTToCheck;
+			}
+			// and add 2*SI, one by one, to get the potential should fire time
+			// and get each location for those next two time
+			t = firstT + _sensorFireTimeInterval;
+			GpsCoordinate c1 = _ad.getLocation(t).getGpsCoord();
+			t += _sensorFireTimeInterval;
+			GpsCoordinate c2 = _ad.getLocation(t).getGpsCoord();
 			
 			// check if this second location is also at the rule location
-			if (_pred.test(c)) {
-				// get the previous time, 2si before the first time at rule location
-				double prevT = firstT - _2si;
-				// get that location
-				c = _ad.getLocation(prevT).getGpsCoord();
-				// check if that location is not at the rule location
-				if ( ! _pred.test(c) ) {
+			if (_pred.test(c1) && _pred.test(c2)) {
+				// get the previous two fire time, 1si and 2si before the first time at rule location
+				double prevT = firstT - _sensorFireTimeInterval;
+				GpsDataPoint dp = _ad.getLocation(prevT);
+				if (dp == null) {
+					c1 = null;
+				} else {
+					c1 = dp.getGpsCoord();
+				}
+				prevT -= _sensorFireTimeInterval;
+				dp = _ad.getLocation(prevT);
+				if (dp == null) {
+					c2 = null;
+				} else {
+					c2 = dp.getGpsCoord();
+				}
+				// get those locations
+				// check if those location are not at the rule location
+				if ( ! _pred.test(c1) && ! _pred.test(c2) ) {
 					return t;
 				}
 			}

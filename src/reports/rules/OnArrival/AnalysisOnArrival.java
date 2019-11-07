@@ -36,6 +36,11 @@ public class AnalysisOnArrival implements IAnalysis {
 
 	@Override
 	public String getAnalysisType() {
-		return ConstTags.REPORT_TYPE_WHILEAT_RULE_ANALYSIS;
+		return ConstTags.REPORT_TYPE_ONARRIVAL_RULE_ANALYSIS;
+	}
+	
+	@Override
+	public String toString() {
+		return "contains OnArrivalPerformanceEval";
 	}
 }

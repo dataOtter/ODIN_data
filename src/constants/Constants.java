@@ -75,6 +75,7 @@ public class Constants {
     public static final int COUPON_NUM_COLS = 21;
     public static final int COUPON_NUM_COLS_V2 = 23;
     public static final int COUPON_COUPONID_IDX = 0;
+    public static final int COUPON_COUPONNUMBER_IDX = 1;
     public static final int COUPON_CONSENTSTATUS_IDX = 5; 
     
     public static final String RULES_CSV = "rules.csv";

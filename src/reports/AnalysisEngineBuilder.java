@@ -35,7 +35,7 @@ public class AnalysisEngineBuilder {
         _sensorData = new SensorDataCollection();
         IMJ_OC<String> sensorTblNames = new SensorTblNamesReader(_path, _formatVersion).getSensorTblNames();
         for (String tblName: sensorTblNames) {
-        	new SensorReader(_path, _formatVersion).addAllSensorDataToDataColl(tblName, _sensorData);
+        	new SensorsReader(_path, _formatVersion).addAllSensorDataToDataColl(tblName, _sensorData);
         }
         _studySensors = new SensorsReader(_path, _formatVersion).getStudySensorsCollection();
         _cids = new CouponReader(_path, _formatVersion).getActiveCouponIds();

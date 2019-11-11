@@ -7,7 +7,6 @@ import dao.AnswersReader;
 import dao.CouponReader;
 import dao.RulesReader;
 import dao.SensorTblNamesReader;
-import dao.SensorsReader;
 import orderedcollection.IMJ_OC;
 import reports.OneReport;
 import reports.rules.AnswersCollection;

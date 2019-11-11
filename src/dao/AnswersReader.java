@@ -37,7 +37,7 @@ public class AnswersReader {
         while ( sc.hasNextLine() ){
         	IMJ_OC<String> line = getCompleteLine(sc);
             OneAnswer oneAns = new OneAnswer(_formatVersion, line);
-            ans.addAnswer(oneAns);
+            ans.add(oneAns);
         } 
         sc.close();
         

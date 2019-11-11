@@ -8,7 +8,7 @@ import reports.rules.OneRule;
 import reports.rules.RulesCollection;
 
 /**
- *
+ * Reads all data from the rules.csv file into a RulesCollection
  * @author Maisha Jauernig
  */
 public class RulesReader {
@@ -16,12 +16,19 @@ public class RulesReader {
 	private final int _formatVersion;
 	private RulesCollection _rules;
 	
+	/**
+	 * @param path
+	 * @param formatVersion
+	 */
 	public RulesReader(String path, int formatVersion) {
 		_path = path;
 		_formatVersion = formatVersion;
 		_rules = null;
 	}
 	
+	/**
+	 * @return all data from the rules.csv file as a RulesCollection
+	 */
 	public RulesCollection getAllRules() {
 		if (_rules == null) {
 	    	int numCols;

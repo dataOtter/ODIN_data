@@ -16,6 +16,10 @@ public class OneRule {
     private final IMJ_OC<Filter> _filters;
     private final int _formatVersion;
     
+    /**
+     * @param formatVersion
+     * @param ruleRow - one row of the rules.csv as a String
+     */
     public OneRule(int formatVersion, String ruleRow) {
     	_formatVersion = formatVersion;
     	String[] line = ruleRow.split(",");
@@ -26,26 +30,38 @@ public class OneRule {
     	_filters = Filter.parseFromString(ruleRow);
     }
     
-    public String getRuleType() {
-        return _ruleType;
-    }
-    
-    public int getRuleId() {
-        return _ruleId;
-    }
-    
+    /**
+     * @return the parameters AbsRuleParams of this rule
+     */
     public AbsRuleParams getParams() {
         return _params;
     }
     
+    /**
+     * @return the question ID associated with this rule as an int
+     */
     public int getQuestionId() {
     	return _questionId;
     }
 
 	/**
-	 * @return the _filters
+	 * @return this rule's filters as an IMJ_OC<Filter>
 	 */
 	public IMJ_OC<Filter> getFilters() {
 		return _filters;
 	}
+	
+	/**
+     * @return  the rule type of this rule as a String
+     */
+    public String getRuleType(){
+        return _ruleType;
+    }
+    
+    /**
+     * @return the rule ID of this rule as an int
+     */
+    public int getRuleId(){
+        return _ruleId;
+    }
 }

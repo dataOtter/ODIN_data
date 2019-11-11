@@ -3,7 +3,7 @@ package dao;
 import constants.Constants;
 
 /**
- *
+ * Contains all information found in the study.csv
  * @author Maisha Jauernig
  */
 public class Study {
@@ -23,10 +23,16 @@ public class Study {
 //    private Integer _uploadInterval;
     private final String[] _allData;
     
-    public Study(String[] data){
+    /**
+     * @param data - the data of the study as a String[]
+     */
+    Study(String[] data){
         _allData = data;
     }
     
+    /**
+     * @return the ID of this study as an int
+     */
     public Integer getStudyId(){
         if (_id == null){
             _id = Integer.parseInt(_allData[Constants.STUDY_STUDYID_IDX]);
@@ -34,7 +40,3 @@ public class Study {
         return _id;
     }
 }
-
-
-
-

@@ -10,7 +10,7 @@ import constants.Constants;
 import orderedcollection.IMJ_OC;
 
 /**
- *
+ * Contains all information found in one row of the answers.csv
  * @author Maisha Jauernig
  */
 public class OneAnswer {
@@ -22,7 +22,12 @@ public class OneAnswer {
     private final Calendar _ruleFiredDateTime;
     private final int _formatVersion;
     
-    public OneAnswer(int formatVersion, IMJ_OC<String> answerRow) throws ParseException{
+    /**
+     * @param formatVersion
+     * @param answerRow - one row of the answers.csv as a String[]
+     * @throws ParseException
+     */
+    public OneAnswer(int formatVersion, IMJ_OC<String> answerRow) throws ParseException {
     	_formatVersion = formatVersion;
     	_couponId = Integer.parseInt(answerRow.get(Constants.ANSWERS_COUPONID_IDX));
 		_ruleId = Integer.parseInt(answerRow.get(Constants.ANSWERS_RULEID_IDX));
@@ -32,20 +37,46 @@ public class OneAnswer {
     	_ruleFiredDateTime = getRuleFiredTimeFromLine(answerRow);
     }
     
+    /**
+     * @return the time the rule associated with this answer fired as a Calendar object
+     */
     public Calendar getRuleFiredTime(){
         return _ruleFiredDateTime;
     }
     
+    /**
+     * @return the text provided as an answer, if any, as a String
+     */
     public String getAnswerText(){
         return _answerText;
     }
     
+    /**
+     * @return the coupon ID associated with this answer as an int
+     */
     public int getCouponId(){
         return _couponId;
     }
     
+    /**
+     * @return the rule ID associated with this answer as an int
+     */
     public int getRuleId(){
         return _ruleId;
+    }
+    
+    /**
+     * @return the question ID associated with this answer as an int
+     */
+    public int getQuestionId(){
+        return _questionId;
+    }
+    
+    /**
+     * @return the choice ID associated with this answer as an int
+     */
+    public int getChoiceId(){
+        return _choiceId;
     }
     
     private Calendar getRuleFiredTimeFromLine(IMJ_OC<String> line) throws ParseException{
@@ -58,18 +89,4 @@ public class OneAnswer {
         dateTime.setTime(d);
         return dateTime;
     }
-
-	/**
-	 * @return the _questionId
-	 */
-	public Integer getQuestionId() {
-		return _questionId;
-	}
-
-	/**
-	 * @return the _choiceId
-	 */
-	public Integer getChoiceId() {
-		return _choiceId;
-	}
 }

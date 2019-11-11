@@ -10,6 +10,7 @@ import reports.AnalysisEngineBuilder;
 import reports.ReportsCollection;
 import reports.stats.StatsBuilder;
 import reports.stats.StatsEngine;
+
 /**
  *
  * @author Maisha Jauernig
@@ -17,7 +18,7 @@ import reports.stats.StatsEngine;
 public class Main {
 
     public static void main(String[] args) throws ParseException, IOException {
-
+    	
         String path = Constants.DIRECTORY_PATH;
         int formatVersion = Constants.DEFAULT_FORMAT_VERSION;
         		

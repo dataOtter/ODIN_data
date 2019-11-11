@@ -1,7 +1,7 @@
 package sensors.gps;
 
 /**
- *
+ * Contains a latitude and a longitude
  * @author Maisha Jauernig
  */
 public class GpsCoordinate {

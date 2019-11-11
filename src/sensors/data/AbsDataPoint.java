@@ -13,10 +13,16 @@ public abstract class AbsDataPoint {
         _dataType = ConstTags.SENSORID_TO_TYPE.get(_sensorId);
 	}
 	
+	/**
+     * @return the date and time associated with the recording of this AbsDataPoint as a Calendar object
+     */
     public Calendar getDateTime() {
         return _dateTime;
     }
     
+	/**
+	 * @return the type of this AbsDataPoint as a String
+	 */
 	public String getDataType() {
 		return _dataType;
 	}

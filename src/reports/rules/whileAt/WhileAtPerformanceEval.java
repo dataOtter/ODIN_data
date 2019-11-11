@@ -233,7 +233,7 @@ public class WhileAtPerformanceEval {
 
 		// loop through answers
 		for (int i = 0; i < _answersLeft.size(); i++) {
-			ans = _answersLeft.getAnsAtIdx(i);
+			ans = _answersLeft.get(i);
 
 			_trueFireT = ans.getRuleFiredTime().getTimeInMillis() / 1000.0;
 
@@ -259,7 +259,7 @@ public class WhileAtPerformanceEval {
 					// System.out.println("here is a late answer");
 				}
 				// remove this answer from the list of answers to avoid counting it again
-				_answersLeft.removeAnsAtIdx(i);
+				_answersLeft.remove(i);
 				Assertion.test(lenBefore == _answersLeft.size() + 1, "delete did not work");
 				break;
 			}
@@ -271,7 +271,7 @@ public class WhileAtPerformanceEval {
 					// if this is too early now, it will only be earlier still for the next rule
 					// fire time
 					// remove this answer from the list of answers to avoid counting it again
-					_answersLeft.removeAnsAtIdx(i);
+					_answersLeft.remove(i);
 					Assertion.test(lenBefore == _answersLeft.size() + 1, "delete did not work");
 					// System.out.println("new early answer");
 					i--;
@@ -286,7 +286,7 @@ public class WhileAtPerformanceEval {
 		double gpsMaxT = _ad.getLastRecordingTime() + _sensorFireTimeInterval - 1;  
 		double ansMaxT = 0.0;
 		if (_answersLeft.size() > 0) {
-			ansMaxT = _answersLeft.getAnsAtIdx(_answersLeft.size() - 1).getRuleFiredTime().getTimeInMillis() / 1000.0;
+			ansMaxT = _answersLeft.get(_answersLeft.size() - 1).getRuleFiredTime().getTimeInMillis() / 1000.0;
 		}
 		return Math.max(gpsMaxT, ansMaxT);
 	}

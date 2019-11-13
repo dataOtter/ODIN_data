@@ -20,7 +20,7 @@ public class RulesCollection extends MJ_OC<OneRule> {
 	 * @param ruleType - type of the rule, found in Constants, as String
 	 * @return a RulesCollection subset that contains only rules of the given type
 	 */
-	public RulesCollection getRulesCollectionByType(String ruleType){
+	public RulesCollection getRulesCollectionByType(String ruleType) {
 		IMJ_OC<OneRule> newRules = new MJ_OC_Factory<OneRule>().create();
 		for (OneRule r: _allRules) {
 			if (r.getRuleType().contains(ruleType)) {

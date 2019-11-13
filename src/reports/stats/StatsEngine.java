@@ -1,5 +1,7 @@
 package reports.stats;
 
+import java.text.ParseException;
+
 import constants.ConstTags;
 import dao.CouponReader;
 import orderedcollection.IMJ_OC;
@@ -25,10 +27,10 @@ public class StatsEngine {
         _doSensors = doSensors;
 	}
 	
-	public ReportsCollection getStats() {
+	public ReportsCollection getStats() throws ParseException {
 
         ReportsCollection stats = new ReportsCollection();
-        IMJ_OC<Integer> cidList = new CouponReader(_path, _formatVersion).getActiveCouponIds();
+        IMJ_OC<Integer> cidList = new CouponReader(_path, _formatVersion).getActiveCoupons().getAllCids();
         
         for (int cid: cidList) {
         	

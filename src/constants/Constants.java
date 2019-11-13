@@ -77,6 +77,7 @@ public class Constants {
     public static final int COUPON_COUPONID_IDX = 0;
     public static final int COUPON_COUPONNUMBER_IDX = 1;
     public static final int COUPON_CONSENTSTATUS_IDX = 5; 
+    public static final int COUPON_LASTREGISTRATION_IDX = 12; 
     
     public static final String RULES_CSV = "rules.csv";
     public static final int RULES_NUM_COLS_V0 = 11;
@@ -90,6 +91,7 @@ public class Constants {
     public static final String RULE_PARAM_TO_VAL = "ruleParamToValue";
     public static final String RULE_WHILEAT_NOTAT = "whileAt";
     public static final String RULE_ONARRIVAL = "onArrival";
+    public static final String RULE_CRON = "cron";
     public static final String RULE_ONDEPARTURE = "onDeparture";
     public static final String RULE_ONBUTTON = "uiObserverRule";
     public static final String RULE_FOLLOWUP = "questionObserverRule";
@@ -106,6 +108,8 @@ public class Constants {
     public static final String RULES_BUTTONLABEL = "buttonLabel";  // onButton
     public static final String RULES_QUESTIONID = "observableQuestionId";  // followUp
     public static final String RULES_CHOICESLIST = "choicesListForObservableQuestion";  // followUp
+    public static final String RULES_CRONMANUAL = "cronRuleString_manual";  // cron
+    public static final String RULES_CRON = "cronRuleString";  // cron
     
     public static final String ANSWERS_CSV = "answers.csv";
     public static final int ANSWERS_NUM_COLS = 10;

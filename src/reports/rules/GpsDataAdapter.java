@@ -13,7 +13,7 @@ public class GpsDataAdapter {
     private final long _sizeGpsBuffer;
     private final SensorDataOfOneType _data;
     
-    public GpsDataAdapter(SensorDataOfOneType d, double si, double minT){
+    public GpsDataAdapter(SensorDataOfOneType d, double si, double minT) {
         _data = d;
         // this will be used for deleting past, already "used" GPS recordings
         // they are deleted up to _sizeGpsBuffer recordings before the given time

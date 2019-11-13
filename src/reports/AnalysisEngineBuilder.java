@@ -38,7 +38,7 @@ public class AnalysisEngineBuilder {
         	new SensorsReader(_path, _formatVersion).addAllSensorDataToDataColl(tblName, _sensorData);
         }
         _studySensors = new SensorsReader(_path, _formatVersion).getStudySensorsCollection();
-        _cids = new CouponReader(_path, _formatVersion).getActiveCouponIds();
+        _cids = new CouponReader(_path, _formatVersion).getActiveCoupons().getAllCids();
         
         // _answers will contain all answers, regardless of cid and rid
         _answers = new AnswersReader(_path, _formatVersion).getAllAnswers();

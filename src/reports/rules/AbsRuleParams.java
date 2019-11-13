@@ -2,6 +2,7 @@ package reports.rules;
 
 import constants.Constants;
 import maps.*;
+import reports.rules.Cron.CronRuleParams;
 import reports.rules.OnArrival.OnArrivalOrDepRuleParams;
 import reports.rules.whileAt.WhileAtRuleParams;
 
@@ -22,6 +23,9 @@ public abstract class AbsRuleParams {
 		else if ((ruleType.contains(Constants.RULE_ONARRIVAL) || ruleType.contains(Constants.RULE_ONDEPARTURE)) 
 				&& ! ruleType.contains(Constants.RULE_BLUETOOTH)) {
 			ruleParam =  new OnArrivalOrDepRuleParams(ruleRow, formatVersion);
+		}
+		else if (ruleType.contains(Constants.RULE_CRON)) {
+			ruleParam =  new CronRuleParams(ruleRow, formatVersion);
 		}
 		else if (ruleType.contains(Constants.RULE_ONBUTTON)) {
 			ruleParam =  new OnButtonRuleParams(ruleRow, formatVersion);

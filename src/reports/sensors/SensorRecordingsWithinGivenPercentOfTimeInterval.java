@@ -24,12 +24,12 @@ public class SensorRecordingsWithinGivenPercentOfTimeInterval extends AbsSensorP
         
         long upperBound = Math.round((_sensorInterval + (_per * _sensorInterval)) * 1000);
         long lowerBound = Math.round((_sensorInterval - (_per * _sensorInterval)) * 1000);
-        long t1 = _data.getDataAtIdx(0).getDateTime().getTimeInMillis();
-        int numDataPoints = _data.length();
+        long t1 = _data.get(0).getDateTime().getTimeInMillis();
+        int numDataPoints = _data.size();
         long count = 1;
         
         for (int i = 1; i<numDataPoints; i++){
-            long t2 = _data.getDataAtIdx(i).getDateTime().getTimeInMillis();
+            long t2 = _data.get(i).getDateTime().getTimeInMillis();
             long tempDiff = t2-t1;
             if (tempDiff >= lowerBound && tempDiff <= upperBound){
                 count += 1;
@@ -42,13 +42,13 @@ public class SensorRecordingsWithinGivenPercentOfTimeInterval extends AbsSensorP
     
     @Override
     public Double getValueInPercent(){
-        double per = _val / (double) _data.length() * 100;
+        double per = _val / (double) _data.size() * 100;
         per = Math.round(per * 1d) / 1d;  // this is to get 2 decimal places
         return per;
     }
     
     private int getTotalNumOfSensorRecs(){
-        return _data.length();
+        return _data.size();
     }
     
     @Override

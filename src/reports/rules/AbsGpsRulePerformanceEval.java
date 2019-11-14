@@ -17,7 +17,7 @@ public abstract class AbsGpsRulePerformanceEval extends AbsRulePerformanceEval {
 		AbsGpsRuleParams params = (AbsGpsRuleParams)rules.getRuleById(rid).getParams();
 		_pred = new PredicateInLocRadius(new GpsCoordinate(params.getLat(), params.getLon()), params.getDist());
 
-		double gpsMaxT = _ad.getLastRecordingTime() + _sensorFireTimeInterval - 1;  
+		double gpsMaxT = _gpsAd.getLastRecordingTime() + _sensorFireTimeInterval - 1;  
 		double ansMaxT = 0.0;
 		if (_answersLeft.size() > 0) {
 			ansMaxT = _answersLeft.get(_answersLeft.size() - 1).getRuleFiredTime().getTimeInMillis() / 1000.0;

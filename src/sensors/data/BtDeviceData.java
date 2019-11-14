@@ -1,5 +1,8 @@
 package sensors.data;
-
+/**
+*
+* @author Maisha Jauernig
+*/
 public class BtDeviceData {
 	private final String _deviceName;
 	private final int _rawRSSI;

@@ -5,6 +5,7 @@ package filters;
 
 import constants.Constants;
 import reports.rules.GpsDataAdapter;
+import sensors.data.GpsDataPoint;
 import sensors.gps.GpsCoordinate;
 
 /**
@@ -18,7 +19,7 @@ public class LocFilterInput extends AbsFilterInput {
 		super(Constants.FILTER_LOCATION, timeNowInSecs);
 		_locNow = null;
 		if (ad != null) {
-			_locNow = ad.getLocation(timeNowInSecs).getGpsCoord();
+			_locNow = ( (GpsDataPoint) ad.getDataPointAtTime(timeNowInSecs) ).getGpsCoord();
 		}
 	}
 

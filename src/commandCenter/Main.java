@@ -37,7 +37,7 @@ public class Main {
         
         // printing
         System.out.println(allReports);
-        System.out.println(allStats);
+        //System.out.println(allStats);
 
     }
 }

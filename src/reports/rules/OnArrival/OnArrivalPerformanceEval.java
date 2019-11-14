@@ -43,29 +43,29 @@ public class OnArrivalPerformanceEval extends AbsGpsRulePerformanceEval {
 		double t = tNow;
 		while (t <= _maxAnsT) {
 			// get the time for the next first recording at the rule location
-			double firstT = _ad.getNextStartTime(t, _pred);
+			double firstT = _gpsAd.getNextStartTime(t, _pred);
 			if (firstT <= 0.0) {
 				return _maxAnsT;
 			}
 			// and add 2*SI, one by one, to get the potential should fire time
 			// and get each location for those next two time
 			t = firstT + _sensorFireTimeInterval;
-			GpsCoordinate c1 = _ad.getLocation(t).getGpsCoord();
+			GpsCoordinate c1 = ( (GpsDataPoint) _gpsAd.getDataPointAtTime(t) ).getGpsCoord();
 			t += _sensorFireTimeInterval;
-			GpsCoordinate c2 = _ad.getLocation(t).getGpsCoord();
+			GpsCoordinate c2 = ( (GpsDataPoint) _gpsAd.getDataPointAtTime(t) ).getGpsCoord();
 			
 			// check if this second location is also at the rule location
 			if (_pred.test(c1) && _pred.test(c2)) {
 				// get the previous two fire time, 1si and 2si before the first time at rule location
 				double prevT = firstT - _sensorFireTimeInterval;
-				GpsDataPoint dp = _ad.getLocation(prevT);
+				GpsDataPoint dp = (GpsDataPoint)_gpsAd.getDataPointAtTime(prevT);
 				if (dp == null) {
 					c1 = null;
 				} else {
 					c1 = dp.getGpsCoord();
 				}
 				prevT -= _sensorFireTimeInterval;
-				dp = _ad.getLocation(prevT);
+				dp = (GpsDataPoint)_gpsAd.getDataPointAtTime(prevT);
 				if (dp == null) {
 					c2 = null;
 				} else {

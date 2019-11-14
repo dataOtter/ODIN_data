@@ -66,7 +66,7 @@ public class SensorDataCollection {
         	String type = data.getDataType();
     		for (SensorDataOfOneType d: allCouponData) {
         		if (d.getDataType().equals(type)) {
-        			d.addDataPoint(data);
+        			d.add(data);
         			return;
         		}
         	}

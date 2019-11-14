@@ -44,8 +44,8 @@ public class GpsCoordsClustersGalaxy {
         GpsCoordinate coord;
         IGpsCoordsClusterObserver obs;
         //loop through d and make a cluster for each GpsDataPoint
-        for (int i = 0; i<d.length(); i++){
-        	GpsDataPoint dp = (GpsDataPoint) d.getDataAtIdx(i);
+        for (int i = 0; i<d.size(); i++){
+        	GpsDataPoint dp = (GpsDataPoint) d.get(i);
             coord = dp.getGpsCoord();
             cluster = new GpsCoordsCluster(coord);
             obs = new GpsCoordsClusterCenterCalc();

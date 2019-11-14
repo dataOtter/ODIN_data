@@ -20,14 +20,14 @@ public class SensorMaxTimeInterval extends AbsSensorPerformanceEval {
             return _val;
         }
         
-        long t1 = _data.getDataAtIdx(0).getDateTime().getTimeInMillis();
+        long t1 = _data.get(0).getDateTime().getTimeInMillis();
         long t2;
         long maxDiff = 0;
         long tempDiff;
-        int numDataPoints = _data.length();
+        int numDataPoints = _data.size();
         
         for (int i = 1; i<numDataPoints; i++){
-            t2 = _data.getDataAtIdx(i).getDateTime().getTimeInMillis();
+            t2 = _data.get(i).getDateTime().getTimeInMillis();
             tempDiff = t2-t1;
             if (tempDiff > maxDiff){
                 maxDiff = tempDiff;

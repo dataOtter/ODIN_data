@@ -34,7 +34,7 @@ public class WhileAtPerformanceEval extends AbsGpsRulePerformanceEval {
 		
 		// loop through time by minT intervals, skipping absences from the rule location
 		for (double fireT = veryFirstFireT; fireT <= _maxAnsT; fireT += _curMinTBetweenFires) {
-			GpsDataPoint p = _ad.getLocationAndClearPreceeding(fireT);
+			GpsDataPoint p = (GpsDataPoint)_gpsAd.getDataPointAndClearPreceeding(fireT);
 			GpsCoordinate c = p.getGpsCoord();
 
 			// if we are roughly at the required location
@@ -55,7 +55,7 @@ public class WhileAtPerformanceEval extends AbsGpsRulePerformanceEval {
 				// this may still not be entirely accurate as each fireT is based on the previous trueFireT and is not an absolute measure
 				locNotWithinRadius(firstFireT);  
 				// set fireT to the time of the next gps recording at the location
-				fireT = _ad.getNextStartTime(fireT, _pred);
+				fireT = _gpsAd.getNextStartTime(fireT, _pred);
 				if (fireT <= 0.0) { // if there are no more recordings at the location
 					break;
 				}
@@ -73,13 +73,13 @@ public class WhileAtPerformanceEval extends AbsGpsRulePerformanceEval {
 
 	@Override
 	protected double getVeryFirstShouldFireTime() {
-		double t = _ad.getFirstRecordingTime();
-		GpsDataPoint p = _ad.getLocationAndClearPreceeding(t);
+		double t = _gpsAd.getFirstRecordingTime();
+		GpsDataPoint p = (GpsDataPoint)_gpsAd.getDataPointAndClearPreceeding(t);
 		GpsCoordinate c = p.getGpsCoord();
 		// if the first gps recording time is not at the rule location,
 		if (!_pred.test(c)) {
 			// get the time for the first recording at the rule location
-			t = _ad.getNextStartTime(t, _pred);
+			t = _gpsAd.getNextStartTime(t, _pred);
 		}
 		// add the initial 2*SI to the first time at the rule location
 		// to get the first time the rule should fire

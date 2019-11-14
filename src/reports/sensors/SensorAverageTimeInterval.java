@@ -20,14 +20,14 @@ public class SensorAverageTimeInterval extends AbsSensorPerformanceEval {
             return _val;
         }
         
-        long t1 = _data.getDataAtIdx(0).getDateTime().getTimeInMillis();
+        long t1 = _data.get(0).getDateTime().getTimeInMillis();
         long t2;
-        int numDataPoints = _data.length();
+        int numDataPoints = _data.size();
         int numTimeIntervals = numDataPoints - 1;
         long sum = 0;
         
         for (int i = 1; i<numDataPoints; i++){
-            t2 = _data.getDataAtIdx(i).getDateTime().getTimeInMillis();
+            t2 = _data.get(i).getDateTime().getTimeInMillis();
             sum += t2-t1;
             t1 = t2;
         }
@@ -61,15 +61,15 @@ public class SensorAverageTimeInterval extends AbsSensorPerformanceEval {
             _val = getValue();
         }
         
-        long t1 = _data.getDataAtIdx(0).getDateTime().getTimeInMillis();
+        long t1 = _data.get(0).getDateTime().getTimeInMillis();
         long t2;
-        int numDataPoints = _data.length(); 
+        int numDataPoints = _data.size(); 
         int numTimeIntervals = numDataPoints - 1;
         long sumSq = 0;
         long t;
         
         for (int i = 1; i<numDataPoints; i++){
-            t2 = _data.getDataAtIdx(i).getDateTime().getTimeInMillis();
+            t2 = _data.get(i).getDateTime().getTimeInMillis();
             t = t2-t1;
             sumSq += (t - _val*1000) * (t - _val*1000);
             t1 = t2;

@@ -33,7 +33,7 @@ public abstract class AbsRulePerformanceEval {
 	protected final IMJ_OC<OneAnswer> _lateAns;
 	protected final IMJ_OC<OneAnswer> _earlyAns;
 	
-	protected GpsDataAdapter _ad;
+	protected final GpsDataAdapter _gpsAd;
 	private final IMJ_OC<Filter> _filters;
 	
 	protected AbsRulePerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
@@ -53,9 +53,11 @@ public abstract class AbsRulePerformanceEval {
 		
 		String sensorId = ConstTags.SENSORID_TO_TYPE.get(Constants.SENSORID_GPS);
 		SensorDataOfOneType gpsData = allSensorData.getCouponDataOfType(_cid, sensorId).getDeepCopy();
-		_ad = null;
 		if (gpsData != null) {
-			_ad = new GpsDataAdapter(gpsData, _sensorFireTimeInterval, _minTReq);
+			_gpsAd = new GpsDataAdapter(gpsData, _sensorFireTimeInterval, _minTReq);
+		}
+		else {
+			_gpsAd = null;
 		}
 	}
 	
@@ -173,7 +175,7 @@ public abstract class AbsRulePerformanceEval {
 	
 	private IMJ_OC<AbsFilterInput> getFilterInputs(double tNow) {
 		IMJ_OC<AbsFilterInput> inputs = new MJ_OC_Factory<AbsFilterInput>().create();
-		inputs.add(new LocFilterInput(tNow, _ad));
+		inputs.add(new LocFilterInput(tNow, _gpsAd));
 		inputs.add(new TimeFilterInput(tNow));
 		inputs.add(new QuestionFilterInput(_allAnswers, tNow));
 		return inputs;

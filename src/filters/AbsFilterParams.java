@@ -16,7 +16,7 @@ public abstract class AbsFilterParams {
 		_type = type;
 	}
 	
-	public abstract boolean testInput(IMJ_OC<AbsFilterInput> inputs);
+	public abstract boolean testInputs(IMJ_OC<AbsFilterInput> inputs);
 
 	/**
 	 * @return the _type

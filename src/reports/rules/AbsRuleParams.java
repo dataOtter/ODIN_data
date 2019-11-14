@@ -44,6 +44,10 @@ public abstract class AbsRuleParams {
 		return _paramNameToVal.get(key);
 	}
 	
+	protected boolean containsParamKey(String key) {
+		return _paramNameToVal.containsKey(key);
+	}
+	
 	private IMJ_Map<String, String> extractParameters(String ruleRow) {
 		ruleRow = ruleRow.replaceAll("\\\\",  "").replaceAll("\"", "");
         //int paramIdx = 1; // default/format version 1

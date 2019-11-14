@@ -32,7 +32,7 @@ public class QuestionFilterParams extends AbsFilterParams {
 	}
 
 	@Override
-	public boolean testInput(IMJ_OC<AbsFilterInput> inputs) {
+	public boolean testInputs(IMJ_OC<AbsFilterInput> inputs) {
 		AnswersCollection allAns = null;
 		Double timeNow = null;
 		

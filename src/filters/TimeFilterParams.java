@@ -38,7 +38,7 @@ public class TimeFilterParams extends AbsFilterParams {
 	}
 
 	@Override
-	public boolean testInput(IMJ_OC<AbsFilterInput> inputs) {
+	public boolean testInputs(IMJ_OC<AbsFilterInput> inputs) {
 		double timeNowSecs = 0.0;
 		for (AbsFilterInput i: inputs) {
 			if (i.getType().equals(this.getType())) {

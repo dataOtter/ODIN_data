@@ -7,6 +7,7 @@ import dao.*;
 import orderedcollection.*;
 import reports.rules.AnswersCollection;
 import reports.rules.RulesCollection;
+import reports.rules.Cron.AnalysisCron;
 import reports.rules.OnArrival.AnalysisOnArrival;
 import reports.rules.whileAt.AnalysisWhileAt;
 import reports.sensors.AnalysisSensor;
@@ -20,6 +21,7 @@ import sensors.data.SensorDataCollection;
 public class AnalysisEngineBuilder {
     private final String _path;
     private final int _formatVersion;
+    private final CouponCollection _coupons;
     private final IMJ_OC<Integer> _cids;
     private final IMJ_OC<Integer> _rids;
     private final IMJ_OC<Integer> _sids;
@@ -38,7 +40,8 @@ public class AnalysisEngineBuilder {
         	new SensorsReader(_path, _formatVersion).addAllSensorDataToDataColl(tblName, _sensorData);
         }
         _studySensors = new SensorsReader(_path, _formatVersion).getStudySensorsCollection();
-        _cids = new CouponReader(_path, _formatVersion).getActiveCoupons().getAllCids();
+        _coupons = new CouponReader(_path, _formatVersion).getActiveCoupons();
+        _cids = _coupons.getAllCids();
         
         // _answers will contain all answers, regardless of cid and rid
         _answers = new AnswersReader(_path, _formatVersion).getAllAnswers();
@@ -86,6 +89,10 @@ public class AnalysisEngineBuilder {
     	            	}
     	            	else if (type.contains(Constants.RULE_ONARRIVAL)) {
 	            			an = new AnalysisOnArrival(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
+	            			e.register(an);
+    	            	}
+    	            	else if (type.contains(Constants.RULE_CRON)) {
+	            			an = new AnalysisCron(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid, _coupons);
 	            			e.register(an);
     	            	}
     	            }

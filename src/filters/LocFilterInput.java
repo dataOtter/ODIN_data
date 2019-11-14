@@ -16,7 +16,10 @@ public class LocFilterInput extends AbsFilterInput {
 	
 	public LocFilterInput(double timeNowInSecs, GpsDataAdapter ad) {
 		super(Constants.FILTER_LOCATION, timeNowInSecs);
-		_locNow = ad.getLocation(timeNowInSecs).getGpsCoord();
+		_locNow = null;
+		if (ad != null) {
+			_locNow = ad.getLocation(timeNowInSecs).getGpsCoord();
+		}
 	}
 
 	/**

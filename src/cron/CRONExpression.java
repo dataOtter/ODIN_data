@@ -58,7 +58,6 @@ public class CRONExpression {
 
 		int secondsToFire = -1;
 		long maximumSeconds = Seconds.secondsBetween(currentDateTime, furthestTimeToCheck).getSeconds();
-		System.out.println("maximumSeconds="+maximumSeconds);
 		
 		DateTimeConverter nextFiringDateTime;
 		
@@ -69,48 +68,39 @@ public class CRONExpression {
 		}
 		
 		int diff = Seconds.secondsBetween(currentDateTime, nextFiringDateTime.getJodaDateTime()).getSeconds();
-		System.out.println("diff="+diff);
 
-		System.out.println("start");
 		while (Seconds.secondsBetween(currentDateTime, nextFiringDateTime.getJodaDateTime()).getSeconds() <= maximumSeconds) {
-			System.out.println("loop");
 			if(!monthCompare.testTimeMatches(nextFiringDateTime.getMonthOfYear())) {
 				nextFiringDateTime.plusMonths(1);
 				nextFiringDateTime.withDayOfMonth(1);
 				nextFiringDateTime.withHourOfDay(0);
 				nextFiringDateTime.withMinuteOfHour(0);
-				System.out.println("moving up to the next month");
 				continue;
 			}
 			if(!dayOfMonthCompare.testTimeMatches(nextFiringDateTime.getDayOfMonth())) {
-				System.out.println("moving up to the next day (dom)");
 				nextFiringDateTime.plusDays(1);
 				nextFiringDateTime.withHourOfDay(0);
 				nextFiringDateTime.withMinuteOfHour(0);
 				continue;
 			}
 			if(!dayOfWeekCompare.testTimeMatches(nextFiringDateTime.getDayOfWeek())) {
-				System.out.println("moving up to the next day (dow)");
 				nextFiringDateTime.plusDays(1);
 				nextFiringDateTime.withHourOfDay(0);
 				nextFiringDateTime.withMinuteOfHour(0);
 				continue;
 			}
 			if(!hourCompare.testTimeMatches(nextFiringDateTime.getHourOfDay())) {
-				System.out.println("moving up to next hour");
 				nextFiringDateTime.plusHours(1);
 				nextFiringDateTime.withMinuteOfHour(0);
 				continue;
 			}
 			if(!minuteCompare.testTimeMatches(nextFiringDateTime.getMinuteOfHour())) {
-				System.out.println("moving up a minute");
 				nextFiringDateTime.plusMinutes(1);
 				continue;
 			}
 			secondsToFire = Seconds.secondsBetween(currentDateTime, nextFiringDateTime.getJodaDateTime()).getSeconds();
 			break;
 		}
-		System.out.println("done");
 		return secondsToFire;
 	}
 	

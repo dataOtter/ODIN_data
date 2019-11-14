@@ -42,7 +42,7 @@ public class LocFilterParams extends AbsFilterParams {
 	}
 
 	@Override
-	public boolean testInput(IMJ_OC<AbsFilterInput> inputs) {
+	public boolean testInputs(IMJ_OC<AbsFilterInput> inputs) {
 		GpsCoordinate locNow = null;
 		for (AbsFilterInput i: inputs) {
 			if (i.getType().equals(this.getType())) {

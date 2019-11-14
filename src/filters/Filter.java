@@ -19,8 +19,8 @@ public class Filter {
 		_params = params;
 	}
 
-	public boolean checkFilterCondition(IMJ_OC<AbsFilterInput> inputs) {
-		return _params.testInput(inputs);
+	public boolean checkFilterInputs(IMJ_OC<AbsFilterInput> inputs) {
+		return _params.testInputs(inputs);
 	}
 	
 	public static IMJ_OC<Filter> parseFromString(String ruleRow) {

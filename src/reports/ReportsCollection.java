@@ -207,7 +207,7 @@ public class ReportsCollection {
 			}
 			else {
 				String existingDesc = tagToDesc.get(finalTag).get(0);
-				Assertion.test(existingDesc == descr, "Conflicting descriptions of tag " + finalTag);
+				Assertion.test(existingDesc.equals(descr), "Conflicting descriptions of tag " + finalTag);
 			}
 		}
 	}

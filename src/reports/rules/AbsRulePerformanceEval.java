@@ -33,7 +33,7 @@ public abstract class AbsRulePerformanceEval {
 	protected final IMJ_OC<OneAnswer> _lateAns;
 	protected final IMJ_OC<OneAnswer> _earlyAns;
 	
-	protected final GpsDataAdapter _ad;
+	protected GpsDataAdapter _ad;
 	private final IMJ_OC<Filter> _filters;
 	
 	protected AbsRulePerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
@@ -51,9 +51,12 @@ public abstract class AbsRulePerformanceEval {
 		_earlyAns = new MJ_OC_Factory<OneAnswer>().create();
 		_lateAns = new MJ_OC_Factory<OneAnswer>().create();
 		
-		SensorDataOfOneType gpsData = allSensorData.getCouponDataOfType(_cid, ConstTags.SENSORID_TO_TYPE.get(Constants.SENSORID_GPS)).getDeepCopy();
-		Assertion.test(gpsData != null, "No GPS data found for coupon ID " + _cid);
-		_ad = new GpsDataAdapter(gpsData, _sensorFireTimeInterval, _minTReq);
+		String sensorId = ConstTags.SENSORID_TO_TYPE.get(Constants.SENSORID_GPS);
+		SensorDataOfOneType gpsData = allSensorData.getCouponDataOfType(_cid, sensorId).getDeepCopy();
+		_ad = null;
+		if (gpsData != null) {
+			_ad = new GpsDataAdapter(gpsData, _sensorFireTimeInterval, _minTReq);
+		}
 	}
 	
 	public OneReport getPerformanceEvalData(OneReport map) {
@@ -76,7 +79,7 @@ public abstract class AbsRulePerformanceEval {
 	
 	protected abstract double getVeryFirstShouldFireTime();
 	
-	protected final void shouldFireRule(double tNowAndIdealFireT, double allowedLateTInterval) {
+	protected final void shouldFireRule(double tNowAndIdealFireT, double tForCalcAllowedDevT) {
 		boolean shouldFire = filtersPassed(tNowAndIdealFireT);
 		if ( ! shouldFire ) {
 			_ruleTrueFilterFalseCount++;
@@ -84,7 +87,7 @@ public abstract class AbsRulePerformanceEval {
 		else {
 			_idealWorldNumRuleFires++;  
 			if (_answersLeft.size() > 0) {
-				findGoodAnswer(tNowAndIdealFireT, allowedLateTInterval);
+				findGoodAnswer(tNowAndIdealFireT, tForCalcAllowedDevT);
 			}
 		}
 		// dummy true fire time when the filter condition was not met and/or there are no answers left
@@ -99,10 +102,10 @@ public abstract class AbsRulePerformanceEval {
 	
 	protected final boolean filtersPassed(double time) {
 		boolean passed = true;
-		IMJ_OC<AbsFilterInput> conds = getFilterConds(time);
+		IMJ_OC<AbsFilterInput> inputs = getFilterInputs(time);
 		if (_filters != null) {
 			for (Filter f: _filters) {
-				if (! f.checkFilterCondition(conds) ) {
+				if (! f.checkFilterInputs(inputs) ) {
 					passed = false;
 					break;
 				}
@@ -111,10 +114,10 @@ public abstract class AbsRulePerformanceEval {
 		return passed;
 	}
 
-	private void findGoodAnswer(double tNowAndIdealFireT, double allowedLateTInterval) {
+	private void findGoodAnswer(double tNowAndIdealFireT, double tForCalcAllowedDevT) {
 		OneAnswer ans;
 		// arbitrary, picking SI because it seems reasonable 
-		double allowedDevT = Constants.PERCENT_ALLOWED_DEVIATION_FROM_REQ_RULE_FIRE_TIME * allowedLateTInterval;
+		double allowedDevT = Constants.PERCENT_ALLOWED_DEVIATION_FROM_REQ_RULE_FIRE_TIME * tForCalcAllowedDevT;
 		int lenBefore = _answersLeft.size();
 
 		// loop through answers
@@ -127,7 +130,8 @@ public abstract class AbsRulePerformanceEval {
 			if (_trueFireT >= tNowAndIdealFireT) {
 
 				// if this answer's fire time is also earlier than the allowed maximum time,
-				if (_trueFireT <= tNowAndIdealFireT + allowedDevT) {
+				double t = tNowAndIdealFireT + allowedDevT;
+				if (_trueFireT <= t) {
 					// then it is a good answer (fired roughly when it should have)
 					_goodAnsCount++;
 				}
@@ -135,11 +139,13 @@ public abstract class AbsRulePerformanceEval {
 				// it is a late answer; but count this as the next fire time
 				else {
 					double tAmountLate = _trueFireT - tNowAndIdealFireT;
-					// if the answer is late by more than 80% of the given time interval, it is a missed answer
-					if (tAmountLate > .8 * allowedLateTInterval) {
-						_likelyMissedAnsCount++;
-					} else {
+					// if the answer is late by less than 80% of the given time interval, it is a late answer
+					if (tAmountLate < .8 * tForCalcAllowedDevT) {
 						_lateAnsCount++;
+					// if the answer is late by more than 80% of the given time interval, it is a missed answer
+					} else {
+						_likelyMissedAnsCount++;
+						break;
 					}
 					_lateAns.add(ans);
 				}
@@ -165,12 +171,12 @@ public abstract class AbsRulePerformanceEval {
 		}
 	}
 	
-	private IMJ_OC<AbsFilterInput> getFilterConds(double tNow) {
-		IMJ_OC<AbsFilterInput> conds = new MJ_OC_Factory<AbsFilterInput>().create();
-		conds.add(new LocFilterInput(tNow, _ad));
-		conds.add(new TimeFilterInput(tNow));
-		conds.add(new QuestionFilterInput(_allAnswers, tNow));
-		return conds;
+	private IMJ_OC<AbsFilterInput> getFilterInputs(double tNow) {
+		IMJ_OC<AbsFilterInput> inputs = new MJ_OC_Factory<AbsFilterInput>().create();
+		inputs.add(new LocFilterInput(tNow, _ad));
+		inputs.add(new TimeFilterInput(tNow));
+		inputs.add(new QuestionFilterInput(_allAnswers, tNow));
+		return inputs;
 	}
 	
 	private OneReport getGoodFireCounts(OneReport map) {
@@ -210,8 +216,8 @@ public abstract class AbsRulePerformanceEval {
 		// all late or missed answer times
 		if (_lateAnsCount > 0) {
 			for (int i = 0; i < _lateAns.size(); i++) {
-				map.addValue(ConstTags.REPORTS_LATEORMISSED_ANS(i),
-						_lateAns.get(i).getRuleFiredTime().getTimeInMillis() * 1.0, ConstTags.REPORTS_LOM_A_TEXT(i));
+				map.addValue(ConstTags.REPORTS_LATE_ANS(i),
+						_lateAns.get(i).getRuleFiredTime().getTimeInMillis() * 1.0, ConstTags.REPORTS_L_A_TEXT(i));
 			}
 		}
 		return map;

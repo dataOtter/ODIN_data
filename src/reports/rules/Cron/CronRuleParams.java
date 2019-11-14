@@ -12,7 +12,12 @@ public class CronRuleParams extends AbsRuleParams {
 
     public CronRuleParams(String ruleRow, int formatVersion) {
 		super(ruleRow, formatVersion);
-		_cronManual = this.getParamVal(Constants.RULES_CRONMANUAL);
+		if (this.containsParamKey(Constants.RULES_CRONMANUAL)) {
+			_cronManual = this.getParamVal(Constants.RULES_CRONMANUAL);
+		}
+		else {
+			_cronManual = "";
+		}
 		_cron = this.getParamVal(Constants.RULES_CRON);
 	}
 

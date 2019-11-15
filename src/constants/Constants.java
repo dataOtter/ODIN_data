@@ -113,6 +113,8 @@ public class Constants {
     public static final String RULES_COUNT = "count";  // onDepBt
     public static final String RULES_DELAY = "delay";  // onDepBt
     public static final String RULES_PROXIMITY = "closeness";  // onDepBt
+    public static final String RULES_PROXIMITY_CLOSE = "closeto";  // onDepBt
+    public static final String RULES_PROXIMITY_NEARBY = "nearby";  // onDepBt
     
     public static final String ANSWERS_CSV = "answers.csv";
     public static final int ANSWERS_NUM_COLS = 10;

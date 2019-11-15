@@ -9,6 +9,7 @@ import reports.rules.AnswersCollection;
 import reports.rules.RulesCollection;
 import reports.rules.Cron.AnalysisCron;
 import reports.rules.OnArrival.AnalysisOnArrival;
+import reports.rules.OnDepBt.AnalysisOnDepBt;
 import reports.rules.whileAt.AnalysisWhileAt;
 import reports.sensors.AnalysisSensor;
 import sensors.StudySensorsCollection;
@@ -87,12 +88,16 @@ public class AnalysisEngineBuilder {
 	            			an = new AnalysisWhileAt(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
 	            			e.register(an);
     	            	}
-    	            	else if (type.contains(Constants.RULE_ONARRIVAL)) {
-	            			an = new AnalysisOnArrival(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
-	            			e.register(an);
-    	            	}
-    	            	else if (type.contains(Constants.RULE_CRON)) {
-	            			an = new AnalysisCron(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid, _coupons);
+    	            	//else if (type.contains(Constants.RULE_ONARRIVAL) && ! type.contains(Constants.RULE_BLUETOOTH)) {
+	            			//an = new AnalysisOnArrival(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
+	            			//e.register(an);
+    	            	//}
+    	            	//else if (type.contains(Constants.RULE_CRON)) {
+	            			//an = new AnalysisCron(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid, _coupons);
+	            			//e.register(an);
+    	            	//}
+    	            	else if (type.contains(Constants.RULE_ONDEPARTURE) && type.contains(Constants.RULE_BLUETOOTH)) {
+	            			an = new AnalysisOnDepBt(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
 	            			e.register(an);
     	            	}
     	            }

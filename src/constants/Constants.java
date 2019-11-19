@@ -8,21 +8,24 @@ public class Constants {
     
     public static final String DIRECTORY_PATH = 
             //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\06-04-2019_167";  // format v 1
-            //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";
+            "C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\10-29-2019_116";
     		//"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2fv2";
     		//"D:\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
     		//"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2fv2";
-    		"D:\\Dropbox\\MB_various\\UNL\\Data\\10-29-2019_116"; 
+    		//"D:\\Dropbox\\MB_various\\UNL\\Data\\10-29-2019_116"; 
     
     // base version is 1
     public static final int DEFAULT_FORMAT_VERSION = 2;
     public static final boolean TESTING_GPS_ONLY = true;
 
     //*********ANALAYSIS VARIABLES*********
-    // for GPS data eval
+    // for sensor data eval
     public final static double PERCENT_ALLOWED_DEVIATION_FROM_SI = 0.01;
-    // for while at rules eval
-    public static final double PERCENT_ALLOWED_DEVIATION_FROM_REQ_RULE_FIRE_TIME = 0.1;
+    // for rules eval
+    public static final double PERC_ALLOWED_DEV_FROM_GIVEN_TIME_ONTIME = 0.1;
+    public static final double PERC_ALLOWED_DEV_FROM_GIVEN_TIME_LATE = 0.8;
+    public static final double PERC_ALLOWED_DEV_FROM_GIVEN_TIME_ONTIME_CRON = 0.02;
+    public static final double PERC_ALLOWED_DEV_FROM_GIVEN_TIME_LATE_CRON = 0.3;
     // when an answer fired too late, after what percentage of the minT 
     // is it considered missed entirely rather than fired late
     public static final double PERCENT_CUTOFF_OF_MINT_FOR_LATE_ANS = 0.8;

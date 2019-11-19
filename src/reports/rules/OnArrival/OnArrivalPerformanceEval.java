@@ -13,9 +13,9 @@ import sensors.gps.GpsCoordinate;
 public class OnArrivalPerformanceEval extends AbsGpsRulePerformanceEval {
 
 	public OnArrivalPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
-			double sensorFireTimeInterval, int cid, int rid) {
+			double gpsSensorFireTimeInterval, int cid, int rid) {
 		
-		super(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, 2*sensorFireTimeInterval);
+		super(answers, rules, allSensorData, gpsSensorFireTimeInterval, cid, rid, 2*gpsSensorFireTimeInterval);
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class OnArrivalPerformanceEval extends AbsGpsRulePerformanceEval {
 		// step through time by each next time having been at the rule location for at least 2si
 		// after not having been at rule location for at least 2si
 		for (double fireT = getVeryFirstShouldFireTime(); fireT < _maxAnsT; fireT = getNextShouldFireTime(fireT)) {
-			shouldFireRule(fireT, _minTReq);
+			shouldFireRule(fireT);
 			// set fireT to when it actually fired
 			fireT = _trueFireT;
 		}
@@ -49,22 +49,22 @@ public class OnArrivalPerformanceEval extends AbsGpsRulePerformanceEval {
 			}
 			// and add 2*SI, one by one, to get the potential should fire time
 			// and get each location for those next two time
-			t = firstT + _sensorFireTimeInterval;
+			t = firstT + _gpsSensorFireTimeInterval;
 			GpsCoordinate c1 = ( (GpsDataPoint) _gpsAd.getDataPointAtTime(t) ).getGpsCoord();
-			t += _sensorFireTimeInterval;
+			t += _gpsSensorFireTimeInterval;
 			GpsCoordinate c2 = ( (GpsDataPoint) _gpsAd.getDataPointAtTime(t) ).getGpsCoord();
 			
 			// check if this second location is also at the rule location
 			if (_pred.test(c1) && _pred.test(c2)) {
 				// get the previous two fire time, 1si and 2si before the first time at rule location
-				double prevT = firstT - _sensorFireTimeInterval;
+				double prevT = firstT - _gpsSensorFireTimeInterval;
 				GpsDataPoint dp = (GpsDataPoint)_gpsAd.getDataPointAtTime(prevT);
 				if (dp == null) {
 					c1 = null;
 				} else {
 					c1 = dp.getGpsCoord();
 				}
-				prevT -= _sensorFireTimeInterval;
+				prevT -= _gpsSensorFireTimeInterval;
 				dp = (GpsDataPoint)_gpsAd.getDataPointAtTime(prevT);
 				if (dp == null) {
 					c2 = null;

@@ -39,7 +39,7 @@ public class WhileAtPerformanceEval extends AbsGpsRulePerformanceEval {
 
 			// if we are roughly at the required location
 			if (_pred.test(c)) {
-				shouldFireRule(fireT, _minTReq);
+				shouldFireRule(fireT);
 				updateTotalTimeAtLoc(fireT);
 				// set fireT to when it actually fired
 				fireT = _trueFireT;
@@ -83,7 +83,7 @@ public class WhileAtPerformanceEval extends AbsGpsRulePerformanceEval {
 		}
 		// add the initial 2*SI to the first time at the rule location
 		// to get the first time the rule should fire
-		t += 2 * _sensorFireTimeInterval;
+		t += 2 * _gpsSensorFireTimeInterval;
 		return t;
 	}
 
@@ -93,12 +93,12 @@ public class WhileAtPerformanceEval extends AbsGpsRulePerformanceEval {
 		// add 2*SI to the total time spent there as no previous fire time exists yet
 		// and in case this fire was late, also add the amount it was late by (+ _trueFireT - tNowAndIdealFireT)
 		if (_atLocConsecCount == 1) {
-			_totalTimeAtLoc += 2 * _sensorFireTimeInterval + _trueFireT - tNowAndIdealFireT;
+			_totalTimeAtLoc += 2 * _gpsSensorFireTimeInterval + _trueFireT - tNowAndIdealFireT;
 		} else {
 			_totalTimeAtLoc += _trueFireT - _prevIdealFireT;
 		}
 		_prevIdealFireT = _trueFireT;
-		_curMinTBetweenFires = _minTReq;
+		_curMinTBetweenFires = _minTReqRule;
 	}
 
 	private void locNotWithinRadius(double firstFireT) {
@@ -109,12 +109,12 @@ public class WhileAtPerformanceEval extends AbsGpsRulePerformanceEval {
 		_totalTimeAtLoc += _curMinTBetweenFires / 2.0;
 		// if the time spent at this location is more than 2 * SI
 		// (i.e. there should be at least one rule fire at this location, not taking filters into account),
-		if (_totalTimeAtLoc >= _sensorFireTimeInterval * 2) {
+		if (_totalTimeAtLoc >= _gpsSensorFireTimeInterval * 2) {
 			// subtract 2*SI from total time because the first minT between rule fires is 2*SI
-			_totalTimeAtLoc -= _sensorFireTimeInterval * 2;
+			_totalTimeAtLoc -= _gpsSensorFireTimeInterval * 2;
 			// then get the count of times it should have fired
 			// by looping from the first fire time to the last fire time, by minTReq
-			for (double i = firstFireT; i <= (firstFireT+_totalTimeAtLoc); i+=_minTReq) {
+			for (double i = firstFireT; i <= (firstFireT+_totalTimeAtLoc); i+=_minTReqRule) {
 				if ( filtersPassed(i) ) {
 					_idealWorldNumRuleFires++;
 				}
@@ -122,7 +122,7 @@ public class WhileAtPerformanceEval extends AbsGpsRulePerformanceEval {
 			// then get the remaining count of times it should have fired, if any
 			//_idealWorldNumRuleFires += Math.floor(_totalTimeAtLoc / _minTReq);
 		}
-		_curMinTBetweenFires = 2 * _sensorFireTimeInterval;
+		_curMinTBetweenFires = 2 * _gpsSensorFireTimeInterval;
 		_totalTimeAtLoc = 0.0;
 	}
 }

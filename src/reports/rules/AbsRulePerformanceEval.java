@@ -23,8 +23,8 @@ public abstract class AbsRulePerformanceEval {
 	protected int _idealWorldNumRuleFires = 0;
 	protected int _ruleTrueFilterFalseCount = 0;
 	
-	protected final double _sensorFireTimeInterval;
-	protected final double _minTReq;
+	protected final double _gpsSensorFireTimeInterval;
+	protected final double _minTReqRule;
 	protected double _maxAnsT;
 	protected double _trueFireT = 0.0;
 	
@@ -36,12 +36,18 @@ public abstract class AbsRulePerformanceEval {
 	protected final GpsDataAdapter _gpsAd;
 	private final IMJ_OC<Filter> _filters;
 	
+	private final double _allowanceLateFireT;
+	private final double _allowanceOnTimeFireT;
+	
 	protected AbsRulePerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
-			double sensorFireTimeInterval, int cid, int rid, double minTReq) {
+			double gpsSensorFireTimeInterval, int cid, int rid, double minTReqRule, 
+			double allowanceOnTimeFireT, double allowanceLateFireT) {
 		_cid = cid;
 		_rid = rid;
-		_sensorFireTimeInterval = sensorFireTimeInterval;
-		_minTReq = minTReq;
+		_gpsSensorFireTimeInterval = gpsSensorFireTimeInterval;
+		_minTReqRule = minTReqRule;
+		_allowanceOnTimeFireT = allowanceLateFireT;
+		_allowanceLateFireT = allowanceOnTimeFireT; 
 		
 		_filters = rules.getRuleById(_rid).getFilters();
 
@@ -54,7 +60,7 @@ public abstract class AbsRulePerformanceEval {
 		String sensorId = ConstTags.SENSORID_TO_TYPE.get(Constants.SENSORID_GPS);
 		SensorDataOfOneType gpsData = allSensorData.getCouponDataOfType(_cid, sensorId).getDeepCopy();
 		if (gpsData != null) {
-			_gpsAd = new GpsDataAdapter(gpsData, _sensorFireTimeInterval, _minTReq);
+			_gpsAd = new GpsDataAdapter(gpsData, _gpsSensorFireTimeInterval, _minTReqRule);
 		}
 		else {
 			_gpsAd = null;
@@ -69,11 +75,11 @@ public abstract class AbsRulePerformanceEval {
 		map = getLateAndMissedFireCounts(map);
 		map = getEarlyFireCounts(map);
 		// allowed margin of error for firing late or early
-		map.addValue(ConstTags.REPORTS_PERC_ALLW_DEV_FRM_RULE_FIRE_T,
-				Constants.PERCENT_ALLOWED_DEVIATION_FROM_REQ_RULE_FIRE_TIME * 100, ConstTags.REPORTS_P_A_D_F_R_F_T_TEXT);
+		map.addValue(ConstTags.REPORTS_PERC_ALLW_DEV_ONTIME,
+				Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_ONTIME * 100, ConstTags.REPORTS_P_A_D_OT_TEXT);
 		// 2*SI and minTReq
-		map.addValue(ConstTags.REPORTS_SENSOR_INTERVAL, _sensorFireTimeInterval);
-		map.addValue(ConstTags.REPORTS_RULE_MIN_T, _minTReq, ConstTags.REPORTS_R_M_T_TEXT);
+		map.addValue(ConstTags.REPORTS_SENSOR_INTERVAL, _gpsSensorFireTimeInterval);
+		map.addValue(ConstTags.REPORTS_RULE_MIN_T, _minTReqRule, ConstTags.REPORTS_R_M_T_TEXT);
 		return map;
 	}
 	
@@ -81,7 +87,7 @@ public abstract class AbsRulePerformanceEval {
 	
 	protected abstract double getVeryFirstShouldFireTime();
 	
-	protected final void shouldFireRule(double tNowAndIdealFireT, double tForCalcAllowedDevT) {
+	protected final void shouldFireRule(double tNowAndIdealFireT) {
 		boolean shouldFire = filtersPassed(tNowAndIdealFireT);
 		if ( ! shouldFire ) {
 			_ruleTrueFilterFalseCount++;
@@ -89,7 +95,7 @@ public abstract class AbsRulePerformanceEval {
 		else {
 			_idealWorldNumRuleFires++;  
 			if (_answersLeft.size() > 0) {
-				findGoodAnswer(tNowAndIdealFireT, tForCalcAllowedDevT);
+				findGoodAnswer(tNowAndIdealFireT);
 			}
 		}
 		// dummy true fire time when the filter condition was not met and/or there are no answers left
@@ -116,10 +122,8 @@ public abstract class AbsRulePerformanceEval {
 		return passed;
 	}
 
-	private void findGoodAnswer(double tNowAndIdealFireT, double tForCalcAllowedDevT) {
+	private void findGoodAnswer(double tNowAndIdealFireT) {
 		OneAnswer ans;
-		// arbitrary, picking SI because it seems reasonable 
-		double allowedDevT = Constants.PERCENT_ALLOWED_DEVIATION_FROM_REQ_RULE_FIRE_TIME * tForCalcAllowedDevT;
 		int lenBefore = _answersLeft.size();
 
 		// loop through answers
@@ -132,7 +136,7 @@ public abstract class AbsRulePerformanceEval {
 			if (_trueFireT >= tNowAndIdealFireT) {
 
 				// if this answer's fire time is also earlier than the allowed maximum time,
-				double t = tNowAndIdealFireT + allowedDevT;
+				double t = tNowAndIdealFireT + _allowanceOnTimeFireT;
 				if (_trueFireT <= t) {
 					// then it is a good answer (fired roughly when it should have)
 					_goodAnsCount++;
@@ -142,7 +146,7 @@ public abstract class AbsRulePerformanceEval {
 				else {
 					double tAmountLate = _trueFireT - tNowAndIdealFireT;
 					// if the answer is late by less than 80% of the given time interval, it is a late answer
-					if (tAmountLate < .8 * tForCalcAllowedDevT) {
+					if (tAmountLate < _allowanceLateFireT) {
 						_lateAnsCount++;
 					// if the answer is late by more than 80% of the given time interval, it is a missed answer
 					} else {
@@ -210,8 +214,8 @@ public abstract class AbsRulePerformanceEval {
 
 	private OneReport getLateAndMissedFireCounts(OneReport map) {
 		// cutoff for deciding if late or missed
-		map.addValue(ConstTags.REPORTS_PERC_CUTOFF_MINT_LATE_ANS, Constants.PERCENT_CUTOFF_OF_MINT_FOR_LATE_ANS * 100.0,
-				ConstTags.REPORTS_P_C_M_L_A_TEXT);
+		map.addValue(ConstTags.REPORTS_PERC_ALLW_DEV_LATE, Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_LATE * 100.0,
+				ConstTags.REPORTS_P_A_D_L_TEXT);
 		// counts of late and missed fires
 		map.addValue(ConstTags.REPORTS_LATE_RULE_FIRES, _lateAnsCount * 1.0, ConstTags.REPORTS_L_R_F_TEXT);
 		map.addValue(ConstTags.REPORTS_MISSED_RULE_FIRES, _likelyMissedAnsCount * 1.0, ConstTags.REPORTS_M_R_F_TEXT);

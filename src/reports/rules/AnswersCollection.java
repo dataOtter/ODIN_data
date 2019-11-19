@@ -2,6 +2,8 @@ package reports.rules;
 
 import dao.OneAnswer;
 import orderedcollection.*;
+
+import java.util.Calendar;
 import java.util.Iterator;
 
 /**
@@ -26,6 +28,25 @@ public class AnswersCollection extends MJ_OC<OneAnswer> {
      */
     private AnswersCollection(IMJ_OC<OneAnswer> answers) {
 		_allAnswers = answers.getDeepCopy();
+	}
+    
+    public AnswersCollection getAnswerAtTimeInSecsForCidAndRid(int cid, int rid, double timeInSecs) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis((long)timeInSecs);
+		AnswersCollection ans = getAnsForRuleAndCid(cid, rid);
+		ans = ans.getAnswersAtTimeInSecs(timeInSecs);
+		return ans;
+    }
+    
+	public AnswersCollection getAnswersAtTimeInSecs(double timeInSecs) {
+		AnswersCollection ans = new AnswersCollection();
+		
+		for (OneAnswer a: _allAnswers) {
+    		if ( a.getRuleFiredTime().getTimeInMillis() / 1000.0 == timeInSecs) {
+    			ans.add(a);
+    		}
+		}
+		return ans;
 	}
     
     /**

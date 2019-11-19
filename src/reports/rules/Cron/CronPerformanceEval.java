@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import Assert.Assertion;
+import constants.Constants;
 import cron.CRONExpression;
 import dao.CouponCollection;
 import dao.OneCoupon;
@@ -24,9 +25,11 @@ public class CronPerformanceEval extends AbsRulePerformanceEval {
 	private DateTime _maxTJoda;
 
 	public CronPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
-			double sensorFireTimeInterval, int cid, int rid, CouponCollection coupons) {
+			double gpsSensorFireTimeInterval, int cid, int rid, CouponCollection coupons) {
 		
-		super(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, sensorFireTimeInterval*2);
+		super(answers, rules, allSensorData, gpsSensorFireTimeInterval, cid, rid, gpsSensorFireTimeInterval*2,
+				Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_ONTIME_CRON * 3000.0, 
+				Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_LATE_CRON * 3000.0);
 
 		_maxAnsT = Calendar.getInstance().getTimeInMillis() / 1000.0;
 		_maxTJoda = DateTime.now();
@@ -38,6 +41,8 @@ public class CronPerformanceEval extends AbsRulePerformanceEval {
 			_maxTJoda = new DateTime((long)_maxAnsT*1000, maxAnsTTZ);
 		}
 		
+		// get time to next fire as replacement for 3000
+		
 		_coupon = coupons.getCouponById(_cid);
 		CronRuleParams params = (CronRuleParams)rules.getRuleById(rid).getParams();
 		_cron = new CRONExpression(params.getCron());
@@ -47,8 +52,7 @@ public class CronPerformanceEval extends AbsRulePerformanceEval {
 	protected void doTheWork() {
 		// step through time by each next time that the cron rule dictates
 		for (double fireT = getVeryFirstShouldFireTime(); fireT < _maxAnsT && fireT > 0; fireT = getNextShouldFireTime(fireT)) {
-			//shouldFireRule(fireT, _sensorFireTimeInterval);
-			shouldFireRule(fireT, 3000.0);
+			shouldFireRule(fireT);
 		}
 		Assertion.test(
 				_earlyAns.size() + _answersLeft.size() + _goodAnsCount + _lateAns.size() == _numRuleFiresTotal,

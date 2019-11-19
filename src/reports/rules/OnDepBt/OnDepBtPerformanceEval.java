@@ -20,16 +20,19 @@ public class OnDepBtPerformanceEval extends AbsRulePerformanceEval {
 	private final int _count;
 	private final String _proximity;
 	private final BtDataAdapter _btAd;
+	private static Integer _minT = null;
 
 	public OnDepBtPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
 			double sensorFireTimeInterval, int cid, int rid) {
 		
-		super(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, getMinTReq(rules, rid));
+		super(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, getMinTReq(rules, rid), 
+				Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_ONTIME * getMinTReq(rules, rid), 
+				Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_LATE * getMinTReq(rules, rid));
 		
 		String sensorId = ConstTags.SENSORID_TO_TYPE.get(Constants.SENSORID_BT);
 		_btData = allSensorData.getCouponDataOfType(_cid, sensorId).getDeepCopy();
 		if (_btData != null) {
-			_btAd = new BtDataAdapter(_btData, _sensorFireTimeInterval, _minTReq);
+			_btAd = new BtDataAdapter(_btData, _gpsSensorFireTimeInterval, _minTReqRule);
 		} else _btAd = null; 
 
 		OnDepBtRuleParams params = (OnDepBtRuleParams)rules.getRuleById(rid).getParams();
@@ -39,7 +42,10 @@ public class OnDepBtPerformanceEval extends AbsRulePerformanceEval {
 	}
 	
 	private static int getMinTReq(RulesCollection rules, int rid) {
-		return ( (OnDepBtRuleParams)rules.getRuleById(rid).getParams() ).getDelay();
+		if (_minT == null) {
+			_minT = ( (OnDepBtRuleParams)rules.getRuleById(rid).getParams() ).getDelay();
+		}
+		return _minT;
 	}
 	
 	@Override
@@ -78,13 +84,13 @@ public class OnDepBtPerformanceEval extends AbsRulePerformanceEval {
 			
 			// if all the checks passed, then it should fire 
 			// add the rule required delay to tNow
-			tNow.add(Calendar.MINUTE, (int) (_minTReq));
-			shouldFireRule(tNow.getTimeInMillis() / 1000.0, _minTReq);
+			tNow.add(Calendar.MINUTE, (int) (_minTReqRule));
+			shouldFireRule(tNow.getTimeInMillis() / 1000.0);
 		}	
 	}
 	
 	private boolean checkProximityReqAndIfSameDevices(IMJ_OC<BtDeviceData> original, Calendar t,  double siMultiplierForTOffset) {
-		t.add(Calendar.MINUTE, (int) (siMultiplierForTOffset*_sensorFireTimeInterval));
+		t.add(Calendar.MINUTE, (int) (siMultiplierForTOffset*_gpsSensorFireTimeInterval));
 		// get the devices recorded at the given time 
 		IMJ_OC<BtDeviceData> toCheck = ( (BtDataPoint) _btAd.getDataPointAtTime(t.getTimeInMillis() / 1000.0) ).getData();
 		

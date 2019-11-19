@@ -30,11 +30,13 @@ public class ConstTags {
 	}
 
 	// underscore before tag means it is not averageable data - not relevant for full-text descriptions
-	public static final String REPORTS_PERC_ALLW_DEV_FRM_RULE_FIRE_T = "_percAllowedDevFromRuleFireTime";
-	public static final String REPORTS_P_A_D_F_R_F_T_TEXT = "Allowed time deviation from minimum time between fires";
-	public static final String REPORTS_PERC_CUTOFF_MINT_LATE_ANS = "_percTimeAllowedToBeLate";
-	public static final String REPORTS_P_C_M_L_A_TEXT = "Rule fires are only considered late if the fire time is (given % of minT) "
-									+ "later than it should be. Where minT = minimum time between rule fires";
+	// for rules
+	public static final String REPORTS_PERC_ALLW_DEV_ONTIME = "_percAllowedDevFromRuleFireTimeAsOnTime";
+	public static final String REPORTS_P_A_D_OT_TEXT = "Allowed percentage deviation of given time to still count as on time";
+	public static final String REPORTS_PERC_ALLW_DEV_LATE = "_percAllowedDevFromRuleFireTimeAsLate";
+	public static final String REPORTS_P_A_D_L_TEXT = "Allowed percentage deviation of given time to still count as late "
+													+ "(rather than missed)";
+	// for sensors
 	public static final String REPORTS_PERC_ALLW_DEV_FRM_SI = "_percAllowedDevFromSI";
 	public static final String REPORTS_P_A_D_F_SI_TEXT = "Maximum percent deviation from requested sensor interval";
 	

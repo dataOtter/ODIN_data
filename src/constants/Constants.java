@@ -127,6 +127,7 @@ public class Constants {
     public static final int ANSWERS_CHOICEID_IDX = 3;
     public static final int ANSWERS_ANSWERTEXT_IDX = 4;
     public static final int ANSWERS_RULEFIREDTIME_IDX = 7;
+    public static final int ANSWERS_NOTIFICATIONRECEIVEDTIME_IDX = 8;
 
     public static final int SENSOR_NUM_COLS = 5;
     public static final int SENSOR_COUPONID_IDX = 0;

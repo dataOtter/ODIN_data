@@ -23,7 +23,8 @@ public class Main {
         int formatVersion = Constants.DEFAULT_FORMAT_VERSION;
         		
         AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion);
-        AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
+        //AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
+        AnalysisEngine eng = bld.addRuleJobs().buildEngine();
         
         ReportsCollection allReports = eng.getAllReports();
         

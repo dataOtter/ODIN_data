@@ -27,9 +27,6 @@ public class OnArrivalPerformanceEval extends AbsGpsRulePerformanceEval {
 			// set fireT to when it actually fired
 			fireT = _trueFireT;
 		}
-		Assertion.test(
-				_earlyAns.size() + _answersLeft.size() + _goodAnsCount + _lateAns.size() == _numRuleFiresTotal,
-				"not all answers are accounted for");
 	}
 
 	@Override

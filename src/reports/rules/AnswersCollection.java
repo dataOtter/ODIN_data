@@ -30,6 +30,13 @@ public class AnswersCollection extends MJ_OC<OneAnswer> {
 		_allAnswers = answers.getDeepCopy();
 	}
     
+    /**
+     * Extracts AnsersCollection subset for the given rule ID, coupon ID, and time
+     * @param cid - coupon ID for which to extract all answers
+     * @param rid - rule ID for which to extract all answers
+     * @param timeInSecs - epoch time in seconds at which to get all answers
+     * @return an AnswersCollection subset
+     */
     public AnswersCollection getAnswerAtTimeInSecsForCidAndRid(int cid, int rid, double timeInSecs) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis((long)timeInSecs);
@@ -38,6 +45,11 @@ public class AnswersCollection extends MJ_OC<OneAnswer> {
 		return ans;
     }
     
+	/**
+     * Extracts AnsersCollection subset for the given time
+	 * @param timeInSecs - epoch time in seconds at which to get all answers
+	 * @return an AnswersCollection subset
+	 */
 	public AnswersCollection getAnswersAtTimeInSecs(double timeInSecs) {
 		AnswersCollection ans = new AnswersCollection();
 		

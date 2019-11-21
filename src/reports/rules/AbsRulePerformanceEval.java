@@ -69,6 +69,7 @@ public abstract class AbsRulePerformanceEval {
 	
 	public OneReport getPerformanceEvalData(OneReport map) {
 		doTheWork();
+		areAllAnswersAccountedFor();
 		map.addValue(ConstTags.REPORTS_COUPONID, _cid * 1.0);
 		map.addValue(ConstTags.REPORTS_RULEID, _rid * 1.0);
 		map = getGoodFireCounts(map);
@@ -125,12 +126,14 @@ public abstract class AbsRulePerformanceEval {
 	private void findGoodAnswer(double tNowAndIdealFireT) {
 		OneAnswer ans;
 		int lenBefore = _answersLeft.size();
+		boolean wasEarly = false;
 
 		// loop through answers
 		for (int i = 0; i < _answersLeft.size(); i++) {
 			ans = _answersLeft.get(i);
 
-			_trueFireT = ans.getRuleFiredTime().getTimeInMillis() / 1000.0;
+			//_trueFireT = ans.getRuleFiredTime().getTimeInMillis() / 1000.0;
+			_trueFireT = ans.getNotificationReceivedTime().getTimeInMillis() / 1000.0;
 
 			// if this answer's fire time is later than or equal to the ideal fire time
 			if (_trueFireT >= tNowAndIdealFireT) {
@@ -144,16 +147,20 @@ public abstract class AbsRulePerformanceEval {
 				// if this answer's fire time is also later than the allowed maximum time,
 				// it is a late answer; but count this as the next fire time
 				else {
+					if (wasEarly) {
+						break;  // if an early answer was found, do not continue on to a late answer
+					}
 					double tAmountLate = _trueFireT - tNowAndIdealFireT;
-					// if the answer is late by less than 80% of the given time interval, it is a late answer
+					// if the answer is late by less than the given amount, it is a late answer
 					if (tAmountLate < _allowanceLateFireT) {
 						_lateAnsCount++;
-					// if the answer is late by more than 80% of the given time interval, it is a missed answer
+						_lateAns.add(ans);
+					// if the answer is late by more than the given amount, it is a missed answer
 					} else {
 						_likelyMissedAnsCount++;
-						break;
+						break;  // to avoid removing this answer from answers left because it may actually be an early fire
+						// but then all missed would automatically be early
 					}
-					_lateAns.add(ans);
 				}
 				// remove this answer from the list of answers to avoid counting it again
 				_answersLeft.remove(i);
@@ -161,8 +168,9 @@ public abstract class AbsRulePerformanceEval {
 				break;
 			}
 			
-			// if this answer's fire time is too early (this also counts "early" answers due a time filter)
+			// if this answer's fire time is too early (this also counts "early" answers due to a time filter)
 			else {
+				wasEarly = true;
 				if (!_earlyAns.contains(ans)) {
 					// keep track of answers/rule fires that were too early
 					_earlyAns.add(ans);
@@ -175,6 +183,12 @@ public abstract class AbsRulePerformanceEval {
 				}
 			}
 		}
+	}
+	
+	private void areAllAnswersAccountedFor() {
+		Assertion.test(
+				_earlyAns.size() + _answersLeft.size() + _goodAnsCount + _lateAns.size() 
+				== _numRuleFiresTotal, "not all answers are accounted for");
 	}
 	
 	private IMJ_OC<AbsFilterInput> getFilterInputs(double tNow) {

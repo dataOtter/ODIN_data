@@ -88,14 +88,14 @@ public class AnalysisEngineBuilder {
 	            			an = new AnalysisWhileAt(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
 	            			e.register(an);
     	            	}
-    	            	else if (type.contains(Constants.RULE_ONARRIVAL) && ! type.contains(Constants.RULE_BLUETOOTH)) {
-	            			an = new AnalysisOnArrival(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
-	            			e.register(an);
-    	            	}
-    	            	//else if (type.contains(Constants.RULE_CRON)) {
-	            			//an = new AnalysisCron(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid, _coupons);
+    	            	//else if (type.contains(Constants.RULE_ONARRIVAL) && ! type.contains(Constants.RULE_BLUETOOTH)) {
+	            			//an = new AnalysisOnArrival(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
 	            			//e.register(an);
     	            	//}
+    	            	else if (type.contains(Constants.RULE_CRON)) {
+	            			an = new AnalysisCron(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid, _coupons);
+	            			e.register(an);
+    	            	}
     	            	//else if (type.contains(Constants.RULE_ONDEPARTURE) && type.contains(Constants.RULE_BLUETOOTH)) {
 	            			//an = new AnalysisOnDepBt(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
 	            			//e.register(an);

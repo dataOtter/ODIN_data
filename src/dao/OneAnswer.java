@@ -20,6 +20,7 @@ public class OneAnswer {
 	private final Integer _choiceId;
     private final String _answerText;
     private final Calendar _ruleFiredDateTime;
+    private final Calendar _notificationReceivedDateTime;
     private final int _formatVersion;
     
     /**
@@ -35,14 +36,22 @@ public class OneAnswer {
 		_choiceId = Integer.parseInt(answerRow.get(Constants.ANSWERS_CHOICEID_IDX));
 		_answerText = answerRow.get(Constants.ANSWERS_ANSWERTEXT_IDX);
     	_ruleFiredDateTime = getRuleFiredTimeFromLine(answerRow);
+    	_notificationReceivedDateTime = getNotificationReceivedTimeFromLine(answerRow);
     }
     
     /**
-     * @return the time the rule associated with this answer fired as a Calendar object
+     * @return the time the rule associated with this answer fired, as a Calendar object
      */
     public Calendar getRuleFiredTime(){
         return _ruleFiredDateTime;
     }
+
+    /**
+     * @return the time the phone received the should fire notification, as a Calendar object
+     */
+	public Calendar getNotificationReceivedTime() {
+		return _notificationReceivedDateTime;
+	}
     
     /**
      * @return the text provided as an answer, if any, as a String
@@ -79,13 +88,21 @@ public class OneAnswer {
         return _choiceId;
     }
     
-    private Calendar getRuleFiredTimeFromLine(IMJ_OC<String> line) throws ParseException{
+    private Calendar getRuleFiredTimeFromLine(IMJ_OC<String> line) throws ParseException {
+        return getTimeFromLine(line, Constants.ANSWERS_RULEFIREDTIME_IDX);
+    }
+    
+    private Calendar getNotificationReceivedTimeFromLine(IMJ_OC<String> line) throws ParseException {
+        return getTimeFromLine(line, Constants.ANSWERS_NOTIFICATIONRECEIVEDTIME_IDX);
+    }
+    
+    private Calendar getTimeFromLine(IMJ_OC<String> line, int idx) throws ParseException {
         Calendar dateTime = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss.S", Locale.US);
-        if (line.get(Constants.ANSWERS_RULEFIREDTIME_IDX).length() < 5) {
+        if (line.get(idx).length() < 5) {
         	System.out.println("wtf");
         }
-        Date d = sdf.parse(line.get(Constants.ANSWERS_RULEFIREDTIME_IDX));
+        Date d = sdf.parse(line.get(idx));
         dateTime.setTime(d);
         return dateTime;
     }

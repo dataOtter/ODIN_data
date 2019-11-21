@@ -51,12 +51,10 @@ public class CronPerformanceEval extends AbsRulePerformanceEval {
 	@Override
 	protected void doTheWork() {
 		// step through time by each next time that the cron rule dictates
-		for (double fireT = getVeryFirstShouldFireTime(); fireT < _maxAnsT && fireT > 0; fireT = getNextShouldFireTime(fireT)) {
+		for (double fireT = getVeryFirstShouldFireTime(); fireT < _maxAnsT && fireT > 0; 
+				fireT = getNextShouldFireTime(fireT)) {
 			shouldFireRule(fireT);
 		}
-		Assertion.test(
-				_earlyAns.size() + _answersLeft.size() + _goodAnsCount + _lateAns.size() == _numRuleFiresTotal,
-				"not all answers are accounted for");
 	}
 	
 	@Override

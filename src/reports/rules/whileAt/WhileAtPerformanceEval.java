@@ -66,9 +66,6 @@ public class WhileAtPerformanceEval extends AbsGpsRulePerformanceEval {
 		if (atLoc) {
 			locNotWithinRadius(firstFireT);
 		}
-		Assertion.test(
-				_earlyAns.size() + _answersLeft.size() + _goodAnsCount + _lateAns.size() == _numRuleFiresTotal,
-				"not all answers are accounted for");
 	}
 
 	@Override

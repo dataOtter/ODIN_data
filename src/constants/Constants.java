@@ -23,9 +23,9 @@ public class Constants {
     public final static double PERCENT_ALLOWED_DEVIATION_FROM_SI = 0.01;
     // for rules eval
     public static final double PERC_ALLOWED_DEV_FROM_GIVEN_TIME_ONTIME = 0.1;
-    public static final double PERC_ALLOWED_DEV_FROM_GIVEN_TIME_LATE = 0.8;
+    public static final double PERC_ALLOWED_DEV_FROM_GIVEN_TIME_NOTMISSED = 0.8;
     public static final double PERC_ALLOWED_DEV_FROM_GIVEN_TIME_ONTIME_CRON = 0.02;
-    public static final double PERC_ALLOWED_DEV_FROM_GIVEN_TIME_LATE_CRON = 0.3;
+    public static final double PERC_ALLOWED_DEV_FROM_GIVEN_TIME_NOTMISSED_CRON = 0.3;
     // when an answer fired too late, after what percentage of the minT 
     // is it considered missed entirely rather than fired late
     public static final double PERCENT_CUTOFF_OF_MINT_FOR_LATE_ANS = 0.8;
@@ -81,6 +81,7 @@ public class Constants {
     public static final int COUPON_COUPONNUMBER_IDX = 1;
     public static final int COUPON_CONSENTSTATUS_IDX = 5; 
     public static final int COUPON_LASTREGISTRATION_IDX = 12; 
+    public static final int COUPON_LASTQUESTIONCALL_IDX = 13; 
     
     public static final String RULES_CSV = "rules.csv";
     public static final int RULES_NUM_COLS_V0 = 11;

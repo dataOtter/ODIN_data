@@ -32,9 +32,9 @@ public class ConstTags {
 	// underscore before tag means it is not averageable data - not relevant for full-text descriptions
 	// for rules
 	public static final String REPORTS_PERC_ALLW_DEV_ONTIME = "_percAllowedDevFromRuleFireTimeAsOnTime";
-	public static final String REPORTS_P_A_D_OT_TEXT = "Allowed percentage deviation of given time to still count as on time";
-	public static final String REPORTS_PERC_ALLW_DEV_LATE = "_percAllowedDevFromRuleFireTimeAsLate";
-	public static final String REPORTS_P_A_D_L_TEXT = "Allowed percentage deviation of given time to still count as late "
+	public static final String REPORTS_P_A_D_OT_TEXT = "Allowed time deviation in seconds to still count as on time";
+	public static final String REPORTS_PERC_ALLW_DEV_NOTMISSED = "_percAllowedDevFromRuleFireTimeAsLate";
+	public static final String REPORTS_P_A_D_M_TEXT = "Allowed time deviation in seconds to still count as late/early "
 													+ "(rather than missed)";
 	// for sensors
 	public static final String REPORTS_PERC_ALLW_DEV_FRM_SI = "_percAllowedDevFromSI";
@@ -112,7 +112,8 @@ public class ConstTags {
 	public static final String REPORTS_MAX_B_S_R_A_P_TEXT = "Percent accuracy of largest actual time between sensor recordings to sensor interval, " 
 																	+ "values bigger or smaller than 100 are more or less accurate";
 	
-	public static final String REPORTS_REL_DATA_GPS = "GPS_sensor";
+	public static final String REPORTS_REL_DATA_GPS = "sensor_GPS";
+	public static final String REPORTS_REL_DATA_BT = "sensor_ProximityBluetooth";
 	public static final String REPORTS_REL_DATA_ANSWERS = "answers";
 	
 	public static String getTypeAndId(String type, OneReport rep) {

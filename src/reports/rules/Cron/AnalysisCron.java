@@ -16,7 +16,7 @@ public class AnalysisCron extends AbsAnalysisRule {
     public AnalysisCron(AnswersCollection answers, RulesCollection rules, 
     		SensorDataCollection allSensorData, double sensorFireTimeInterval, int cid, int rid, CouponCollection coupons) {
     	
-    	super(ConstTags.REPORT_TYPE_CRON_RULE_ANALYSIS);
+    	super(ConstTags.REPORT_TYPE_CRON_RULE_ANALYSIS, new String[]{});
     	
         _eval = new CronPerformanceEval(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, coupons);
     }

@@ -1,6 +1,7 @@
 package reports.rules.OnArrival;
 
 import Assert.Assertion;
+import dao.CouponCollection;
 import reports.rules.*;
 import sensors.data.GpsDataPoint;
 import sensors.data.SensorDataCollection;
@@ -13,9 +14,9 @@ import sensors.gps.GpsCoordinate;
 public class OnArrivalPerformanceEval extends AbsGpsRulePerformanceEval {
 
 	public OnArrivalPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
-			double gpsSensorFireTimeInterval, int cid, int rid) {
+			double gpsSensorFireTimeInterval, int cid, int rid, CouponCollection coupons) {
 		
-		super(answers, rules, allSensorData, gpsSensorFireTimeInterval, cid, rid, 2*gpsSensorFireTimeInterval);
+		super(answers, rules, allSensorData, gpsSensorFireTimeInterval, cid, rid, 2*gpsSensorFireTimeInterval, coupons);
 	}
 
 	@Override

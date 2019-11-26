@@ -24,10 +24,10 @@ public class CouponReader {
 	}
 	
 	/**
-	 * @return CouponCollection of coupon IDs to coupon numbers that belong to participants whose consentstatus is "agreed"
+	 * @return CouponCollection of coupon IDs to coupon numbers
 	 * @throws ParseException 
 	 */
-	public CouponCollection getActiveCoupons() throws ParseException {
+	public CouponCollection getAllCoupons() throws ParseException {
 		int numCols;
 		if (_formatVersion == 2) {
 			numCols = Constants.COUPON_NUM_COLS_V2;
@@ -40,15 +40,19 @@ public class CouponReader {
         CouponCollection coll = new CouponCollection();
         
         while (sc.hasNextLine()){
-        	String line = sc.nextLine();
-        	String[] lineArr = line.split(",");
-            String consentStatus = lineArr[Constants.COUPON_CONSENTSTATUS_IDX];
-            if (Constants.COUPON_CONSENTSTATUS_CONSENTAGREED.equals(consentStatus)){
-            	coll.add(new OneCoupon(line));
-            }
+            coll.add( new OneCoupon( sc.nextLine() ) );
         }
         sc.close();
+        
         return coll;
+	}
+	
+	/**
+	 * @return CouponCollection of coupon IDs to coupon numbers that belong to participants whose consentstatus is "agreed"
+	 * @throws ParseException 
+	 */
+	public CouponCollection getActiveCoupons() throws ParseException {
+        return getAllCoupons().getActiveCoupons();
 	}
 	
 	/**

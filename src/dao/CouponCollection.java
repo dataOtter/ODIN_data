@@ -1,5 +1,6 @@
 package dao;
 
+import constants.Constants;
 import orderedcollection.*;
 
 public class CouponCollection extends MJ_OC<OneCoupon> {
@@ -20,6 +21,16 @@ public class CouponCollection extends MJ_OC<OneCoupon> {
             }
         }
         return null;
+	}
+	
+	public CouponCollection getActiveCoupons() {
+		CouponCollection cc = new CouponCollection();
+		for (OneCoupon c: _allCoupons) {
+			if (Constants.COUPON_CONSENTSTATUS_CONSENTAGREED.equals(c.getConsentStatus())) {
+				cc.add(c);
+			}
+		}
+		return cc;
 	}
 	
 	/**

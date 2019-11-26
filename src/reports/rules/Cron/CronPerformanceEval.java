@@ -1,12 +1,10 @@
 package reports.rules.Cron;
 
 import java.util.Calendar;
-import java.util.TimeZone;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import Assert.Assertion;
 import constants.Constants;
 import cron.CRONExpression;
 import dao.CouponCollection;
@@ -26,24 +24,18 @@ public class CronPerformanceEval extends AbsRulePerformanceEval {
 
 	public CronPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
 			double gpsSensorFireTimeInterval, int cid, int rid, CouponCollection coupons) {
-		
-		super(answers, rules, allSensorData, gpsSensorFireTimeInterval, cid, rid, gpsSensorFireTimeInterval*2,
-				Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_ONTIME_CRON * 3000.0, 
-				Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_LATE_CRON * 3000.0);
 
-		_maxAnsT = Calendar.getInstance().getTimeInMillis() / 1000.0;
-		_maxTJoda = DateTime.now();
-		if (_answersLeft.size() > 0) {
-			Calendar maxT = _answersLeft.get(_answersLeft.size() - 1).getRuleFiredTime();
-			_maxAnsT = maxT.getTimeInMillis() / 1000.0;
-			TimeZone tz = maxT.getTimeZone();
-			DateTimeZone maxAnsTTZ = DateTimeZone.forID(tz.getID());
-			_maxTJoda = new DateTime((long)_maxAnsT*1000, maxAnsTTZ);
-		}
-		
 		// get time to next fire as replacement for 3000
-		
+		super(answers, rules, allSensorData, gpsSensorFireTimeInterval, cid, rid, gpsSensorFireTimeInterval*2,
+				getAllowedDevOnTime(rules, rid), getAllowedDevNotMissed(rules, rid));
+
 		_coupon = coupons.getCouponById(_cid);
+		
+		Calendar maxT = _coupon.getLastQuestionCallTime();
+		_maxAnsT = maxT.getTimeInMillis() / 1000.0;
+		DateTimeZone maxAnsTTZ = DateTimeZone.forID( maxT.getTimeZone().getID() );
+		_maxTJoda = new DateTime((long)_maxAnsT*1000, maxAnsTTZ);
+		
 		CronRuleParams params = (CronRuleParams)rules.getRuleById(rid).getParams();
 		_cron = new CRONExpression(params.getCron());
 	}
@@ -61,7 +53,7 @@ public class CronPerformanceEval extends AbsRulePerformanceEval {
 	protected double getVeryFirstShouldFireTime() {
 		Calendar t = _coupon.getLastRegistrationTime();
 		DateTime tJoda = new DateTime(t);
-		int secondsUntilFire = _cron.getSecondsToFire(tJoda, _maxTJoda, true);
+		int secondsUntilFire = _cron.getSecondsToFire(tJoda, _maxTJoda, false);
 		
 		if (secondsUntilFire < 0) {
 			return -1;
@@ -77,5 +69,24 @@ public class CronPerformanceEval extends AbsRulePerformanceEval {
 			return -1;
 		}
 		return prevFireT + secondsUntilFire;
+	}
+	
+	private static double getAllowedDevOnTime(RulesCollection rules, int rid) {
+		return Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_ONTIME_CRON * getMaxSecsBetweenFires(rules, rid);
+	}
+	
+	private static double getAllowedDevNotMissed(RulesCollection rules, int rid) {
+		return Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_NOTMISSED_CRON * getMaxSecsBetweenFires(rules, rid);
+	}
+	
+	private static double getMaxSecsBetweenFires(RulesCollection rules, int rid) {
+		CronRuleParams params = (CronRuleParams)rules.getRuleById(rid).getParams();
+		CRONExpression cron = new CRONExpression(params.getCron());
+		
+		DateTime now = DateTime.now();
+		int s1 = cron.getSecondsToFire(now, now.plusMonths(13), false);
+		DateTime fire1 = now.plusSeconds(s1);
+		int maxSecsBetweenFires = cron.getSecondsToFire(fire1, fire1.plusMonths(13), true);
+		return (double) maxSecsBetweenFires;
 	}
 }

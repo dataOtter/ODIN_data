@@ -11,18 +11,20 @@ import reports.OneReport;
 public class AbsAnalysisRule implements IAnalysis {
 	protected AbsRulePerformanceEval _eval;
 	private String _type;
+	private IMJ_OC<String> _relatedDataNames;
       
-    public AbsAnalysisRule(String type) {
+    public AbsAnalysisRule(String type, String[] relatedDataNames) {
+    	_relatedDataNames = new MJ_OC_Factory<String>().create();
     	_type = type;
+    	for (String s: relatedDataNames) {
+    		_relatedDataNames.add(s);
+    	}
+    	_relatedDataNames.add(ConstTags.REPORTS_REL_DATA_ANSWERS);
     }
     
     @Override
     public final OneReport getAnalysisReport() {
-    	IMJ_OC<String> relatedDataNames = new MJ_OC_Factory<String>().create();
-    	relatedDataNames.add(ConstTags.REPORTS_REL_DATA_ANSWERS);
-    	relatedDataNames.add(ConstTags.REPORTS_REL_DATA_GPS);
-    	
-    	OneReport rep = new OneRuleReport(relatedDataNames);
+    	OneReport rep = new OneRuleReport(_relatedDataNames);
     	
     	rep = _eval.getPerformanceEvalData(rep);
         return rep;

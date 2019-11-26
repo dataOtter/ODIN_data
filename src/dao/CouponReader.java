@@ -25,12 +25,12 @@ public class CouponReader {
 	}
 	
 	/**
-	 * @return CouponCollection of coupon IDs to coupon numbers that belong to participants whose consentstatus is "agreed"
+	 * @return CouponCollection of coupon IDs to coupon numbers
 	 * @throws ParseException 
 	 */
-	public CouponCollection getActiveCoupons() throws ParseException {
+	public CouponCollection getAllCoupons() throws ParseException {
 		IMJ_Map<Integer, IMJ_Map<String, Calendar>> uploadtimes = new ServieToHeartbeatReader(_path, _formatVersion).getUploadTimes();
-		
+
 		int numCols;
 		if (_formatVersion == 2) {
 			numCols = Constants.COUPON_NUM_COLS_V2;
@@ -49,9 +49,19 @@ public class CouponReader {
             if (Constants.COUPON_CONSENTSTATUS_CONSENTAGREED.equals(consentStatus)){
             	coll.add(new OneCoupon(line, uploadtimes));
             }
+            coll.add( new OneCoupon( sc.nextLine() ) );
         }
         sc.close();
+        
         return coll;
+	}
+	
+	/**
+	 * @return CouponCollection of coupon IDs to coupon numbers that belong to participants whose consentstatus is "agreed"
+	 * @throws ParseException 
+	 */
+	public CouponCollection getActiveCoupons() throws ParseException {
+        return getAllCoupons().getActiveCoupons();
 	}
 	
 	/**

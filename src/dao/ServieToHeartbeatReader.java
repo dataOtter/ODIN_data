@@ -17,7 +17,7 @@ import maps.*;
  * @author Maisha Jauernig
  *
  */
-public class ServieToHeartbeatReader {
+class ServieToHeartbeatReader {
 	private final String _path;
 	private final int _formatVersion;
 	
@@ -26,26 +26,9 @@ public class ServieToHeartbeatReader {
 	 * @param path
 	 * @param formatVersion
 	 */
-	public ServieToHeartbeatReader(String path, int formatVersion) {
+	ServieToHeartbeatReader(String path, int formatVersion) {
 		_path = path;
 		_formatVersion = formatVersion;
-	}
-	
-	public IMJ_Map<Integer, String> getServicesNames() {
-		IMJ_Map<Integer, String> map = new MJ_Map_Factory<Integer, String>().create();
-		
-        Scanner sc = new ScannerHelper(_path, Constants.SERVICES_CSV, Constants.SERVICES_NUM_COLS).getScanner();
-		
-        while ( sc.hasNextLine() ){
-        	String[] line = sc.nextLine().split(",");
-        	int serviceId = Integer.parseInt(line[Constants.SERVICES_SERVICEID_IDX]);
-        	String serviceName = line[Constants.SERVICES_SERVICENAME_IDX];
-        	map.put(serviceId, serviceName);
-        	
-        } 
-        sc.close();
-        
-        return map;
 	}
 	
 	IMJ_Map<Integer, IMJ_Map<String, Calendar>> getUploadTimes() throws ParseException {
@@ -76,10 +59,31 @@ public class ServieToHeartbeatReader {
         return map;
 	}
 	
+	private IMJ_Map<Integer, String> getServicesNames() {
+		IMJ_Map<Integer, String> map = new MJ_Map_Factory<Integer, String>().create();
+		
+        Scanner sc = new ScannerHelper(_path, Constants.SERVICES_CSV, Constants.SERVICES_NUM_COLS).getScanner();
+		
+        while ( sc.hasNextLine() ){
+        	String[] line = sc.nextLine().split(",");
+        	int serviceId = Integer.parseInt(line[Constants.SERVICES_SERVICEID_IDX]);
+        	String serviceName = line[Constants.SERVICES_SERVICENAME_IDX];
+        	map.put(serviceId, serviceName);
+        	
+        } 
+        sc.close();
+        
+        return map;
+	}
+	
 	private Calendar getTimeFromLine(String[] line, int idx) throws ParseException {
         Calendar dateTime = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss.S", Locale.US);
-        Date d = sdf.parse(line[idx]);
+        String date = line[idx];
+        if (date.equals("null")) {
+        	return null;
+        }
+        Date d = sdf.parse(date);
         dateTime.setTime(d);
         return dateTime;
     }

@@ -27,13 +27,11 @@ public class CronPerformanceEval extends AbsRulePerformanceEval {
 
 		// get time to next fire as replacement for 3000
 		super(answers, rules, allSensorData, gpsSensorFireTimeInterval, cid, rid, gpsSensorFireTimeInterval*2,
-				getAllowedDevOnTime(rules, rid), getAllowedDevNotMissed(rules, rid));
+				getAllowedDevOnTime(rules, rid), getAllowedDevNotMissed(rules, rid), coupons);
 
 		_coupon = coupons.getCouponById(_cid);
 		
-		Calendar maxT = _coupon.getLastQuestionCallTime();
-		_maxAnsT = maxT.getTimeInMillis() / 1000.0;
-		DateTimeZone maxAnsTTZ = DateTimeZone.forID( maxT.getTimeZone().getID() );
+		DateTimeZone maxAnsTTZ = DateTimeZone.forID( _coupon.getVeryLastUpload().getTimeZone().getID() );
 		_maxTJoda = new DateTime((long)_maxAnsT*1000, maxAnsTTZ);
 		
 		CronRuleParams params = (CronRuleParams)rules.getRuleById(rid).getParams();

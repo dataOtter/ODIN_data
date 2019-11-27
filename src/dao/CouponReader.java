@@ -49,7 +49,6 @@ public class CouponReader {
             if (Constants.COUPON_CONSENTSTATUS_CONSENTAGREED.equals(consentStatus)){
             	coll.add(new OneCoupon(line, uploadtimes));
             }
-            coll.add( new OneCoupon( sc.nextLine() ) );
         }
         sc.close();
         

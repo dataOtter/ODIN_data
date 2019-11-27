@@ -23,7 +23,6 @@ public class OneCoupon {
         _number = line[Constants.COUPON_COUPONNUMBER_IDX];
         _lastRegistrationTime = getLastRegTime(line[Constants.COUPON_LASTREGISTRATION_IDX]);
         _lastUploads = uploads.get(_id);
-		_lastRegistrationTime = getCalendar(line[Constants.COUPON_LASTREGISTRATION_IDX]);
         _lastQuestionCallTime = getCalendar(line[Constants.COUPON_LASTQUESTIONCALL_IDX]);
         _consentStatus = line[Constants.COUPON_CONSENTSTATUS_IDX];
     }
@@ -54,6 +53,26 @@ public class OneCoupon {
 
 	public Calendar getLastUploadForService(String service) {
 		return _lastUploads.get(service);
+	}
+	
+	public Calendar getVeryLastUpload() {
+		String service = _lastUploads.getKey(0);
+		Calendar last = _lastUploads.get(service);
+		
+		for(int i = 1; i<_lastUploads.size(); i++) {
+			service = _lastUploads.getKey(i);
+			Calendar c = _lastUploads.get(service);
+			if (last == null) {
+				last = c;
+			}
+			if (c == null) {
+				continue;
+			}
+			if (c.after(last)) {
+				last = c;
+			}
+		}
+		return last;
 	}
 
 	/**

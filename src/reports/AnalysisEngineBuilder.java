@@ -97,7 +97,7 @@ public class AnalysisEngineBuilder {
 	            			//e.register(an);
     	            	//}
     	            	//else if (type.contains(Constants.RULE_ONDEPARTURE) && type.contains(Constants.RULE_BLUETOOTH)) {
-	            			//an = new AnalysisOnDepBt(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid);
+	            			//an = new AnalysisOnDepBt(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid, _coupons);
 	            			//e.register(an);
     	            	//}
     	            }

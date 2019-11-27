@@ -16,11 +16,9 @@ public abstract class AbsGpsRulePerformanceEval extends AbsRulePerformanceEval {
 
 		super(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, minTReq, 
 				Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_ONTIME * minTReq, 
-				Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_NOTMISSED * minTReq);
+				Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_NOTMISSED * minTReq, coupons);
 
 		AbsGpsRuleParams params = (AbsGpsRuleParams)rules.getRuleById(rid).getParams();
 		_pred = new PredicateInLocRadius(new GpsCoordinate(params.getLat(), params.getLon()), params.getDist());
-
-		_maxAnsT = coupons.getCouponById(_cid).getLastQuestionCallTime().getTimeInMillis() / 1000.0;
 	}
 }

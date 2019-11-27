@@ -8,11 +8,11 @@ public class Constants {
     
     public static final String DIRECTORY_PATH = 
             //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\06-04-2019_167";  // format v 1
-            "C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\10-29-2019_116";
+            //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\10-29-2019_116";
     		//"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2fv2";
     		//"D:\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
     		//"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2fv2";
-    		//"D:\\Dropbox\\MB_various\\UNL\\Data\\10-29-2019_116"; 
+    		"D:\\Dropbox\\MB_various\\UNL\\Data\\10-29-2019_116"; 
     
     // base version is 1
     public static final int DEFAULT_FORMAT_VERSION = 2;

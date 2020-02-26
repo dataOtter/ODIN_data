@@ -33,6 +33,18 @@ public class CouponCollection extends MJ_OC<OneCoupon> {
 		return cc;
 	}
 	
+	public CouponCollection getSpecifiedCoupons(IMJ_OC<String> consentstatuses) {
+		CouponCollection cc = new CouponCollection();
+		for (OneCoupon c: _allCoupons) {
+			for (String stat: consentstatuses) {
+				if (stat.equals(c.getConsentStatus())) {
+					cc.add(c);
+				}
+			}
+		}
+		return cc;
+	}
+	
 	/**
 	 * @return an IMJ_OC<Integer> of all coupon IDs found in this CouponCollection
 	 */

@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import constants.Constants;
 import maps.*;
+import orderedcollection.*;
 
 /**
  * Reads all data from the coupon.csv file
@@ -53,6 +54,15 @@ public class CouponReader {
 	 */
 	public CouponCollection getActiveCoupons() throws ParseException {
         return getAllCoupons().getActiveCoupons();
+	}
+	
+	/**
+	 * @return CouponCollection of coupon IDs to coupon numbers that belong to participants whose consentstatus 
+	 * matches the given status(es)
+	 * @throws ParseException 
+	 */
+	public CouponCollection getSpecifiedCoupons(IMJ_OC<String> consentstatuses) throws ParseException {
+        return getAllCoupons().getSpecifiedCoupons(consentstatuses);
 	}
 	
 	/**

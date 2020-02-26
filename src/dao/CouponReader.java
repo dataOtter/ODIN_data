@@ -1,6 +1,7 @@
 package dao;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Scanner;
 
 import constants.Constants;
@@ -29,6 +30,8 @@ public class CouponReader {
 	 * @throws ParseException 
 	 */
 	public CouponCollection getAllCoupons() throws ParseException {
+		IMJ_Map<Integer, IMJ_Map<String, Calendar>> uploadtimes = new ServieToHeartbeatReader(_path, _formatVersion).getUploadTimes();
+
 		int numCols;
 		if (_formatVersion == 2) {
 			numCols = Constants.COUPON_NUM_COLS_V2;
@@ -41,7 +44,12 @@ public class CouponReader {
         CouponCollection coll = new CouponCollection();
         
         while (sc.hasNextLine()){
-            coll.add( new OneCoupon( sc.nextLine() ) );
+        	String line = sc.nextLine();
+        	String[] lineArr = line.split(",");
+            String consentStatus = lineArr[Constants.COUPON_CONSENTSTATUS_IDX];
+            if (Constants.COUPON_CONSENTSTATUS_CONSENTAGREED.equals(consentStatus)){
+            	coll.add(new OneCoupon(line, uploadtimes));
+            }
         }
         sc.close();
         

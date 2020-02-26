@@ -61,6 +61,17 @@ public class Constants {
 	public static final String FILTER_QUESTION_CHID = "choiceId";
 
     //*********CSV FILE NAMES & COLUMNS*********
+    public static final String SERVICETOHEARTBEAT_CSV = "servicetoheartbeat.csv";
+    public static final int SERVICETHB_NUM_COLS = 8;
+    public static final int SERVICETHB_COUPONID_IDX = 1;
+    public static final int SERVICETHB_SERVICEID_IDX = 2;
+    public static final int SERVICETHB_LASTUPLOADTIME_IDX = 7;
+
+    public static final String SERVICES_CSV = "services.csv";
+    public static final int SERVICES_NUM_COLS = 2;
+    public static final int SERVICES_SERVICEID_IDX = 0;
+    public static final int SERVICES_SERVICENAME_IDX = 1;
+    
     public static final String STUDY_CSV = "study.csv";
     public static final int STUDY_NUM_COLS = 15;
     public static final int STUDY_NUM_COLS_V2 = 18;

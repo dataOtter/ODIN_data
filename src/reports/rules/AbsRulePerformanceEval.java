@@ -2,6 +2,7 @@ package reports.rules;
 
 import Assert.Assertion;
 import constants.*;
+import dao.CouponCollection;
 import dao.OneAnswer;
 import filters.*;
 import orderedcollection.*;
@@ -26,7 +27,7 @@ public abstract class AbsRulePerformanceEval {
 	
 	protected final double _gpsSensorFireTimeInterval;
 	protected final double _minTReqRule;
-	protected double _maxAnsT;
+	protected final double _maxAnsT;
 	protected double _trueFireT = 0.0;
 	
 	protected final AnswersCollection _allAnswers;
@@ -42,7 +43,7 @@ public abstract class AbsRulePerformanceEval {
 	
 	protected AbsRulePerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
 			double gpsSensorFireTimeInterval, int cid, int rid, double minTReqRule, 
-			double allowanceOnTimeFireT, double allowanceLateFireT) {
+			double allowanceOnTimeFireT, double allowanceLateFireT, CouponCollection coupons) {
 		_cid = cid;
 		_rid = rid;
 		_gpsSensorFireTimeInterval = gpsSensorFireTimeInterval;
@@ -57,6 +58,8 @@ public abstract class AbsRulePerformanceEval {
 		_numRuleFiresTotal = _answersLeft.size();
 		_earlyAns = new MJ_OC_Factory<OneAnswer>().create();
 		_lateAns = new MJ_OC_Factory<OneAnswer>().create();
+		
+		_maxAnsT = coupons.getCouponById(_cid).getVeryLastUpload().getTimeInMillis() / 1000.0;
 		
 		String sensorId = ConstTags.SENSORID_TO_TYPE.get(Constants.SENSORID_GPS);
 		SensorDataOfOneType gpsData = allSensorData.getCouponDataOfType(_cid, sensorId).getDeepCopy();

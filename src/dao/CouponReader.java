@@ -33,7 +33,7 @@ public class CouponReader {
 		IMJ_Map<Integer, IMJ_Map<String, Calendar>> uploadtimes = new ServieToHeartbeatReader(_path, _formatVersion).getUploadTimes();
 
 		int numCols;
-		if (_formatVersion == 2) {
+		if (_formatVersion >= 2) {
 			numCols = Constants.COUPON_NUM_COLS_V2;
 		}
 		else {
@@ -78,7 +78,7 @@ public class CouponReader {
 	 */
 	public IMJ_Map<Integer, String> getActiveCouponIdsToNumbers() {
 		int numCols;
-		if (_formatVersion == 2) {
+		if (_formatVersion >= 2) {
 			numCols = Constants.COUPON_NUM_COLS_V2;
 		}
 		else {

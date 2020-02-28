@@ -31,10 +31,10 @@ public class ConstTags {
 
 	// underscore before tag means it is not averageable data - not relevant for full-text descriptions
 	// for rules
-	public static final String REPORTS_PERC_ALLW_DEV_ONTIME = "_percAllowedDevFromRuleFireTimeAsOnTime";
-	public static final String REPORTS_P_A_D_OT_TEXT = "Allowed time deviation in seconds to still count as on time";
-	public static final String REPORTS_PERC_ALLW_DEV_NOTMISSED = "_percAllowedDevFromRuleFireTimeAsLate";
-	public static final String REPORTS_P_A_D_M_TEXT = "Allowed time deviation in seconds to still count as late/early "
+	public static final String REPORTS_RULE_ALLW_DEV_ONTIME = "_allowedDevInSecsFromRuleFireTimeAsOnTime";
+	public static final String REPORTS_R_A_D_OT_TEXT = "Allowed time deviation in seconds to still count as on time";
+	public static final String REPORTS_RULE_ALLW_DEV_NOTMISSED = "_allowedDevInSecsFromRuleFireTimeAsLate";
+	public static final String REPORTS_R_A_D_M_TEXT = "Allowed time deviation in seconds to still count as late/early "
 													+ "(rather than missed)";
 	// for sensors
 	public static final String REPORTS_PERC_ALLW_DEV_FRM_SI = "_percAllowedDevFromSI";
@@ -83,11 +83,11 @@ public class ConstTags {
 	public static final String REPORTS_TOTAL_RULE_FIRES = "_numTotalRuleFires";
 	public static final String REPORTS_T_R_F_TEXT = "Number of total rule fires";
 	public static final String REPORTS_LATE_RULE_FIRES = "numLateRuleFires";  // averageable
-	public static final String REPORTS_L_R_F_TEXT = "Number of late rule fires (late by at most given % of minT)";
+	public static final String REPORTS_L_R_F_TEXT = "Number of late rule fires";
 	public static final String REPORTS_EARLY_RULE_FIRES = "numEarlyRuleFires";  // averageable
 	public static final String REPORTS_E_R_F_TEXT = "Number of early rule fires (including early as per the rule and early as per the filter(s))";
 	public static final String REPORTS_MISSED_RULE_FIRES = "numMissedRuleFires";  // averageable
-	public static final String REPORTS_M_R_F_TEXT = "Number of missed rule fires (late by more than given % of minT)";
+	public static final String REPORTS_M_R_F_TEXT = "Number of missed rule fires";
 	public static final String REPORTS_OTHER_RULE_FIRES = "numNotMissedLateEarlyGoodRuleFires";  // averageable
 	public static final String REPORTS_O_R_F_TEXT = "Number of rule fires that were not early, late, missed, or on time - related to filters";
 	public static String REPORTS_LATE_ANS(int i) {return "_lateAns#" + i;}

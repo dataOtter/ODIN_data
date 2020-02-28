@@ -23,7 +23,7 @@ public class Main {
     	//checkPredicate();
     	
         String path = Constants.DIRECTORY_PATH;
-        int formatVersion = Constants.DEFAULT_FORMAT_VERSION;
+        int formatVersion = Constants.FORMAT_VERSION;
         IMJ_OC<String> consentstatuses = new MJ_OC_Factory<String>().create();
         //consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTREVOKED);
         //consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTWITHDRAWN);

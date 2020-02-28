@@ -56,8 +56,12 @@ public abstract class AbsRuleParams {
 		ruleRow = ruleRow.replaceAll("\\\\",  "").replaceAll("\"", "");
         //int paramIdx = 1; // default/format version 1
         if (_formatVersion == 2) {
+    		ruleRow = ruleRow.substring(ruleRow.indexOf(Constants.FILTERS_LIST));
+        }  
+        else if (_formatVersion == 3) {
     		ruleRow = ruleRow.substring(ruleRow.indexOf(Constants.RULE_PARAM_TO_VAL));
         }  
+        
         String paramSection = ruleRow.split("\\{")[1].split("\\}")[0];
         
         IMJ_Map<String, String> params = new MJ_Map_Factory<String, String>().create();

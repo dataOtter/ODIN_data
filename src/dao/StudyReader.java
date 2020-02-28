@@ -26,7 +26,7 @@ public class StudyReader {
      */
     public Study getStudy(){
     	int numCols;
-    	if (_formatVersion == 2) {
+    	if (_formatVersion >= 2) {
     		numCols = Constants.STUDY_NUM_COLS_V2;
     	}
     	else {

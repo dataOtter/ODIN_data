@@ -207,12 +207,12 @@ public abstract class AbsRulePerformanceEval {
 	
 	private OneReport getGoodFireCounts(OneReport map) {
 		// cutoff for deciding if on time
-		map.addValue(ConstTags.REPORTS_PERC_ALLW_DEV_ONTIME, _allowedDivergenceOnTimeFireT,
-				ConstTags.REPORTS_P_A_D_OT_TEXT);
+		map.addValue(ConstTags.REPORTS_RULE_ALLW_DEV_ONTIME, _allowedDivergenceOnTimeFireT,
+				ConstTags.REPORTS_R_A_D_OT_TEXT);
 		// counts of good, total, and ideal rule fires
-		map.addValue(ConstTags.REPORTS_GOOD_RULE_FIRES, _goodAnsCount * 1.0, ConstTags.REPORTS_G_R_F_TEXT);
 		map.addValue(ConstTags.REPORTS_TOTAL_RULE_FIRES, _numRuleFiresTotal * 1.0, ConstTags.REPORTS_T_R_F_TEXT);
 		map.addValue(ConstTags.REPORTS_IDEAL_RULE_FIRES, _idealWorldNumRuleFires * 1.0, ConstTags.REPORTS_I_R_F_TEXT);
+		map.addValue(ConstTags.REPORTS_GOOD_RULE_FIRES, _goodAnsCount * 1.0, ConstTags.REPORTS_G_R_F_TEXT);
 
 		// percent good of ideal fires
 		double ans1 = 0.0;
@@ -237,8 +237,8 @@ public abstract class AbsRulePerformanceEval {
 
 	private OneReport getLateAndMissedFireCounts(OneReport map) {
 		// cutoff for deciding if missed
-		map.addValue(ConstTags.REPORTS_PERC_ALLW_DEV_NOTMISSED, _allowedDivergenceNotMissedFireT,
-				ConstTags.REPORTS_P_A_D_M_TEXT);
+		map.addValue(ConstTags.REPORTS_RULE_ALLW_DEV_NOTMISSED, _allowedDivergenceNotMissedFireT,
+				ConstTags.REPORTS_R_A_D_M_TEXT);
 		// counts of late and missed fires
 		map.addValue(ConstTags.REPORTS_LATE_RULE_FIRES, _lateAnsCount * 1.0, ConstTags.REPORTS_L_R_F_TEXT);
 		map.addValue(ConstTags.REPORTS_MISSED_RULE_FIRES, _likelyMissedAnsCount * 1.0, ConstTags.REPORTS_M_R_F_TEXT);

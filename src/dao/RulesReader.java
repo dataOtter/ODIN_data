@@ -41,6 +41,8 @@ public class RulesReader {
 	    		break;
 	    	case 2:
 	    		numCols = Constants.RULES_NUM_COLS_V2;
+	    	case 3:
+	    		numCols = Constants.RULES_NUM_COLS_V2;
 	    		break;
     		default:
 				numCols = Constants.RULES_NUM_COLS_V0;

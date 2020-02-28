@@ -139,7 +139,7 @@ public class SensorsReader {
             latitude = Double.parseDouble(lat);
             longitude = Double.parseDouble(lon);
         }
-        else if (_formatVersion == 2 || _formatVersion == 0) {
+        else if (_formatVersion == 2 || _formatVersion == 0 || _formatVersion == 3) {
         	latitude = Double.parseDouble(line[Constants.SENSOR_GPS_LAT_IDX]
             		.replaceAll("\\[", "").replaceAll("\\{", "").replaceAll("\"", "").replaceAll("\\}", "").replaceAll("\\]", "")
             		.split(":")[1]);
@@ -176,7 +176,7 @@ public class SensorsReader {
 		IMJ_OC<BtDeviceData> data = new MJ_OC_Factory<BtDeviceData>().create();
         int timeIdx = Constants.SENSOR_BT_TIME_IDX;
         
-		if (_formatVersion == 2) {
+		if (_formatVersion >= 2) {
 	        int nameIdx = Constants.SENSOR_BT_FIRST_DEVNAME_IDX;
 	        int rawIdx = Constants.SENSOR_BT_FIRST_RAW_IDX;
 	        int smoothIdx = Constants.SENSOR_BT_FIRST_SMOOTHED_IDX;

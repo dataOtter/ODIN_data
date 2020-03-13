@@ -8,11 +8,11 @@ public class Constants {
     
     public static final String DIRECTORY_PATH = 
             //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\06-04-2019_167";  // format v 1
-            "C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\02-26-2020_34";
+            //"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\02-26-2020_34";
     		//"C:\\Users\\Bilal\\Dropbox\\MB_various\\UNL\\Data\\12-17-2019_116";
     		//"D:\\Dropbox\\MB_various\\UNL\\Data\\08-27-2019_89";  // format v 2
     		//"D:\\Dropbox\\MB_various\\UNL\\Data\\02-21-2019_120\\t4.2fv2";
-    		//"D:\\Dropbox\\MB_various\\UNL\\Data\\10-29-2019_116"; 
+    		"D:\\Dropbox\\MB_various\\UNL\\Data\\03-02-2020_34"; 
     
     // base version is 1
     // 2/27/2020 onwards use format version 3 
@@ -45,6 +45,11 @@ public class Constants {
     public static final int SENSORID_LIGHT = 11;
     public static final int SENSORID_GPS = 12;
 	public static final int SENSORID_ACTIVITY = 13;
+	
+	//****************CHOICE IDs********************
+	public static final int CHOICEID_SKIPPED = 999;
+	public static final int CHOICEID_POWEREDOFF = 1000;
+	public static final int CHOICEID_EXPIRED = 1001;
 	
 	//*********FILTER TYPE NAMES*********
 	public static final String FILTERS_LIST = "filtersList";
@@ -193,7 +198,9 @@ public class Constants {
     public static final String STUDYTOSENSOR_UUID = "uuid";  // beacon
     
     public static final String HEALTH_CODEBOOK_CSV = "health_codebook.csv";
+    public static final String CEDARS_CODEBOOK_CSV = "cedars_codebook.csv";
     public static final String HEALTH_CODEBOOK_COLUMN_LABELS = "health_report_column_label,variable_tag,variable_description,variable_related_data";
     public static final String HEALTH_REPORT_CSV = "health_report.csv";
+    public static final String CEDARS_REPORT_CSV = "cedars_report.csv";
     public static final String HEALTH_REPORT_NO_VALUE = "NA";
 }

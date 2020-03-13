@@ -120,7 +120,14 @@ public class ReportsCollection {
 	}
 	
 	public IMJ_Map<String, IMJ_OC<String>> getTagToDescAndBuildFinalTags(int studyId, IMJ_OC<String> allFinalTags) {
-		return (IMJ_Map<String, IMJ_OC<String>>) getMapOfValues(studyId, false, allFinalTags); 
+		IMJ_OC<String> onlyAddTheseTags = null;
+		return (IMJ_Map<String, IMJ_OC<String>>) getMapOfValues(studyId, false, allFinalTags, onlyAddTheseTags); 
+	}
+	
+	public IMJ_Map<String, IMJ_OC<String>> getTagToDescAndBuildFinalTags(int studyId, IMJ_OC<String> allFinalTags, 
+			IMJ_OC<String> onlyAddTheseTags) {
+		// overloaded
+		return (IMJ_Map<String, IMJ_OC<String>>) getMapOfValues(studyId, false, allFinalTags, onlyAddTheseTags); 
 	}
 		/*IMJ_Map<String, String> tagToDesc = new MJ_Map_Factory<String, String>().create(); 
 		// for each list of report types
@@ -137,7 +144,8 @@ public class ReportsCollection {
 	
 	public IMJ_Map<Integer, IMJ_Map<String, String>> getCidToTagToData(int studyId, 
 			IMJ_OC<String> allFinalTags) {
-		return (IMJ_Map<Integer, IMJ_Map<String, String>>) getMapOfValues(studyId, true, allFinalTags); 
+		IMJ_OC<String> onlyAddTheseTags = null;
+		return (IMJ_Map<Integer, IMJ_Map<String, String>>) getMapOfValues(studyId, true, allFinalTags, onlyAddTheseTags); 
 	}
 		/*// for each list of report types
 		for (int i = 0; i<_allReports.size(); i++) {
@@ -151,7 +159,8 @@ public class ReportsCollection {
 		return cidToTagToData;
 	}*/
 	
-	private IMJ_Map<?, ?> getMapOfValues(int studyId, boolean isDataNotDesc, IMJ_OC<String> allFinalTags) {
+	private IMJ_Map<?, ?> getMapOfValues(int studyId, boolean isDataNotDesc, IMJ_OC<String> allFinalTags, 
+			IMJ_OC<String> onlyAddTheseTags) {
 		IMJ_Map<?, ?> mapOfValues = null;
 		if (isDataNotDesc) {
 			mapOfValues = new MJ_Map_Factory<Integer, IMJ_Map<String, String>>().create(); 
@@ -172,7 +181,7 @@ public class ReportsCollection {
 				}
 				else {
 					addToTagToDescAndToFinalTags(rep, type, studyId, 
-							(IMJ_Map<String, IMJ_OC<String>>) mapOfValues, allFinalTags);
+							(IMJ_Map<String, IMJ_OC<String>>) mapOfValues, allFinalTags, onlyAddTheseTags);
 					IMJ_OC<String> relatedDataNames = rep.getRelatedDataNames();
 				}
 			} 
@@ -181,8 +190,7 @@ public class ReportsCollection {
 	}
 	
 	private void addToTagToDescAndToFinalTags(OneReport rep, String type, int studyId, 
-			IMJ_Map<String, IMJ_OC<String>> tagToDesc, IMJ_OC<String> allFinalTags) {
-		
+			IMJ_Map<String, IMJ_OC<String>> tagToDesc, IMJ_OC<String> allFinalTags, IMJ_OC<String> onlyAddTheseTags) {
 		// get the sensor or rule id and type, to prepend to column names
 		String typeAndId = ConstTags.getTypeAndId(type, rep);
 		// get the vals to add to tagToDesc to write to the file
@@ -197,9 +205,23 @@ public class ReportsCollection {
 			descrAndRelData.add(descr);
 			descrAndRelData.add(relatedDataNames);
 			
-			// update list of unique tags across all reports
-			if ( ! allFinalTags.contains(finalTag) ) {
-				allFinalTags.add(finalTag);
+			if (onlyAddTheseTags == null) {
+				// update list of unique tags across all reports
+				if ( ! allFinalTags.contains(finalTag) ) {
+					allFinalTags.add(finalTag);
+				}
+			}
+			else {
+				for (int i = 0; i < onlyAddTheseTags.size(); i++) {
+					String repTag = onlyAddTheseTags.get(i);
+					if (finalTag.contains(repTag)) {
+						// update list of unique tags across all reports
+						if ( ! allFinalTags.contains(finalTag) ) {
+							allFinalTags.add(finalTag);
+						}
+						break;
+					}
+				}
 			}
 						
 			if ( ! tagToDesc.containsKey(finalTag)) {

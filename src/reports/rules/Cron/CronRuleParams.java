@@ -26,6 +26,9 @@ public class CronRuleParams extends AbsRuleParams {
 	}
 
 	public String getCron() {
+		if (_cron.contains("null")) {
+			return _cronManual;
+		}
 		return _cron;
 	}
 }

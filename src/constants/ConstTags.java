@@ -80,6 +80,16 @@ public class ConstTags {
 	public static final String REPORTS_I_R_F_TEXT = "Number of ideal world rule fires";
 	public static final String REPORTS_RULE_TRUE_FILTER_FALSE = "ruleTrueFilterFalse";
 	public static final String REPORTS_R_T_F_F = "Number of times rule condition(s) were met, but filter condition(s) were not met";
+	public static final String REPORTS_SKIPPED_RULE_FIRES = "_numSkippedAnsRuleFires";
+	public static final String REPORTS_S_R_F_TEXT = "Number of answers where the participant pressed Skip button";
+	public static final String REPORTS_EXPIRED_RULE_FIRES = "_numExpiredAnsRuleFires";
+	public static final String REPORTS_EX_R_F_TEXT = "Number of answers where phone was powered off "
+			+ "before participant answered question and before question expired";
+	public static final String REPORTS_POWEREDOFF_RULE_FIRES = "_numPoweredOffAnsRuleFires";
+	public static final String REPORTS_PO_R_F_TEXT = "Number of answers  where the question expired "
+			+ "(before participant answered it or pressed “Skip”)";
+	public static final String REPORTS_RESPONDED_RULE_FIRES = "_numRespondedAnsRuleFires";
+	public static final String REPORTS_R_R_F_TEXT = "Number of answers that were responses";
 	public static final String REPORTS_TOTAL_RULE_FIRES = "_numTotalRuleFires";
 	public static final String REPORTS_T_R_F_TEXT = "Number of total rule fires";
 	public static final String REPORTS_LATE_RULE_FIRES = "numLateRuleFires";  // averageable

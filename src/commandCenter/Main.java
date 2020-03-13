@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.text.ParseException;
 
 import constants.Constants;
-import dao.OutputFileWriter;
+import dao.BasicReportFilesWriter;
+import dao.CedarsReportWriter;
 import orderedcollection.*;
 import reports.AnalysisEngine;
 import reports.AnalysisEngineBuilder;
@@ -32,20 +33,23 @@ public class Main {
         		
         AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion, consentstatuses);
         //AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
-        //AnalysisEngine eng = bld.addRuleJobs().buildEngine();
-        AnalysisEngine eng = bld.addSensorJobs().buildEngine();
+        AnalysisEngine eng = bld.addRuleJobs().buildEngine();
+        //AnalysisEngine eng = bld.addSensorJobs().buildEngine();
         
         ReportsCollection allReports = eng.getAllReports();
         
-        StatsBuilder sb = new StatsBuilder(path, formatVersion, allReports).enableSensorsStats().enableRulesStats();
-        StatsEngine stats = sb.build();
+        CedarsReportWriter writer = new CedarsReportWriter(allReports, path, formatVersion);
+        writer.writeAllDataToFiles();
         
-        ReportsCollection allStats = stats.getStats();
+        //StatsBuilder sb = new StatsBuilder(path, formatVersion, allReports).enableSensorsStats().enableRulesStats();
+        //StatsEngine stats = sb.build();
         
-        OutputFileWriter out = new OutputFileWriter(allReports, path, formatVersion);
-        out.writeAllDataToFiles();
+        //ReportsCollection allStats = stats.getStats();
         
-        System.out.println(allReports);
+        //BasicReportFilesWriter out = new BasicReportFilesWriter(allReports, path, formatVersion);
+       // out.writeAllDataToFiles();
+        
+        //System.out.println(allReports);
         //System.out.println(allStats);
 
     }

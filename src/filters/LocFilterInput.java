@@ -19,7 +19,11 @@ public class LocFilterInput extends AbsFilterInput {
 		super(Constants.FILTER_LOCATION, timeNowInSecs);
 		_locNow = null;
 		if (ad != null) {
-			_locNow = ( (GpsDataPoint) ad.getDataPointAtTime(timeNowInSecs) ).getGpsCoord();
+			GpsDataPoint d = (GpsDataPoint) ad.getDataPointAtTime(timeNowInSecs);
+			if (d == null) {
+				return;  // this happens if the first gps recording time is later than the given time now 
+			}
+			_locNow = d.getGpsCoord();
 		}
 	}
 

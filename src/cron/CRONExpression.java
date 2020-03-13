@@ -26,8 +26,7 @@ public class CRONExpression {
 	DayOfWeekCompare dayOfWeekCompare = null;
 
 
-	public CRONExpression(String cronExpression)
-	{
+	public CRONExpression(String cronExpression) {
 		String[] strings = cronExpression.split("\\s+");
 		_minute = strings[0];
 		_hour = strings[1];

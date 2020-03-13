@@ -6,6 +6,8 @@ import orderedcollection.*;
 import java.util.Calendar;
 import java.util.Iterator;
 
+import constants.Constants;
+
 /**
  * A collection of OneAnswer, extends MJ_OC<OneAnswer>
  * @author Maisha Jauernig
@@ -69,6 +71,51 @@ public class AnswersCollection extends MJ_OC<OneAnswer> {
      */
     public AnswersCollection getAnsForRuleAndCid(int cid, int rid) {
     	return this.getAnswersByRids(rid).getAnswersByCids(cid);
+    }
+    
+    /**
+     * Extracts AnsersCollection subset for answers where the participant pressed “Skip” button
+     * @return an AnswersCollection subset
+     */
+    public AnswersCollection getAnsForSkipped() {
+    	return this.getAnswersByChoiceIds(Constants.CHOICEID_SKIPPED);
+    }
+    
+    /**
+     * Extracts AnsersCollection subset for answers where phone was powered off 
+     * before participant answered question and before question expired
+     * @return an AnswersCollection subset
+     */
+    public AnswersCollection getAnsForPoweredOff() {
+    	return this.getAnswersByChoiceIds(Constants.CHOICEID_POWEREDOFF);
+    }
+    
+    /**
+     * Extracts AnsersCollection subset for answers where the question expired 
+     * (before participant answered it or pressed “Skip”)
+     * @return an AnswersCollection subset
+     */
+    public AnswersCollection getAnsForExpired() {
+    	return this.getAnswersByChoiceIds(Constants.CHOICEID_EXPIRED);
+    }
+    
+    /**
+     * Extracts AnsersCollection subset for answers where the participant responded
+     * @return an AnswersCollection subset
+     */
+    public AnswersCollection getAnsForResponded() {
+    	IMJ_OC<Integer> avoid = new MJ_OC_Factory<Integer>().create();
+    	avoid.add(Constants.CHOICEID_SKIPPED);
+    	avoid.add(Constants.CHOICEID_POWEREDOFF);
+    	avoid.add(Constants.CHOICEID_EXPIRED);
+		AnswersCollection ans = new AnswersCollection();
+				
+			for (OneAnswer a: _allAnswers) {
+	    		if ( ! avoid.contains(a.getChoiceId()) ) {
+	    			ans.add(a);
+	    		}
+			}
+		return ans;
     }
     
     /**
@@ -182,6 +229,31 @@ public class AnswersCollection extends MJ_OC<OneAnswer> {
 		IMJ_OC<Integer> cids = new MJ_OC_Factory<Integer>().create();
 		cids.add(cid);
 		return getAnswersByCids(cids);
+	}
+	
+	/**
+	 * @param chids - IMJ_OC<Integer> of choice IDs for which to get all answers
+	 * @return an AnswersCollection subset that contains only answers associated with the given choice IDs
+	 */
+	public AnswersCollection getAnswersByChoiceIds(IMJ_OC<Integer> chids) {
+		AnswersCollection ans = new AnswersCollection();
+		
+		for (OneAnswer a: _allAnswers) {
+    		if ( chids.contains(a.getChoiceId()) ) {
+    			ans.add(a);
+    		}
+		}
+		return ans;
+	}
+	
+	/**
+	 * @param chids - choice IDs for which to get all answers
+	 * @return an AnswersCollection subset that contains only answers associated with the given choice ID
+	 */
+	public AnswersCollection getAnswersByChoiceIds(int chid) {
+		IMJ_OC<Integer> chids = new MJ_OC_Factory<Integer>().create();
+		chids.add(chid);
+		return getAnswersByChoiceIds(chids);
 	}
     
 	@Override

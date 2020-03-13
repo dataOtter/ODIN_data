@@ -18,6 +18,10 @@ public abstract class AbsRulePerformanceEval {
 	protected final int _rid;
 	
 	private final int _numRuleFiresTotal;
+	private final int _numAnsweredRuleFiresTotal;
+	private final int _numSkippedAnswerRuleFiresTotal;
+	private final int _numPoweredOffAnswerRuleFires;
+	private final int _numExpiredAnswerRuleFires;
 	private int _goodAnsCount = 0;
 	private int _lateAnsCount = 0;
 	private int _earlyAnsCount = 0;
@@ -56,6 +60,11 @@ public abstract class AbsRulePerformanceEval {
 		_allAnswers = answers;
 		_answersLeft = answers.getAnsForRuleAndCid(_cid, _rid);
 		_numRuleFiresTotal = _answersLeft.size();
+		_numAnsweredRuleFiresTotal = _answersLeft.getAnsForResponded().size();
+		_numSkippedAnswerRuleFiresTotal = _answersLeft.getAnsForSkipped().size();
+		_numPoweredOffAnswerRuleFires = _answersLeft.getAnsForPoweredOff().size();
+		_numExpiredAnswerRuleFires = _answersLeft.getAnsForExpired().size();
+		
 		_earlyAns = new MJ_OC_Factory<OneAnswer>().create();
 		_lateAns = new MJ_OC_Factory<OneAnswer>().create();
 		
@@ -209,6 +218,17 @@ public abstract class AbsRulePerformanceEval {
 		// cutoff for deciding if on time
 		map.addValue(ConstTags.REPORTS_RULE_ALLW_DEV_ONTIME, _allowedDivergenceOnTimeFireT,
 				ConstTags.REPORTS_R_A_D_OT_TEXT);
+		
+		// counts of skipped, expired, powered off, and responded to answers 
+		map.addValue(ConstTags.REPORTS_SKIPPED_RULE_FIRES, _numSkippedAnswerRuleFiresTotal * 1.0, 
+				ConstTags.REPORTS_S_R_F_TEXT);
+		map.addValue(ConstTags.REPORTS_EXPIRED_RULE_FIRES, _numExpiredAnswerRuleFires * 1.0, 
+				ConstTags.REPORTS_EX_R_F_TEXT);
+		map.addValue(ConstTags.REPORTS_POWEREDOFF_RULE_FIRES, _numPoweredOffAnswerRuleFires * 1.0, 
+				ConstTags.REPORTS_PO_R_F_TEXT);
+		map.addValue(ConstTags.REPORTS_RESPONDED_RULE_FIRES, _numAnsweredRuleFiresTotal * 1.0, 
+				ConstTags.REPORTS_R_R_F_TEXT);
+		
 		// counts of good, total, and ideal rule fires
 		map.addValue(ConstTags.REPORTS_TOTAL_RULE_FIRES, _numRuleFiresTotal * 1.0, ConstTags.REPORTS_T_R_F_TEXT);
 		map.addValue(ConstTags.REPORTS_IDEAL_RULE_FIRES, _idealWorldNumRuleFires * 1.0, ConstTags.REPORTS_I_R_F_TEXT);

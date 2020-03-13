@@ -13,14 +13,14 @@ import reports.ReportsCollection;
  *
  * @author Maisha Jauernig
  */
-public class OutputFileWriter {
+public class BasicReportFilesWriter {
 	private final ReportsCollection _repsCollection;
 	private IMJ_OC<String> _allFinalTags;
 	private IMJ_OC<String> _tagsWritten;
     private final String _path;
     private final int _formatVersion;
 	
-	public OutputFileWriter(ReportsCollection reps, String path, int formatVersion) {
+	public BasicReportFilesWriter(ReportsCollection reps, String path, int formatVersion) {
         _path = path;
         _formatVersion = formatVersion;
 		_repsCollection = reps;

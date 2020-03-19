@@ -73,7 +73,7 @@ public class WhileAtPerformanceEval extends AbsGpsRulePerformanceEval {
 
 	@Override
 	protected double getVeryFirstShouldFireTime() {
-		double t = _gpsAd.getFirstRecordingTime();
+		double t = Math.max(_gpsAd.getFirstRecordingTime(), _startTimeInSecs);
 		GpsDataPoint p = (GpsDataPoint)_gpsAd.getDataPointAndClearPreceeding(t);
 		GpsCoordinate c = p.getGpsCoord();
 		// if the first gps recording time is not at the rule location,

@@ -35,8 +35,8 @@ public class OnArrivalPerformanceEval extends AbsGpsRulePerformanceEval {
 	@Override
 	protected double getVeryFirstShouldFireTime() {
 		// get next should fire time after first recording time and after not being at rule location for at least 2si
-		//return getNextShouldFireTime(_ad.getFirstRecordingTime(), maxTToCheck);
-		return getNextShouldFireTime(0.0);
+		//return getNextShouldFireTime(_ad.getFirstRecordingTime());
+		return getNextShouldFireTime(Math.max(0.0, _startTimeInSecs));
 	}
 	
 	private double getNextShouldFireTime(double tNow) {

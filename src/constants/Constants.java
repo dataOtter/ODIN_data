@@ -23,9 +23,10 @@ public class Constants {
     public static final int FORMAT_VERSION = 3;
     public static final boolean TESTING_GPS_ONLY = true;
     
-    public static final double STOP_TIME_IN_SECS = getMillisFromStringDate("02/18/2020 20:23");
+    public static final double START_TIME_IN_SECS = getSecsFromStringDate("01/21/2020 18:23");
+    public static final double STOP_TIME_IN_SECS = getSecsFromStringDate("02/18/2020 19:52");
     //public static final double STOP_TIME_IN_SECS = -1;
-    public static final double TIME_WINDOW_IN_HRS = 24.0 * 29.0;
+    public static final double TIME_WINDOW_IN_HRS = 24.0 * 5.0;
 
     //*********ANALAYSIS VARIABLES*********
     // for sensor data eval
@@ -213,7 +214,7 @@ public class Constants {
     public static final String HEALTH_REPORT_NO_VALUE = "NA";
     
 
-    private static double getMillisFromStringDate(String date) {
+    private static double getSecsFromStringDate(String date) {
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm", Locale.ENGLISH);
         LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
         long millis = dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();

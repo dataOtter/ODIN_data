@@ -15,9 +15,12 @@ public class SensorAverageTimeInterval extends AbsSensorPerformanceEval {
     }
     
     @Override
-    public long getValue(){
+    public Double getValue(){
         if (_val != null){
             return _val;
+        }
+        if (_data.isEmpty()) {
+        	return null;
         }
         
         long t1 = _data.get(0).getDateTime().getTimeInMillis();
@@ -34,7 +37,7 @@ public class SensorAverageTimeInterval extends AbsSensorPerformanceEval {
         
         long avg = sum / numTimeIntervals;
         double avgInSecs = avg / 1000.0;
-        _val = Math.round(avgInSecs);
+        _val = (double) Math.round(avgInSecs);
         return _val;
     }
     
@@ -47,18 +50,21 @@ public class SensorAverageTimeInterval extends AbsSensorPerformanceEval {
     
     @Override
     public OneReport addToMap(OneReport map) {
-        double avg = getValue() * 1.0;
-        double stdev = getStdev();
-        double avgInPer = getValueInPercent();
+        Double avg = getValue();
+        Double stdev = getStdev();
+        Double avgInPer = getValueInPercent();
         map.addValue(ConstTags.REPORTS_AVERAGE_ONE_SENSOR_IN_SECS, avg, ConstTags.REPORTS_A_O_S_I_S_TEXT);
         map.addValue(ConstTags.REPORTS_AVERAGE_ONE_SENSOR, avgInPer, ConstTags.REPORTS_A_O_S_TEXT);
         map.addValue(ConstTags.REPORTS_STANDARD_DEV_ONE_SENSOR, stdev, ConstTags.REPORTS_S_D_O_S_TEXT);
         return map;
     }
     
-    private double getStdev(){
+    private Double getStdev(){
         if (_val == null){
             _val = getValue();
+        }
+        if (_data.isEmpty()) {
+        	return null;
         }
         
         long t1 = _data.get(0).getDateTime().getTimeInMillis();

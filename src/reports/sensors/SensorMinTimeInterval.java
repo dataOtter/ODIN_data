@@ -15,9 +15,12 @@ public class SensorMinTimeInterval extends AbsSensorPerformanceEval {
     }
     
     @Override
-    public long getValue(){
+    public Double getValue(){
         if (_val != null){
             return _val;
+        }
+        if (_data.isEmpty()) {
+        	return null;
         }
         
         long t1 = _data.get(0).getDateTime().getTimeInMillis();
@@ -36,7 +39,7 @@ public class SensorMinTimeInterval extends AbsSensorPerformanceEval {
         }
         
         double answer = minDiff / 1000.0;
-        _val = Math.round(answer);
+        _val = (double) Math.round(answer);
         return _val;
     }
     
@@ -49,7 +52,7 @@ public class SensorMinTimeInterval extends AbsSensorPerformanceEval {
 
     @Override
     public OneReport addToMap(OneReport map) {
-        map.addValue(ConstTags.REPORTS_MINT_BTW_SENSOR_RECS, getValue() * 1.0, ConstTags.REPORTS_MIN_B_S_R_TEXT);
+        map.addValue(ConstTags.REPORTS_MINT_BTW_SENSOR_RECS, getValue(), ConstTags.REPORTS_MIN_B_S_R_TEXT);
         map.addValue(ConstTags.REPORTS_MINT_BTW_SENSOR_RECS_AS_PERC, getValueInPercent(), ConstTags.REPORTS_MIN_B_S_R_A_P_TEXT);
         return map;
     }

@@ -50,7 +50,9 @@ public class CronPerformanceEval extends AbsRulePerformanceEval {
 	
 	@Override
 	protected double getVeryFirstShouldFireTime() {
-		Calendar t = _coupon.getLastRegistrationTime();
+		double time = Math.max(_startTimeInSecs, _coupon.getLastRegistrationTime().getTimeInMillis() / 1000.0);
+		Calendar t = Calendar.getInstance();
+		t.setTimeInMillis((long) time * 1000);
 		DateTime tJoda = new DateTime(t);
 		int secondsUntilFire = _cron.getSecondsToFire(tJoda, _maxTJoda, false);
 		

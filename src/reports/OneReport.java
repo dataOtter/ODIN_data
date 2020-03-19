@@ -71,9 +71,12 @@ public abstract class OneReport {
 			
 			if (! tag.contains("__") || tag.contains(ConstTags.REPORTS_COUPONID)) {
 				
-				double val = _data.get(tag);
+				Double val = _data.get(tag);
 				String valAsString = "";
-				if (val < 1.0 && val > 0.0) {
+				if (val == null) {
+					valAsString = "null";
+				}
+				else if (val < 1.0 && val > 0.0) {
 					valAsString = String.format("%.1f", val);
 				}
 				else {

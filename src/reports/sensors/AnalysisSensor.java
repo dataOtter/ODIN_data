@@ -24,14 +24,15 @@ public class AnalysisSensor implements IAnalysis {
     		double stopTimeInSecs, double windowInHrs) {
         _sensorId = sensorId;
 		if (stopTimeInSecs == -1) {
-			_answersLeft = answers.getAnsForRuleAndCid(_cid, _rid);
+	        _data = allData.getCouponDataOfType(cid, getAnalysisType()).getDeepCopy();
 		}
 		else {
 			_stopTimeInSecs = stopTimeInSecs;
 			_startTimeInSecs = _stopTimeInSecs - (windowInHrs * 60.0 * 60.0);
-			_answersLeft = answers.getAnswersInTimeWindowForCidAndRid(_cid, _rid, _startTimeInSecs, _stopTimeInSecs);
+			
+	        _data = allData.getCouponDataOfTypeInTimeWindow(cid, getAnalysisType(), _startTimeInSecs, _stopTimeInSecs)
+	        		.getDeepCopy();
 		}
-        _data = allData.getCouponDataOfType(cid, getAnalysisType()).getDeepCopy();
         _couponId = cid; 
         _sensorInterval = si;
     }

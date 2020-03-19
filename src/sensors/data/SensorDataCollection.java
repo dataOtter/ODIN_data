@@ -49,23 +49,25 @@ public class SensorDataCollection {
     			return d;
     		}
     	}
-    	return null;
+    	return new SensorDataOfOneType("");
     }
     
     /**
      * @param couponId - ID of the coupon for which to get all data of the given type, as an int
      * @param type - type of sensor data, found in Constants, for which the get all data for the given coupon ID
-     * @return the data associated with the given coupon and data type as SensorDataOfOneType 
+     * @param startTimeInSecs - time from which to get all data for the given coupon ID
+     * @param stopTimeInSecs - time up to which to get all data for the given coupon ID
+     * @return the data associated with the given coupon and data type, in the given time window, as SensorDataOfOneType 
      */
     public SensorDataOfOneType getCouponDataOfTypeInTimeWindow(int couponId, String type, 
-    		double stopTimeInSecs, double windowInHrs) {
+    		double startTimeInSecs, double stopTimeInSecs) {
     	IMJ_OC<SensorDataOfOneType> allData = _couponToData.get(couponId);
     	for (SensorDataOfOneType d: allData) {
     		if (d.getDataType().equals(type)) {
-    			return d;
+    			return d.getDataInTimeWindow(startTimeInSecs, stopTimeInSecs);
     		}
     	}
-    	return null;
+    	return new SensorDataOfOneType("");
     }
     
     /**

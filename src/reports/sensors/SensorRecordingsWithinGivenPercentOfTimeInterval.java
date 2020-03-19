@@ -17,16 +17,19 @@ public class SensorRecordingsWithinGivenPercentOfTimeInterval extends AbsSensorP
     }
 
     @Override
-    protected long getValue() {
+    protected Double getValue() {
         if (_val != null){
             return _val;
+        }
+        if (_data.isEmpty()) {
+        	return null;
         }
         
         long upperBound = Math.round((_sensorInterval + (_per * _sensorInterval)) * 1000);
         long lowerBound = Math.round((_sensorInterval - (_per * _sensorInterval)) * 1000);
         long t1 = _data.get(0).getDateTime().getTimeInMillis();
         int numDataPoints = _data.size();
-        long count = 1;
+        double count = 1;
         
         for (int i = 1; i<numDataPoints; i++){
             long t2 = _data.get(i).getDateTime().getTimeInMillis();
@@ -42,6 +45,9 @@ public class SensorRecordingsWithinGivenPercentOfTimeInterval extends AbsSensorP
     
     @Override
     public Double getValueInPercent(){
+    	if (_val == null) {
+    		return null;
+    	}
         double per = _val / (double) _data.size() * 100;
         per = Math.round(per * 1d) / 1d;  // this is to get 2 decimal places
         return per;
@@ -62,7 +68,7 @@ public class SensorRecordingsWithinGivenPercentOfTimeInterval extends AbsSensorP
     public OneReport addToMap(OneReport map) {
         map.addValue(ConstTags.REPORTS_TOTAL_SENSOR_RECS, getTotalNumOfSensorRecs() * 1.0, ConstTags.REPORTS_T_S_R_TEXT);
         map.addValue(ConstTags.REPORTS_PERC_ALLW_DEV_FRM_SI, _per * 100.0, ConstTags.REPORTS_P_A_D_F_SI_TEXT);
-        map.addValue(ConstTags.REPORTS_SENSOR_RECS_WITHIN_DEV, getValue() * 1.0, ConstTags.REPORTS_S_R_W_D_TEXT);
+        map.addValue(ConstTags.REPORTS_SENSOR_RECS_WITHIN_DEV, getValue(), ConstTags.REPORTS_S_R_W_D_TEXT);
         map.addValue(ConstTags.REPORTS_PERC_SENSOR_RECS_WITHIN_DEV, getValueInPercent(), ConstTags.REPORTS_S_R_P_W_D_TEXT);
         return map;
     }

@@ -1,5 +1,7 @@
 package sensors.data;
 
+import java.util.Calendar;
+
 import Assert.Assertion;
 import orderedcollection.*;
 
@@ -20,15 +22,39 @@ public class SensorDataOfOneType extends MJ_OC<AbsDataPoint> {
 
     private SensorDataOfOneType(IMJ_OC<AbsDataPoint> data){
         _data = data;
-        _type = data.get(0).getDataType();
+        if (! data.isEmpty()) {
+            _type = data.get(0).getDataType();
+        }
+        else {
+        	_type = "";
+        }
     }
     
     public String getDataType() {
     	return _type;
     }
     
+    public SensorDataOfOneType getDataInTimeWindow(double startTimeInSecs, double stopTimeInSecs) {
+    	Calendar start = Calendar.getInstance();
+    	start.setTimeInMillis((long) startTimeInSecs * 1000); 
+    	Calendar stop = Calendar.getInstance();
+    	stop.setTimeInMillis((long) stopTimeInSecs * 1000); 
+    	
+    	IMJ_OC<AbsDataPoint> data = new MJ_OC_Factory<AbsDataPoint>().create();
+    	
+    	for (AbsDataPoint dp: this._data) {
+    		if (dp.getDateTime().compareTo(start) >= 0 && dp.getDateTime().compareTo(stop) <= 0) {
+    			data.add(dp);
+    		}
+    	}
+    	return new SensorDataOfOneType(data);
+    }
+    
     @Override
     public SensorDataOfOneType getDeepCopy(){
+    	//if (_data.isEmpty()) {
+    		//return null;
+    	//}
     	return new SensorDataOfOneType(_data.getDeepCopy());
     }
     

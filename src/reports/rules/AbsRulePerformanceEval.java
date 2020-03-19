@@ -1,5 +1,7 @@
 package reports.rules;
 
+import java.util.Calendar;
+
 import Assert.Assertion;
 import constants.*;
 import dao.CouponCollection;
@@ -17,8 +19,8 @@ import sensors.data.SensorDataOfOneType;
 public abstract class AbsRulePerformanceEval {
 	protected final int _cid;
 	protected final int _rid;
-	private double _startTimeInSecs = -1.0;
-	private double _stopTimeInSecs = -1.0;
+	protected final double _startTimeInSecs;
+	private final double _stopTimeInSecs;
 	
 	private final int _numRuleFiresTotal;
 	private final int _numAnsweredRuleFiresTotal;
@@ -54,13 +56,16 @@ public abstract class AbsRulePerformanceEval {
 		_cid = cid;
 		_rid = rid;
 		if (stopTimeInSecs == -1) {
+			_stopTimeInSecs = (coupons.getCouponById(_cid).getVeryLastUpload().getTimeInMillis() / 1000.0) + 9999.0;
+			_startTimeInSecs = -1;
 			_answersLeft = answers.getAnsForRuleAndCid(_cid, _rid);
 		}
 		else {
 			_stopTimeInSecs = stopTimeInSecs;
-			_startTimeInSecs = _stopTimeInSecs - (windowInHrs * 60.0 * 60.0);
+			_startTimeInSecs = stopTimeInSecs - (windowInHrs * 60.0 * 60.0);
 			_answersLeft = answers.getAnswersInTimeWindowForCidAndRid(_cid, _rid, _startTimeInSecs, _stopTimeInSecs);
 		}
+		_maxAnsT = Math.min(coupons.getCouponById(_cid).getVeryLastUpload().getTimeInMillis() / 1000.0, stopTimeInSecs);
 		_gpsSensorFireTimeInterval = gpsSensorFireTimeInterval;
 		_minTReqRule = minTReqRule;
 		_allowedDivergenceOnTimeFireT = allowanceOnTimeFireT;
@@ -77,8 +82,6 @@ public abstract class AbsRulePerformanceEval {
 		
 		_earlyAns = new MJ_OC_Factory<OneAnswer>().create();
 		_lateAns = new MJ_OC_Factory<OneAnswer>().create();
-		
-		_maxAnsT = coupons.getCouponById(_cid).getVeryLastUpload().getTimeInMillis() / 1000.0;
 		
 		String sensorId = ConstTags.SENSORID_TO_TYPE.get(Constants.SENSORID_GPS);
 		SensorDataOfOneType gpsData = allSensorData.getCouponDataOfType(_cid, sensorId).getDeepCopy();
@@ -120,8 +123,11 @@ public abstract class AbsRulePerformanceEval {
 		}
 		else {
 			_idealWorldNumRuleFires++;  
-			if (_answersLeft.size() > 0) {
+			if (_answersLeft.size() > 0) {  // either ans left is already 0 len, or issue in ismissed counting
 				findGoodAnswer(tNowAndIdealFireT);
+			}
+			else {
+				_likelyMissedAnsCount++;
 			}
 		}
 		// dummy true fire time when the filter condition was not met and/or there are no answers left
@@ -260,7 +266,7 @@ public abstract class AbsRulePerformanceEval {
 		}
 		map.addValue(ConstTags.REPORTS_GOOD_FIRE_PERCENT_OF_TOTAL, ans2, ConstTags.REPORTS_G_F_P_O_T_TEXT);
 		
-		map.addValue(ConstTags.REPORTS_RULE_TRUE_FILTER_FALSE, _ruleTrueFilterFalseCount*1.0, ConstTags.REPORTS_R_T_F_F);
+		map.addValue(ConstTags.REPORTS_RULE_TRUE_FILTER_FALSE, (double) _ruleTrueFilterFalseCount, ConstTags.REPORTS_R_T_F_F);
 
 		return map;
 	}
@@ -270,13 +276,15 @@ public abstract class AbsRulePerformanceEval {
 		map.addValue(ConstTags.REPORTS_RULE_ALLW_DEV_NOTMISSED, _allowedDivergenceNotMissedFireT,
 				ConstTags.REPORTS_R_A_D_M_TEXT);
 		// counts of late and missed fires
-		map.addValue(ConstTags.REPORTS_LATE_RULE_FIRES, _lateAnsCount * 1.0, ConstTags.REPORTS_L_R_F_TEXT);
-		map.addValue(ConstTags.REPORTS_MISSED_RULE_FIRES, _likelyMissedAnsCount * 1.0, ConstTags.REPORTS_M_R_F_TEXT);
+		map.addValue(ConstTags.REPORTS_LATE_RULE_FIRES, (double) _lateAnsCount, ConstTags.REPORTS_L_R_F_TEXT);
+		map.addValue(ConstTags.REPORTS_MISSED_RULE_FIRES, (double) _likelyMissedAnsCount, ConstTags.REPORTS_M_R_F_TEXT);
 		// all late or missed answer times
 		if (_lateAnsCount > 0) {
 			for (int i = 0; i < _lateAns.size(); i++) {
-				map.addValue(ConstTags.REPORTS_LATE_ANS(i),
-						_lateAns.get(i).getRuleFiredTime().getTimeInMillis() * 1.0, ConstTags.REPORTS_L_A_TEXT(i));
+				long millis = _lateAns.get(i).getRuleFiredTime().getTimeInMillis();
+				Calendar c = Calendar.getInstance();
+				c.setTimeInMillis(millis);
+				map.addValue(ConstTags.REPORTS_LATE_ANS(i), (double) millis, ConstTags.REPORTS_L_A_TEXT(i));
 			}
 		}
 		return map;
@@ -284,17 +292,17 @@ public abstract class AbsRulePerformanceEval {
 
 	private OneReport getEarlyFireCounts(OneReport map) {
 		// count of early fires
-		map.addValue(ConstTags.REPORTS_EARLY_RULE_FIRES, _earlyAnsCount * 1.0, ConstTags.REPORTS_E_R_F_TEXT);
+		map.addValue(ConstTags.REPORTS_EARLY_RULE_FIRES, (double) _earlyAnsCount, ConstTags.REPORTS_E_R_F_TEXT);
 		// all early answer times
 		if (_earlyAns.size() > 0) {
 			for (int i = 0; i < _earlyAns.size(); i++) {
 				map.addValue(ConstTags.REPORTS_EARLY_ANS(i),
-						_earlyAns.get(i).getRuleFiredTime().getTimeInMillis() * 1.0,
+						(double) _earlyAns.get(i).getRuleFiredTime().getTimeInMillis(),
 						ConstTags.REPORTS_E_A_TEXT(i));
 			}
 		}
 		// count of not late, missed, early, or on time fires
-		map.addValue(ConstTags.REPORTS_OTHER_RULE_FIRES, _answersLeft.size() * 1.0, ConstTags.REPORTS_O_R_F_TEXT);
+		map.addValue(ConstTags.REPORTS_OTHER_RULE_FIRES, (double) _answersLeft.size(), ConstTags.REPORTS_O_R_F_TEXT);
 
 		return map;
 	}

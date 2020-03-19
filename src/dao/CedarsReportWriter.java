@@ -35,7 +35,7 @@ public class CedarsReportWriter {
 		//_allFinalTags.add(ConstTags.REPORTS_STUDYID);
 	}
 	
-	public void writeAllDataToFiles() throws IOException {
+	public void writeAllDataToFiles(String reportName) throws IOException {
 		Study s = new StudyReader(_path, _formatVersion).getStudy();
 		int studyId = s.getStudyId();
 
@@ -50,7 +50,7 @@ public class CedarsReportWriter {
 		writeDocsToFile(wrDocs, studyId);*/
 		makeFinalTagsAndGetTagToDescr(studyId);
 		
-		FileWriter wrData = new FileWriter(Constants.CEDARS_REPORT_CSV);
+		FileWriter wrData = new FileWriter(reportName);
 		String colsToWrite = _allFinalTags.toString();
 		colsToWrite = colsToWrite + "\n";
 		

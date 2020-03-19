@@ -139,7 +139,7 @@ public class OnDepBtPerformanceEval extends AbsRulePerformanceEval {
 	@Override
 	protected double getVeryFirstShouldFireTime() {
 		// TODO Auto-generated method stub
-		return 0;
+		return Math.max(0.0, _startTimeInSecs);
 	}
 		
 	/* W seconds after the following:   // _minTReq

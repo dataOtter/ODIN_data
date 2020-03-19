@@ -21,19 +21,19 @@ public class StatsOfReportsCollection {
 		for (String tag: tagsList) {
 			IMJ_OC<Double> val_list = _reps.getAllValuesForTag(tag);
 			
-			double ave = getAvg(val_list);
+			Double ave = getAvg(val_list);
 			String ave_tag = "Average_" + tag;
 			answer.addValue(ave_tag, ave);
 			
-			double stdev = getStdev(val_list, ave);
+			Double stdev = getStdev(val_list, ave);
 			String stdev_tag = "Stdev_" + tag;
 			answer.addValue(stdev_tag, stdev);
 			
-			double max = getMax(val_list);
+			Double max = getMax(val_list);
 			String max_tag = "Max_" + tag;
 			answer.addValue(max_tag, max);
 			
-			double min = getMin(val_list);
+			Double min = getMin(val_list);
 			String min_tag = "Min_" + tag;
 			answer.addValue(min_tag, min);
 		}
@@ -61,7 +61,10 @@ public class StatsOfReportsCollection {
 	}
 	
 	private Double getMax(IMJ_OC<Double> values){
-		double max = values.get(0);
+		Double max = null;
+		if (! values.isEmpty()) {
+			max = values.get(0);
+		}
 		for (double temp: values) {
 			if (temp > max) {
 				max = temp;
@@ -71,7 +74,10 @@ public class StatsOfReportsCollection {
 	}
 	
 	private Double getMin(IMJ_OC<Double> values){
-		double min = values.get(0);
+		Double min = null;
+		if (! values.isEmpty()) {
+			min = values.get(0);
+		}
 		for (double temp: values) {
 			if (temp < min) {
 				min = temp;

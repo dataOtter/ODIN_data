@@ -40,20 +40,38 @@ public class Main {
         
         ReportsCollection allReports = eng.getAllReports();
         
-        //CedarsReportWriter writer = new CedarsReportWriter(allReports, path, formatVersion);
-        //writer.writeAllDataToFiles();
+        CedarsReportWriter writer = new CedarsReportWriter(allReports, path, formatVersion);
+        writer.writeAllDataToFiles(Constants.CEDARS_REPORT_CSV);
+        loopTimeForCedarsRep(path, formatVersion, consentstatuses, stopTimeInSecs, windowInHrs);
         
-        StatsBuilder sb = new StatsBuilder(path, formatVersion, allReports).enableSensorsStats().enableRulesStats();
-        StatsEngine stats = sb.build();
+        //StatsBuilder sb = new StatsBuilder(path, formatVersion, allReports).enableSensorsStats().enableRulesStats();
+        //StatsEngine stats = sb.build();
         
-        ReportsCollection allStats = stats.getStats();
+        //ReportsCollection allStats = stats.getStats();
         
         //BasicReportFilesWriter out = new BasicReportFilesWriter(allReports, path, formatVersion);
         //out.writeAllDataToFiles();
         
-        System.out.println(allReports);
+        //System.out.println(allReports);
         //System.out.println(allStats);
 
+    }
+    
+    public static void loopTimeForCedarsRep(String path, int formatVersion, IMJ_OC<String> consentstatuses,
+    		double stopT, double window) throws ParseException, IOException {
+    	int i = 0;
+        for (double t = Constants.START_TIME_IN_SECS; t <= stopT; t += (24 * 60 * 60)) {
+        	AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion, consentstatuses, 
+        			t, window);
+            AnalysisEngine eng = bld.addRuleJobs().buildEngine();
+            
+            ReportsCollection allReports = eng.getAllReports();
+            
+            CedarsReportWriter writer = new CedarsReportWriter(allReports, path, formatVersion);
+            String name = Constants.CEDARS_REPORT_CSV.substring(0, Constants.CEDARS_REPORT_CSV.length() - 4) + i + ".csv";
+            i++;
+            writer.writeAllDataToFiles(name);
+        }
     }
     
     public static void checkPredicate() {

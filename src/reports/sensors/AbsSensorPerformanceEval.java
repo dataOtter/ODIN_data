@@ -10,7 +10,7 @@ import sensors.data.SensorDataOfOneType;
  */
 public abstract class AbsSensorPerformanceEval{
     protected final SensorDataOfOneType _data;
-    protected Long _val = null;
+    protected Double _val = null;
     protected final double _sensorInterval;
 
     public AbsSensorPerformanceEval(SensorDataOfOneType data, double si) {
@@ -26,14 +26,17 @@ public abstract class AbsSensorPerformanceEval{
         return _sensorInterval;
     }
     
-    protected abstract long getValue();
+    protected abstract Double getValue();
     
     public abstract void printAll();
     
     public abstract OneReport addToMap(OneReport map);
     
     public Double getValueInPercent(){
-        long rawNum = getValue();
+        Double rawNum = getValue();
+    	if (rawNum == null) {
+    		return null;
+    	}
         double per = rawNum / _sensorInterval * 100;
         per = Math.round(per * 100d) / 100d;  // this is to get 2 decimal places
         return per;

@@ -53,6 +53,22 @@ public class SensorDataCollection {
     }
     
     /**
+     * @param couponId - ID of the coupon for which to get all data of the given type, as an int
+     * @param type - type of sensor data, found in Constants, for which the get all data for the given coupon ID
+     * @return the data associated with the given coupon and data type as SensorDataOfOneType 
+     */
+    public SensorDataOfOneType getCouponDataOfTypeInTimeWindow(int couponId, String type, 
+    		double stopTimeInSecs, double windowInHrs) {
+    	IMJ_OC<SensorDataOfOneType> allData = _couponToData.get(couponId);
+    	for (SensorDataOfOneType d: allData) {
+    		if (d.getDataType().equals(type)) {
+    			return d;
+    		}
+    	}
+    	return null;
+    }
+    
+    /**
      * Adds the given AbsDataPoint to this SensorDataCollection as appropriate
      * @param cid - ID as int of the coupon whose data point to add
      * @param data - concrete instance of AbsDataPoint to add to this SensorDataCollection

@@ -11,10 +11,12 @@ public class AnalysisOnDepBt extends AbsAnalysisRule {
 
     // _answers contains all answers, regardless of cid and rid        
     public AnalysisOnDepBt(AnswersCollection answers, RulesCollection rules, 
-    		SensorDataCollection allSensorData, double sensorFireTimeInterval, int cid, int rid, CouponCollection coupons) {
+    		SensorDataCollection allSensorData, double sensorFireTimeInterval, int cid, int rid, CouponCollection coupons,
+    		double stopTimeInSecs, double windowInHrs) {
     	
     	super(ConstTags.REPORT_TYPE_ONDEPBT_RULE_ANALYSIS, new String[]{ConstTags.REPORTS_REL_DATA_BT});
     	
-        _eval = new OnDepBtPerformanceEval(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, coupons);
+        _eval = new OnDepBtPerformanceEval(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, coupons,
+        		stopTimeInSecs, windowInHrs);
     }
 }

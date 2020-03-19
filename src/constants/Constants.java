@@ -1,4 +1,8 @@
 package constants;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 /**
  *
@@ -18,6 +22,10 @@ public class Constants {
     // 2/27/2020 onwards use format version 3 
     public static final int FORMAT_VERSION = 3;
     public static final boolean TESTING_GPS_ONLY = true;
+    
+    public static final double STOP_TIME_IN_SECS = getMillisFromStringDate("02/18/2020 20:23");
+    //public static final double STOP_TIME_IN_SECS = -1;
+    public static final double TIME_WINDOW_IN_HRS = 24.0 * 29.0;
 
     //*********ANALAYSIS VARIABLES*********
     // for sensor data eval
@@ -203,4 +211,12 @@ public class Constants {
     public static final String HEALTH_REPORT_CSV = "health_report.csv";
     public static final String CEDARS_REPORT_CSV = "cedars_report.csv";
     public static final String HEALTH_REPORT_NO_VALUE = "NA";
+    
+
+    private static double getMillisFromStringDate(String date) {
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm", Locale.ENGLISH);
+        LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
+        long millis = dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        return millis / 1000.0;
+    }
 }

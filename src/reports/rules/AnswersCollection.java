@@ -39,13 +39,43 @@ public class AnswersCollection extends MJ_OC<OneAnswer> {
      * @param timeInSecs - epoch time in seconds at which to get all answers
      * @return an AnswersCollection subset
      */
-    public AnswersCollection getAnswerAtTimeInSecsForCidAndRid(int cid, int rid, double timeInSecs) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis((long)timeInSecs);
+    public AnswersCollection getAnswersAtTimeInSecsForCidAndRid(int cid, int rid, double timeInSecs) {
 		AnswersCollection ans = getAnsForRuleAndCid(cid, rid);
 		ans = ans.getAnswersAtTimeInSecs(timeInSecs);
 		return ans;
     }
+    
+    /**
+     * Extracts AnsersCollection subset for the given rule ID, coupon ID, and time window
+     * @param cid - coupon ID for which to extract all answers
+     * @param rid - rule ID for which to extract all answers
+     * @param startTimeInSecs - epoch time in seconds from which to get all answers
+     * @param endTimeInSecs - epoch time in seconds up to which to get all answers
+     * @return an AnswersCollection subset
+     */
+    public AnswersCollection getAnswersInTimeWindowForCidAndRid(int cid, int rid, double startTimeInSecs, double endTimeInSecs) {
+		AnswersCollection ans = getAnsForRuleAndCid(cid, rid);
+		ans = ans.getAnswersForTimeWindowInSecs(startTimeInSecs, endTimeInSecs);
+		return ans;
+    }
+    
+    /**
+     * Extracts AnsersCollection subset for the given time window
+     * @param startTimeInSecs - epoch time in seconds from which to get all answers
+     * @param endTimeInSecs - epoch time in seconds up to which to get all answers
+	 * @return an AnswersCollection subset
+	 */
+	private AnswersCollection getAnswersForTimeWindowInSecs(double startTimeInSecs, double endTimeInSecs) {
+		AnswersCollection ans = new AnswersCollection();
+		
+		for (OneAnswer a: _allAnswers) {
+			double ansTime = a.getRuleFiredTime().getTimeInMillis() / 1000.0;
+    		if ( ansTime >= startTimeInSecs && ansTime <= endTimeInSecs) {
+    			ans.add(a);
+    		}
+		}
+		return ans;
+	}
     
 	/**
      * Extracts AnsersCollection subset for the given time

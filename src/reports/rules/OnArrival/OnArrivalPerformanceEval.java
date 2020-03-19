@@ -14,9 +14,11 @@ import sensors.gps.GpsCoordinate;
 public class OnArrivalPerformanceEval extends AbsGpsRulePerformanceEval {
 
 	public OnArrivalPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
-			double gpsSensorFireTimeInterval, int cid, int rid, CouponCollection coupons) {
+			double gpsSensorFireTimeInterval, int cid, int rid, CouponCollection coupons,
+			double stopTimeInSecs, double windowInHrs) {
 		
-		super(answers, rules, allSensorData, gpsSensorFireTimeInterval, cid, rid, 2*gpsSensorFireTimeInterval, coupons);
+		super(answers, rules, allSensorData, gpsSensorFireTimeInterval, cid, rid, 2*gpsSensorFireTimeInterval, coupons,
+				stopTimeInSecs, windowInHrs);
 	}
 
 	@Override

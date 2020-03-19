@@ -9,6 +9,7 @@ import orderedcollection.*;
 import reports.OneReport;
 import sensors.data.SensorDataCollection;
 import sensors.data.SensorDataOfOneType;
+
 /**
 *
 * @author Maisha Jauernig
@@ -16,6 +17,8 @@ import sensors.data.SensorDataOfOneType;
 public abstract class AbsRulePerformanceEval {
 	protected final int _cid;
 	protected final int _rid;
+	private double _startTimeInSecs = -1.0;
+	private double _stopTimeInSecs = -1.0;
 	
 	private final int _numRuleFiresTotal;
 	private final int _numAnsweredRuleFiresTotal;
@@ -46,10 +49,18 @@ public abstract class AbsRulePerformanceEval {
 	private final double _allowedDivergenceOnTimeFireT;
 	
 	protected AbsRulePerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
-			double gpsSensorFireTimeInterval, int cid, int rid, double minTReqRule, 
-			double allowanceOnTimeFireT, double allowanceLateFireT, CouponCollection coupons) {
+			double gpsSensorFireTimeInterval, int cid, int rid, double minTReqRule, double allowanceOnTimeFireT, 
+			double allowanceLateFireT, CouponCollection coupons, double stopTimeInSecs, double windowInHrs) {
 		_cid = cid;
 		_rid = rid;
+		if (stopTimeInSecs == -1) {
+			_answersLeft = answers.getAnsForRuleAndCid(_cid, _rid);
+		}
+		else {
+			_stopTimeInSecs = stopTimeInSecs;
+			_startTimeInSecs = _stopTimeInSecs - (windowInHrs * 60.0 * 60.0);
+			_answersLeft = answers.getAnswersInTimeWindowForCidAndRid(_cid, _rid, _startTimeInSecs, _stopTimeInSecs);
+		}
 		_gpsSensorFireTimeInterval = gpsSensorFireTimeInterval;
 		_minTReqRule = minTReqRule;
 		_allowedDivergenceOnTimeFireT = allowanceOnTimeFireT;
@@ -58,7 +69,6 @@ public abstract class AbsRulePerformanceEval {
 		_filters = rules.getRuleById(_rid).getFilters();
 
 		_allAnswers = answers;
-		_answersLeft = answers.getAnsForRuleAndCid(_cid, _rid);
 		_numRuleFiresTotal = _answersLeft.size();
 		_numAnsweredRuleFiresTotal = _answersLeft.getAnsForResponded().size();
 		_numSkippedAnswerRuleFiresTotal = _answersLeft.getAnsForSkipped().size();

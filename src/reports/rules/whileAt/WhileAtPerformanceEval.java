@@ -18,9 +18,11 @@ public class WhileAtPerformanceEval extends AbsGpsRulePerformanceEval {
 	private int _atLocConsecCount = 0;
 
 	public WhileAtPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
-			double sensorFireTimeInterval, int cid, int rid, CouponCollection coupons) {
+			double sensorFireTimeInterval, int cid, int rid, CouponCollection coupons, 
+			double stopTimeInSecs, double windowInHrs) {
 		
-		super(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, getMinTReq(rules, rid), coupons);
+		super(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, getMinTReq(rules, rid), coupons,
+				stopTimeInSecs, windowInHrs);
 	}
 	
 	private static double getMinTReq(RulesCollection rules, int rid) {

@@ -23,11 +23,12 @@ public class CronPerformanceEval extends AbsRulePerformanceEval {
 	private DateTime _maxTJoda;
 
 	public CronPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
-			double gpsSensorFireTimeInterval, int cid, int rid, CouponCollection coupons) {
+			double gpsSensorFireTimeInterval, int cid, int rid, CouponCollection coupons, 
+			double stopTimeInSecs, double windowInHrs) {
 
 		// get time to next fire as replacement for 3000
 		super(answers, rules, allSensorData, gpsSensorFireTimeInterval, cid, rid, gpsSensorFireTimeInterval*2,
-				getAllowedDevOnTime(rules, rid), getAllowedDevNotMissed(rules, rid), coupons);
+				getAllowedDevOnTime(rules, rid), getAllowedDevNotMissed(rules, rid), coupons, stopTimeInSecs, windowInHrs);
 
 		_coupon = coupons.getCouponById(_cid);
 		

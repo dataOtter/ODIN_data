@@ -29,27 +29,29 @@ public class Main {
         //consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTREVOKED);
         //consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTWITHDRAWN);
         consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTAGREED);
+        double stopTimeInSecs = Constants.STOP_TIME_IN_SECS;
+        double windowInHrs = Constants.TIME_WINDOW_IN_HRS;
         
-        		
-        AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion, consentstatuses);
+        AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion, consentstatuses, 
+        		stopTimeInSecs, windowInHrs);
         //AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
         AnalysisEngine eng = bld.addRuleJobs().buildEngine();
         //AnalysisEngine eng = bld.addSensorJobs().buildEngine();
         
         ReportsCollection allReports = eng.getAllReports();
         
-        CedarsReportWriter writer = new CedarsReportWriter(allReports, path, formatVersion);
-        writer.writeAllDataToFiles();
+        //CedarsReportWriter writer = new CedarsReportWriter(allReports, path, formatVersion);
+        //writer.writeAllDataToFiles();
         
-        //StatsBuilder sb = new StatsBuilder(path, formatVersion, allReports).enableSensorsStats().enableRulesStats();
-        //StatsEngine stats = sb.build();
+        StatsBuilder sb = new StatsBuilder(path, formatVersion, allReports).enableSensorsStats().enableRulesStats();
+        StatsEngine stats = sb.build();
         
-        //ReportsCollection allStats = stats.getStats();
+        ReportsCollection allStats = stats.getStats();
         
         //BasicReportFilesWriter out = new BasicReportFilesWriter(allReports, path, formatVersion);
-       // out.writeAllDataToFiles();
+        //out.writeAllDataToFiles();
         
-        //System.out.println(allReports);
+        System.out.println(allReports);
         //System.out.println(allStats);
 
     }

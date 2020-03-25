@@ -7,6 +7,7 @@ import constants.*;
 import dao.CouponCollection;
 import dao.OneAnswer;
 import filters.*;
+import maps.IMJ_Map;
 import orderedcollection.*;
 import reports.OneReport;
 import sensors.data.SensorDataCollection;
@@ -18,6 +19,7 @@ import sensors.data.SensorDataOfOneType;
 */
 public abstract class AbsRulePerformanceEval {
 	protected final int _cid;
+	private final IMJ_Map<Integer, String> _cIdToNames;
 	protected final int _rid;
 	protected final double _startTimeInSecs;
 	private final double _stopTimeInSecs;
@@ -52,7 +54,9 @@ public abstract class AbsRulePerformanceEval {
 	
 	protected AbsRulePerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
 			double gpsSensorFireTimeInterval, int cid, int rid, double minTReqRule, double allowanceOnTimeFireT, 
-			double allowanceLateFireT, CouponCollection coupons, double stopTimeInSecs, double windowInHrs) {
+			double allowanceLateFireT, CouponCollection coupons, double stopTimeInSecs, double windowInHrs, 
+			IMJ_Map<Integer, String> cIdToNames) {
+		_cIdToNames = cIdToNames;
 		_cid = cid;
 		_rid = rid;
 		if (stopTimeInSecs == -1) {
@@ -99,14 +103,15 @@ public abstract class AbsRulePerformanceEval {
 		Assertion.test(
 				_earlyAns.size() + _answersLeft.size() + _goodAnsCount + _lateAns.size() 
 				== _numRuleFiresTotal, "not all answers are accounted for");
-		
-		rep.addValue(ConstTags.REPORTS_COUPONID, _cid * 1.0);
-		rep.addValue(ConstTags.REPORTS_RULEID, _rid * 1.0);
+
+		rep.addValue(ConstTags.REPORTS_COUPONNAME, _cIdToNames.get(_cid));
+		rep.addValue(ConstTags.REPORTS_COUPONID, Integer.toString(_cid));
+		rep.addValue(ConstTags.REPORTS_RULEID, Integer.toString(_rid));
 		rep = getGoodFireCounts(rep);
 		rep = getLateAndMissedFireCounts(rep);
 		rep = getEarlyFireCounts(rep);
 		// 2*SI and minTReq
-		rep.addValue(ConstTags.REPORTS_SENSOR_INTERVAL, _gpsSensorFireTimeInterval);
+		rep.addValue(ConstTags.REPORTS_SENSOR_INTERVAL, Double.toString(_gpsSensorFireTimeInterval));
 		rep.addValue(ConstTags.REPORTS_RULE_MIN_T, _minTReqRule, ConstTags.REPORTS_R_M_T_TEXT);
 		return rep;
 	}

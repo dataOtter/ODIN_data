@@ -9,14 +9,14 @@ import orderedcollection.*;
  * @author Maisha Jauernig
  */
 public abstract class OneReport {
-	private final IMJ_Map<String, Double> _data;
+	private final IMJ_Map<String, String> _data;
 	private final IMJ_Map<String, String> _docs;
 	private final boolean _isRuleReport;
 	private final boolean _isSensorReport;
 	private IMJ_OC<String> _relatedDataNames;
 	
 	protected OneReport(boolean isSensorReport, boolean isRuleReport, IMJ_OC<String> relatedDataNames) {
-		_data = new MJ_Map_Factory<String, Double>().create();
+		_data = new MJ_Map_Factory<String, String>().create();
 		_docs = new MJ_Map_Factory<String, String>().create();
 		_isSensorReport = isSensorReport;
 		_isRuleReport = isRuleReport;
@@ -39,7 +39,7 @@ public abstract class OneReport {
 		if ( ! _data.containsKey(tag)) {
 			return null;
 		}
-		return _data.get(tag);
+		return Double.parseDouble(_data.get(tag));
 	}
 
 	public String getDocs(String tag) {
@@ -50,16 +50,16 @@ public abstract class OneReport {
 	}
 	
 	public int getCid() {
-		return _data.get(ConstTags.REPORTS_COUPONID).intValue();
+		return Integer.parseInt(_data.get(ConstTags.REPORTS_COUPONID));
 	}
 	
-	public void addValue(String tag, Double val) {
+	public void addValue(String tag, String val) {
 		_data.put(tag, val);
 		_docs.put(tag, "");
 	}
 	
 	public void addValue(String tag, Double val, String doc) {
-		_data.put(tag, val);
+		_data.put(tag, Double.toString(val));
 		_docs.put(tag, doc);
 	}
 	
@@ -71,7 +71,7 @@ public abstract class OneReport {
 			
 			if (! tag.contains("__") || tag.contains(ConstTags.REPORTS_COUPONID)) {
 				
-				Double val = _data.get(tag);
+				Double val = Double.parseDouble(_data.get(tag));
 				String valAsString = "";
 				if (val == null) {
 					valAsString = "null";

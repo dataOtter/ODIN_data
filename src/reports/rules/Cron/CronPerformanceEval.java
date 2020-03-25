@@ -9,6 +9,7 @@ import constants.Constants;
 import cron.CRONExpression;
 import dao.CouponCollection;
 import dao.OneCoupon;
+import maps.IMJ_Map;
 import reports.rules.AbsRulePerformanceEval;
 import reports.rules.AnswersCollection;
 import reports.rules.RulesCollection;
@@ -24,11 +25,11 @@ public class CronPerformanceEval extends AbsRulePerformanceEval {
 
 	public CronPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
 			double gpsSensorFireTimeInterval, int cid, int rid, CouponCollection coupons, 
-			double stopTimeInSecs, double windowInHrs) {
+			double stopTimeInSecs, double windowInHrs, IMJ_Map<Integer, String> cIdToNames) {
 
 		// get time to next fire as replacement for 3000
 		super(answers, rules, allSensorData, gpsSensorFireTimeInterval, cid, rid, gpsSensorFireTimeInterval*2,
-				getAllowedDevOnTime(rules, rid), getAllowedDevNotMissed(rules, rid), coupons, stopTimeInSecs, windowInHrs);
+				getAllowedDevOnTime(rules, rid), getAllowedDevNotMissed(rules, rid), coupons, stopTimeInSecs, windowInHrs, cIdToNames);
 
 		_coupon = coupons.getCouponById(_cid);
 		

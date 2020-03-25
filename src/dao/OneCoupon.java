@@ -11,7 +11,7 @@ import maps.IMJ_Map;
 
 public class OneCoupon {
 	private final int _id;
-	private final String _number;
+	private final String _name;
     private final Calendar _lastRegistrationTime;
     private final IMJ_Map<String, Calendar> _lastUploads;
     private final Calendar _lastQuestionCallTime;
@@ -20,7 +20,7 @@ public class OneCoupon {
     public OneCoupon(String couponRow, IMJ_Map<Integer, IMJ_Map<String, Calendar>> uploads) throws ParseException {
     	String[] line = couponRow.split(",");
         _id = Integer.parseInt(line[Constants.COUPON_COUPONID_IDX]);
-        _number = line[Constants.COUPON_COUPONNUMBER_IDX];
+        _name = line[Constants.COUPON_COUPONNUMBER_IDX];
         _lastRegistrationTime = getLastRegTime(line[Constants.COUPON_LASTREGISTRATION_IDX]);
         _lastUploads = uploads.get(_id);
         _lastQuestionCallTime = getCalendar(line[Constants.COUPON_LASTQUESTIONCALL_IDX]);
@@ -39,8 +39,8 @@ public class OneCoupon {
 		return _id;
 	}
 
-	public String getNumber() {
-		return _number;
+	public String getName() {
+		return _name;
 	}
 
 	public Calendar getLastRegistrationTime() {

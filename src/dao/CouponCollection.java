@@ -1,6 +1,7 @@
 package dao;
 
 import constants.Constants;
+import maps.*;
 import orderedcollection.*;
 
 public class CouponCollection extends MJ_OC<OneCoupon> {
@@ -54,6 +55,17 @@ public class CouponCollection extends MJ_OC<OneCoupon> {
 			cids.add(c.getId());
 		}
 		return cids;
+	}
+	
+	/**
+	 * @return an IMJ_OC<String> of all coupon names found in this CouponCollection
+	 */
+	public IMJ_Map<Integer, String> getAllCidsToCNames() {
+		IMJ_Map<Integer, String> idToName = new MJ_Map_Factory<Integer, String>().create();
+		for (OneCoupon c: _allCoupons) {
+			idToName.put(c.getId(), c.getName());
+		}
+		return idToName;
 	}
 
 	@Override

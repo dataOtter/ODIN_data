@@ -2,6 +2,7 @@ package reports.rules.whileAt;
 
 import Assert.Assertion;
 import dao.CouponCollection;
+import maps.IMJ_Map;
 import reports.rules.*;
 import sensors.data.SensorDataCollection;
 import sensors.data.GpsDataPoint;
@@ -19,10 +20,10 @@ public class WhileAtPerformanceEval extends AbsGpsRulePerformanceEval {
 
 	public WhileAtPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
 			double sensorFireTimeInterval, int cid, int rid, CouponCollection coupons, 
-			double stopTimeInSecs, double windowInHrs) {
+			double stopTimeInSecs, double windowInHrs, IMJ_Map<Integer, String> cIdToNames) {
 		
 		super(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, getMinTReq(rules, rid), coupons,
-				stopTimeInSecs, windowInHrs);
+				stopTimeInSecs, windowInHrs, cIdToNames);
 	}
 	
 	private static double getMinTReq(RulesCollection rules, int rid) {

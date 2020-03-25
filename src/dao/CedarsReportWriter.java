@@ -31,7 +31,8 @@ public class CedarsReportWriter {
 		_repsCollection = reps;
 		//_tagsWritten = new MJ_OC_Factory<String>().create();
 		_allFinalTags = new MJ_OC_Factory<String>().create();
-		_allFinalTags.add(ConstTags.REPORTS_COUPONID);
+		_allFinalTags.add(ConstTags.REPORTS_COUPONNAME);
+		//_allFinalTags.add(ConstTags.REPORTS_COUPONID);
 		//_allFinalTags.add(ConstTags.REPORTS_STUDYID);
 	}
 	

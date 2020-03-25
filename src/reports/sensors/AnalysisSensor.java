@@ -1,6 +1,7 @@
 package reports.sensors;
 
 import constants.ConstTags;
+import maps.IMJ_Map;
 import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
 import reports.IAnalysis;
@@ -15,13 +16,15 @@ import sensors.data.SensorDataOfOneType;
 public class AnalysisSensor implements IAnalysis {
     private final double _sensorInterval;
     private final int _sensorId;
+    private final IMJ_Map<Integer, String> _cIdToNames;
     private final int _couponId;
 	private double _startTimeInSecs = -1.0;
 	private double _stopTimeInSecs = -1.0;
     private final SensorDataOfOneType _data;
     
     public AnalysisSensor(int cid, int sensorId, SensorDataCollection allData, double si, 
-    		double stopTimeInSecs, double windowInHrs) {
+    		double stopTimeInSecs, double windowInHrs,IMJ_Map<Integer, String> cIdToNames) {
+    	_cIdToNames = cIdToNames;
         _sensorId = sensorId;
 		if (stopTimeInSecs == -1) {
 	        _data = allData.getCouponDataOfType(cid, getAnalysisType()).getDeepCopy();
@@ -45,9 +48,10 @@ public class AnalysisSensor implements IAnalysis {
     	
     	OneReport rep = new OneSensorReport(relatedDataNames);
     	
-        rep.addValue(ConstTags.REPORTS_COUPONID, _couponId * 1.0);
-        rep.addValue(ConstTags.REPORTS_SENSORID, _sensorId * 1.0);
-        rep.addValue(ConstTags.REPORTS_SENSOR_INTERVAL, _sensorInterval);
+    	rep.addValue(ConstTags.REPORTS_COUPONNAME, _cIdToNames.get(_couponId));
+        rep.addValue(ConstTags.REPORTS_COUPONID, Integer.toString(_couponId));
+        rep.addValue(ConstTags.REPORTS_SENSORID, Integer.toString(_sensorId));
+        rep.addValue(ConstTags.REPORTS_SENSOR_INTERVAL, Double.toString(_sensorInterval));
         
         SensorAverageTimeInterval avg = new SensorAverageTimeInterval(_data, _sensorInterval);
         rep = avg.addToMap(rep);

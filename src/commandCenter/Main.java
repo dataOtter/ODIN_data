@@ -2,6 +2,11 @@ package commandCenter;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import constants.Constants;
 import dao.BasicReportFilesWriter;
@@ -58,17 +63,24 @@ public class Main {
     }
     
     public static void loopTimeForCedarsRep(String path, int formatVersion, IMJ_OC<String> consentstatuses,
-    		double stopT, double window) throws ParseException, IOException {
+    		double stopT, double windowInHrs) throws ParseException, IOException {
     	int i = 0;
         for (double t = Constants.START_TIME_IN_SECS; t <= stopT; t += (24 * 60 * 60)) {
         	AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion, consentstatuses, 
-        			t, window);
+        			t, windowInHrs);
             AnalysisEngine eng = bld.addRuleJobs().buildEngine();
             
             ReportsCollection allReports = eng.getAllReports();
             
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy_HH-mm", Locale.ENGLISH);
+            Date date =  new Date( (long) t * 1000);
+            String startDate = sdf.format(date);
+            date =  new Date( (long) (t + windowInHrs*60*60) * 1000);
+            String stopDate = sdf.format(date);
+            
             CedarsReportWriter writer = new CedarsReportWriter(allReports, path, formatVersion);
-            String name = Constants.CEDARS_REPORT_CSV.substring(0, Constants.CEDARS_REPORT_CSV.length() - 4) + i + ".csv";
+            String name = Constants.CEDARS_REPORT_CSV.substring(0, Constants.CEDARS_REPORT_CSV.length() - 4) 
+            		+ "_" + startDate + "_to_" + stopDate + ".csv";
             i++;
             writer.writeAllDataToFiles(name);
         }

@@ -42,6 +42,7 @@ public class ConstTags {
 	
 	public static final String REPORTS_RULEID = "_ruleId";
 	public static final String REPORTS_COUPONID = "_couponId";
+	public static final String REPORTS_COUPONNAME = "_couponName";
 	public static final String REPORTS_SENSORID = "_sensorId";
 	public static final String REPORTS_STUDYID = "_studyId";
 	

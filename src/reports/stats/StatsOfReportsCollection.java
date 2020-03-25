@@ -23,19 +23,19 @@ public class StatsOfReportsCollection {
 			
 			Double ave = getAvg(val_list);
 			String ave_tag = "Average_" + tag;
-			answer.addValue(ave_tag, ave);
+			answer.addValue(ave_tag, Double.toString(ave));
 			
 			Double stdev = getStdev(val_list, ave);
 			String stdev_tag = "Stdev_" + tag;
-			answer.addValue(stdev_tag, stdev);
+			answer.addValue(stdev_tag, Double.toString(stdev));
 			
 			Double max = getMax(val_list);
 			String max_tag = "Max_" + tag;
-			answer.addValue(max_tag, max);
+			answer.addValue(max_tag, Double.toString(max));
 			
 			Double min = getMin(val_list);
 			String min_tag = "Min_" + tag;
-			answer.addValue(min_tag, min);
+			answer.addValue(min_tag, Double.toString(min));
 		}
 		
 		return answer;

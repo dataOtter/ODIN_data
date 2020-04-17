@@ -1,5 +1,6 @@
 package commandCenter;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,7 +11,11 @@ import java.util.Locale;
 
 import constants.Constants;
 import dao.BasicReportFilesWriter;
-import dao.CedarsReportWriter;
+import dao.JupyterReportWriter;
+import dao.FullReportWriter;
+import dao.PerCidReportWriter;
+import dao.ZipReportWriter;
+import dao.StudyReader;
 import orderedcollection.*;
 import reports.AnalysisEngine;
 import reports.AnalysisEngineBuilder;
@@ -34,56 +39,33 @@ public class Main {
         //consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTREVOKED);
         //consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTWITHDRAWN);
         consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTAGREED);
+        double startTInSecs = Constants.START_TIME_IN_SECS;
         double stopTimeInSecs = Constants.STOP_TIME_IN_SECS;
-        double windowInHrs = Constants.TIME_WINDOW_IN_HRS;
+        double slidingWindowInHrs = Constants.TIME_SLIDING_WINDOW_IN_HRS;
         
         AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion, consentstatuses, 
-        		stopTimeInSecs, windowInHrs);
-        //AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
-        AnalysisEngine eng = bld.addRuleJobs().buildEngine();
+        		stopTimeInSecs, slidingWindowInHrs);
+        AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
+        //AnalysisEngine eng = bld.addRuleJobs().buildEngine();
         //AnalysisEngine eng = bld.addSensorJobs().buildEngine();
         
         ReportsCollection allReports = eng.getAllReports();
-        
-        CedarsReportWriter writer = new CedarsReportWriter(allReports, path, formatVersion);
-        writer.writeAllDataToFiles(Constants.CEDARS_REPORT_CSV);
-        loopTimeForCedarsRep(path, formatVersion, consentstatuses, stopTimeInSecs, windowInHrs);
-        
-        //StatsBuilder sb = new StatsBuilder(path, formatVersion, allReports).enableSensorsStats().enableRulesStats();
-        //StatsEngine stats = sb.build();
-        
-        //ReportsCollection allStats = stats.getStats();
-        
         //BasicReportFilesWriter out = new BasicReportFilesWriter(allReports, path, formatVersion);
         //out.writeAllDataToFiles();
         
+        //StatsBuilder sb = new StatsBuilder(path, formatVersion, allReports).enableSensorsStats().enableRulesStats();
+        //StatsEngine stats = sb.build();
+        //ReportsCollection allStats = stats.getStats();
+        
+        //new ZipReportWriter(path, formatVersion).makeFullReportsZipFolder(startTInSecs, stopTimeInSecs, slidingWindowInHrs);
+        
+        //new FullReportWriter(allReports, path, formatVersion).writeOutFullReports(consentstatuses, stopTimeInSecs, startTInSecs, slidingWindowInHrs);
+        
+        //new JupyterReportWriter(allReports, path, formatVersion).writeTexJupyterFiles(consentstatuses, stopTimeInSecs, startTInSecs, slidingWindowInHrs);
+
         //System.out.println(allReports);
         //System.out.println(allStats);
 
-    }
-    
-    public static void loopTimeForCedarsRep(String path, int formatVersion, IMJ_OC<String> consentstatuses,
-    		double stopT, double windowInHrs) throws ParseException, IOException {
-    	int i = 0;
-        for (double t = Constants.START_TIME_IN_SECS; t <= stopT; t += (24 * 60 * 60)) {
-        	AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion, consentstatuses, 
-        			t, windowInHrs);
-            AnalysisEngine eng = bld.addRuleJobs().buildEngine();
-            
-            ReportsCollection allReports = eng.getAllReports();
-            
-            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy_HH-mm", Locale.ENGLISH);
-            Date date =  new Date( (long) t * 1000);
-            String startDate = sdf.format(date);
-            date =  new Date( (long) (t + windowInHrs*60*60) * 1000);
-            String stopDate = sdf.format(date);
-            
-            CedarsReportWriter writer = new CedarsReportWriter(allReports, path, formatVersion);
-            String name = Constants.CEDARS_REPORT_CSV.substring(0, Constants.CEDARS_REPORT_CSV.length() - 4) 
-            		+ "_" + startDate + "_to_" + stopDate + ".csv";
-            i++;
-            writer.writeAllDataToFiles(name);
-        }
     }
     
     public static void checkPredicate() {

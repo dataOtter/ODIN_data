@@ -53,13 +53,21 @@ public abstract class OneReport {
 		return Integer.parseInt(_data.get(ConstTags.REPORTS_COUPONID));
 	}
 	
+	public String getCName() {
+		return _data.get(ConstTags.REPORTS_COUPONNAME);
+	}
+	
 	public void addValue(String tag, String val) {
 		_data.put(tag, val);
 		_docs.put(tag, "");
 	}
 	
 	public void addValue(String tag, Double val, String doc) {
-		_data.put(tag, Double.toString(val));
+		String v = "";
+		if (val != null) {
+			v = Double.toString(val);
+		}
+		_data.put(tag, v);
 		_docs.put(tag, doc);
 	}
 	
@@ -71,8 +79,8 @@ public abstract class OneReport {
 			
 			if (! tag.contains("__") || tag.contains(ConstTags.REPORTS_COUPONID)) {
 				
-				Double val = Double.parseDouble(_data.get(tag));
-				String valAsString = "";
+				String val = _data.get(tag);
+				/*String valAsString = "";
 				if (val == null) {
 					valAsString = "null";
 				}
@@ -81,9 +89,9 @@ public abstract class OneReport {
 				}
 				else {
 					valAsString = String.format("%.0f", val);
-				}
+				}*/
 
-				s += _docs.get(tag) + " (" + tag + ") : " + valAsString + "\n";
+				s += _docs.get(tag) + " (" + tag + ") : " + val + "\n";
 			}
 		}
 			

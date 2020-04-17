@@ -1,6 +1,7 @@
 package reports.sensors;
 
 import constants.ConstTags;
+import constants.Constants;
 import maps.IMJ_Map;
 import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
@@ -23,7 +24,7 @@ public class AnalysisSensor implements IAnalysis {
     private final SensorDataOfOneType _data;
     
     public AnalysisSensor(int cid, int sensorId, SensorDataCollection allData, double si, 
-    		double stopTimeInSecs, double windowInHrs,IMJ_Map<Integer, String> cIdToNames) {
+    		double stopTimeInSecs, double windowInHrs, IMJ_Map<Integer, String> cIdToNames) {
     	_cIdToNames = cIdToNames;
         _sensorId = sensorId;
 		if (stopTimeInSecs == -1) {
@@ -31,7 +32,12 @@ public class AnalysisSensor implements IAnalysis {
 		}
 		else {
 			_stopTimeInSecs = stopTimeInSecs;
-			_startTimeInSecs = _stopTimeInSecs - (windowInHrs * 60.0 * 60.0);
+			if (windowInHrs == -1.0) {
+				_startTimeInSecs = Constants.START_TIME_IN_SECS;
+			}
+			else {
+				_startTimeInSecs = _stopTimeInSecs - (windowInHrs * 60.0 * 60.0);
+			}
 			
 	        _data = allData.getCouponDataOfTypeInTimeWindow(cid, getAnalysisType(), _startTimeInSecs, _stopTimeInSecs)
 	        		.getDeepCopy();

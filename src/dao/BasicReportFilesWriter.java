@@ -35,7 +35,7 @@ public class BasicReportFilesWriter {
 		int studyId = s.getStudyId();
 		
 		// must call docs first in order to make list of _allFinalTags
-		FileWriter wrDocs = new FileWriter(Constants.HEALTH_CODEBOOK_CSV);
+		FileWriter wrDocs = new FileWriter(Constants.REPORT_CODEBOOK_CSV);
 		String colsToWrite = Constants.HEALTH_CODEBOOK_COLUMN_LABELS + "\n";
 		try { 
 			wrDocs.write(colsToWrite);

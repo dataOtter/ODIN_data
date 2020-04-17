@@ -23,10 +23,11 @@ public class Constants {
     public static final int FORMAT_VERSION = 3;
     public static final boolean TESTING_GPS_ONLY = true;
     
-    public static final double START_TIME_IN_SECS = getSecsFromStringDate("01/21/2020 18:23");
-    public static final double STOP_TIME_IN_SECS = getSecsFromStringDate("02/18/2020 19:52");
-    //public static final double STOP_TIME_IN_SECS = -1;
-    public static final double TIME_WINDOW_IN_HRS = 24.0 * 5.0;
+    public static final double START_TIME_IN_SECS = getSecsFromStringDate("01/21/2020 16:23");
+    public static final double STOP_TIME_IN_SECS = getSecsFromStringDate("02/01/2020 19:52");  //02/18/2020
+    //public static final double STOP_TIME_IN_SECS = -1;  // means go until last entry 
+    //public static final double TIME_SLIDING_WINDOW_IN_HRS = -1.0;
+    public static final double TIME_SLIDING_WINDOW_IN_HRS = 24.0 * 10.0;
 
     //*********ANALAYSIS VARIABLES*********
     // for sensor data eval
@@ -206,11 +207,10 @@ public class Constants {
     public static final String STUDYTOSENSOR_STANDARD = "standard";  // beacon
     public static final String STUDYTOSENSOR_UUID = "uuid";  // beacon
     
-    public static final String HEALTH_CODEBOOK_CSV = "health_codebook.csv";
-    public static final String CEDARS_CODEBOOK_CSV = "cedars_codebook.csv";
+    public static final String REPORT_CODEBOOK_CSV = "codebook.csv";
     public static final String HEALTH_CODEBOOK_COLUMN_LABELS = "health_report_column_label,variable_tag,variable_description,variable_related_data";
-    public static final String HEALTH_REPORT_CSV = "health_report.csv";
-    public static final String CEDARS_REPORT_CSV = "cedars_report.csv";
+    public static final String HEALTH_REPORT_CSV = "report.csv";
+    public static final String JUPYTER_REPORT_CSV = "short_report.csv";
     public static final String HEALTH_REPORT_NO_VALUE = "NA";
     
 

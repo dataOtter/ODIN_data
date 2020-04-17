@@ -66,7 +66,12 @@ public abstract class AbsRulePerformanceEval {
 		}
 		else {
 			_stopTimeInSecs = stopTimeInSecs;
+			if (windowInHrs == -1.0) {
+				_startTimeInSecs = Constants.START_TIME_IN_SECS;
+			}
+			else {
 			_startTimeInSecs = stopTimeInSecs - (windowInHrs * 60.0 * 60.0);
+			}
 			_answersLeft = answers.getAnswersInTimeWindowForCidAndRid(_cid, _rid, _startTimeInSecs, _stopTimeInSecs);
 		}
 		_maxAnsT = Math.min(coupons.getCouponById(_cid).getVeryLastUpload().getTimeInMillis() / 1000.0, stopTimeInSecs);

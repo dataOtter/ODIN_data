@@ -9,8 +9,7 @@ import java.io.IOException;
 
 import constants.ConstTags;
 import constants.Constants;
-import maps.IMJ_Map;
-import maps.MJ_Map_Factory;
+import maps.*;
 import reports.ReportsCollection;
 
 /**
@@ -19,7 +18,7 @@ import reports.ReportsCollection;
  */
 public class PerCidReportWriter extends AbsReportWriter {
 	
-	public PerCidReportWriter(ReportsCollection reps, String path, int formatVersion) {
+	protected PerCidReportWriter(ReportsCollection reps, String path, int formatVersion) {
 		super(reps, path, formatVersion, null);
 		_allFinalTags.add(ConstTags.REPORTS_COUPONID);
 		_allFinalTags.add(ConstTags.REPORTS_STUDYID);

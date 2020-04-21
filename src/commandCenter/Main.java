@@ -57,11 +57,15 @@ public class Main {
         //StatsEngine stats = sb.build();
         //ReportsCollection allStats = stats.getStats();
         
-        //new ZipReportWriter(path, formatVersion).makeFullReportsZipFolder(startTInSecs, stopTimeInSecs, slidingWindowInHrs);
+        //new ZipReportWriter(path, formatVersion).writeTimeWindowReportsToFiles(consentstatuses, stopTimeInSecs, startTInSecs, 
+        		//slidingWindowInHrs, false, false, true, "study_", Constants.HEALTH_REPORT_CSV);
         
-        //new FullReportWriter(allReports, path, formatVersion).writeOutFullReports(consentstatuses, stopTimeInSecs, startTInSecs, slidingWindowInHrs);
+        // FYI this has no codebook and no folder structure
+        //new FullReportWriter(allReports, path, formatVersion).writeTimeWindowReportsToFiles(consentstatuses, stopTimeInSecs, 
+        		//startTInSecs, slidingWindowInHrs, false, true, false, "", Constants.HEALTH_REPORT_CSV);
         
-        //new JupyterReportWriter(allReports, path, formatVersion).writeTexJupyterFiles(consentstatuses, stopTimeInSecs, startTInSecs, slidingWindowInHrs);
+        new JupyterReportWriter(allReports, path, formatVersion).writeTimeWindowReportsToFiles(consentstatuses, stopTimeInSecs, 
+        		startTInSecs, slidingWindowInHrs, true, false, false, "", Constants.JUPYTER_REPORT_CSV);
 
         //System.out.println(allReports);
         //System.out.println(allStats);

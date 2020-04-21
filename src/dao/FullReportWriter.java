@@ -5,18 +5,10 @@ package dao;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import constants.ConstTags;
 import constants.Constants;
-import maps.IMJ_Map;
-import maps.MJ_Map_Factory;
-import orderedcollection.IMJ_OC;
-import reports.AnalysisEngine;
-import reports.AnalysisEngineBuilder;
+import maps.*;
 import reports.ReportsCollection;
 
 /**
@@ -31,43 +23,7 @@ public class FullReportWriter extends AbsReportWriter {
 		_allFinalTags.add(ConstTags.REPORTS_STUDYID);
 	}
 	
-	public void writeOutFullReports(IMJ_OC<String> consentstatuses, double stopT, double startT, double slidingWindowInHrs) throws ParseException, IOException {
-		int studyId = new StudyReader(_path, _formatVersion).getStudy().getStudyId();
-		String folderPath = "";
-		writeAllDataToFiles(Constants.HEALTH_REPORT_CSV, folderPath, studyId);
-        loopTimeForFullRep(_path, _formatVersion, consentstatuses, stopT, startT, slidingWindowInHrs, studyId, folderPath);
-	}
-	
-	private void loopTimeForFullRep(String path, int formatVersion, IMJ_OC<String> consentstatuses,
-    		double stopT, double startT, double slidingWindowInHrs, int studyId, String folderPath) throws ParseException, IOException {
-    	double newWindow = 0;
-    	double checkT = startT;
-    	double stopIncreaseingWindowT = startT + (slidingWindowInHrs * 60 * 60);
-    	
-        for (double t = startT; t <= (stopT - (slidingWindowInHrs * 60 * 60)); 
-        		t = (checkT < stopIncreaseingWindowT) ? startT : t + (24 * 60 * 60)) {
-        	if (checkT < stopIncreaseingWindowT) {
-        		newWindow += 24;
-        		checkT += (24 * 60 * 60);
-        	}
-        	AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion, consentstatuses, 
-        			t + (newWindow * 60 * 60), newWindow);
-            AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
-            ReportsCollection allReports = eng.getAllReports();
-            
-            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
-            Date date =  new Date( (long) t * 1000);
-            String startDate = sdf.format(date);
-            date =  new Date( (long) (t + newWindow*60*60) * 1000);
-            String stopDate = sdf.format(date);
-            
-            FullReportWriter writer = new FullReportWriter(allReports, path, formatVersion);
-            String name = Constants.HEALTH_REPORT_CSV.substring(0, Constants.HEALTH_REPORT_CSV.length() - 4) 
-            		+ "_" + startDate + "_to_" + stopDate + ".csv";
-            writer.writeAllDataToFiles(name, folderPath, studyId);
-        }
-    }
-
+	@Override
 	protected void writeDataToFile(int studyId, String reportName, String colsToWrite, String folderName) throws IOException {
 		FileWriter wr = new FileWriter(reportName);
 		try { 

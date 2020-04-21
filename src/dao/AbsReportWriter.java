@@ -1,13 +1,25 @@
 package dao;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import constants.ConstTags;
 import constants.Constants;
 import maps.IMJ_Map;
 import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
+import reports.AnalysisEngine;
+import reports.AnalysisEngineBuilder;
 import reports.ReportsCollection;
 
 public abstract class AbsReportWriter {
@@ -30,23 +42,120 @@ public abstract class AbsReportWriter {
 	
 	protected abstract void writeDataToFile(int studyId, String reportName, String colsToWrite, String folderName) throws IOException;
 	
-	public void writeAllDataToFiles(String reportName, String folderPath, int studyId) throws IOException {
+	public void writeTimeWindowReportsToFiles(IMJ_OC<String> consentstatuses, double stopT, double startT, 
+			double slidingWindowInHrs, boolean isJupyterReport, boolean isFullReport, boolean isZipReport,
+			String folderPath, String reportName) throws ParseException, IOException {
+		
+		int studyId = new StudyReader(_path, _formatVersion).getStudy().getStudyId();
+		
+		if (isZipReport) {
+			AnalysisEngineBuilder bld = new AnalysisEngineBuilder(_path, _formatVersion, consentstatuses, 
+	        		stopT, slidingWindowInHrs);
+	        AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
+	        ReportsCollection allReports = eng.getAllReports();
+
+			folderPath += Integer.toString(studyId);
+	        new File(folderPath).mkdir();
+	        String folderPath2 = folderPath + "/full";
+	        new File(folderPath2).mkdir();
+	        
+	        PerCidReportWriter writer = new PerCidReportWriter(allReports, _path, _formatVersion);
+	        writer.writeAllDataToFiles(reportName, folderPath2, studyId, true);
+	        
+	        JupyterReportWriter writer2 = new JupyterReportWriter(allReports, _path, _formatVersion);
+	        writer2.writeAllDataToFiles(folderPath2 + "/" + Constants.JUPYTER_REPORT_CSV, folderPath, studyId, true);
+		}
+		
+		else {
+			boolean writeDocs = true;
+			if (isJupyterReport) {
+				String folderPath2 = "tex_study_" + Integer.toString(studyId);
+		        new File(folderPath2).mkdir();
+		        folderPath = folderPath2;
+		        writeDocs = false;
+			}
+			//writeAllDataToFiles(reportName, folderPath, studyId, writeDocs);
+		}
+		
+		loopTimeForRep(_path, _formatVersion, consentstatuses, stopT, startT, slidingWindowInHrs, folderPath, studyId, 
+				isJupyterReport, isFullReport, isZipReport);
+		
+		if (isZipReport) {
+			pack(folderPath, folderPath + ".zip");
+			/*File f = new File(folderPath);
+			String[]entries = f.list();
+			for(String s: entries){
+			    File currentFile = new File(f.getPath(),s);
+			    currentFile.delete();
+			}
+			f.delete();*/
+		}
+	}
+
+	protected void writeAllDataToFiles(String reportName, String folderPath, int studyId, boolean writeDocs) throws IOException {
 		// must call docs first in order to make list of _allFinalTags
 		String colsToWrite = Constants.HEALTH_CODEBOOK_COLUMN_LABELS + "\n";
-		FileWriter wrDocs;
-		try {
-			wrDocs = new FileWriter(folderPath + "/" + Constants.REPORT_CODEBOOK_CSV);
-			wrDocs.write(colsToWrite);
-			writeDocsToFile(wrDocs, studyId, _onlyAddTheseTags);
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		
+		if(writeDocs) {
+			FileWriter wrDocs;
+			try {
+				wrDocs = new FileWriter(folderPath + "/" + Constants.REPORT_CODEBOOK_CSV);
+				wrDocs.write(colsToWrite);
+				writeDocsToFile(wrDocs, studyId, _onlyAddTheseTags);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
+		
 		makeFinalTagsAndGetTagToDescr(studyId, _onlyAddTheseTags);
 		
 		colsToWrite = _allFinalTags.toString();
 		colsToWrite = colsToWrite + "\n";
 
 		writeDataToFile(studyId, reportName, colsToWrite, folderPath);
+	}
+	
+	protected void addToTagOrderedToData(IMJ_Map<String, String> tagOrderedToData, int cid, int studyId, 
+			IMJ_Map<String, String> tagToData) {
+		// get the cid and study ID as the first two entries for the file output
+		tagOrderedToData.replace(ConstTags.REPORTS_COUPONID, Integer.toString(cid));
+		tagOrderedToData.replace(ConstTags.REPORTS_STUDYID, Integer.toString(studyId));
+		// for each data column for this coupon
+		for (int j = 0; j<tagToData.size(); j++) {
+			String tag = tagToData.getKey(j);
+			String data = tagToData.get(tag);
+			
+			for (int i = 0; i < tagOrderedToData.size(); i++) {
+				String repTag = tagOrderedToData.getKey(i);
+				if (tag.contains(repTag)) {
+					// add the data to the file output
+					tagOrderedToData.replace(repTag, data);
+					break;
+				}
+			}
+		}
+	}
+	
+	private void pack(String sourceDirPath, String zipFilePath) {
+		try {
+			Path p = Files.createFile(Paths.get(zipFilePath));
+			ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p));
+	        Path pp = Paths.get(sourceDirPath);
+	        Files.walk(pp)
+	          .filter(path -> !Files.isDirectory(path))
+	          .forEach(path -> {
+	              ZipEntry zipEntry = new ZipEntry(pp.relativize(path).toString());
+	              try {
+	                  zs.putNextEntry(zipEntry);
+	                  Files.copy(path, zs);
+	                  zs.closeEntry();
+	            } catch (IOException e) {
+	                System.err.println(e);
+	            }
+	          });
+	    } catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private IMJ_Map<String, IMJ_OC<String>> makeFinalTagsAndGetTagToDescr(int studyId, IMJ_OC<String> onlyAddTheseTags) {
@@ -100,25 +209,57 @@ public abstract class AbsReportWriter {
 			e.printStackTrace();
 		}
 	}
-
-	protected void addToTagOrderedToData(IMJ_Map<String, String> tagOrderedToData, int cid, int studyId, 
-			IMJ_Map<String, String> tagToData) {
-		// get the cid and study ID as the first two entries for the file output
-		tagOrderedToData.replace(ConstTags.REPORTS_COUPONID, Integer.toString(cid));
-		tagOrderedToData.replace(ConstTags.REPORTS_STUDYID, Integer.toString(studyId));
-		// for each data column for this coupon
-		for (int j = 0; j<tagToData.size(); j++) {
-			String tag = tagToData.getKey(j);
-			String data = tagToData.get(tag);
-			
-			for (int i = 0; i < tagOrderedToData.size(); i++) {
-				String repTag = tagOrderedToData.getKey(i);
-				if (tag.contains(repTag)) {
-					// add the data to the file output
-					tagOrderedToData.replace(repTag, data);
-					break;
-				}
-			}
-		}
+	
+	private void loopTimeForRep(String path, int formatVersion, IMJ_OC<String> consentstatuses,
+    		double stopT, double startT, double slidingWindowInHrs, String folderPath, int studyId, 
+    		boolean isJupyterReport, boolean isFullReport, boolean isZipReport) 
+    				throws ParseException, IOException {
+    	double newWindow = 0;
+    	double checkT = startT;
+    	double stopIncreaseingWindowT = startT + (slidingWindowInHrs * 60 * 60);
+    	
+        for (double t = startT; t <= (stopT - (slidingWindowInHrs * 60 * 60)); 
+        		t = (checkT < stopIncreaseingWindowT) ? startT : t + (24 * 60 * 60)) {
+        	if (checkT < stopIncreaseingWindowT) {
+        		newWindow += 24;
+        		checkT += (24 * 60 * 60);
+        	}
+        	AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion, consentstatuses, 
+        			t + (newWindow * 60 * 60), newWindow);
+            AnalysisEngine eng = bld.addRuleJobs().buildEngine();
+            ReportsCollection allReports = eng.getAllReports();
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
+            Date date =  new Date( (long) t * 1000);
+            String startDate = sdf.format(date);
+            date =  new Date( (long) (t + newWindow*60*60) * 1000);
+            String stopDate = sdf.format(date);
+            
+            if (isJupyterReport) {
+            	writeReport(new JupyterReportWriter(allReports, path, formatVersion), folderPath + "/", 
+            			Constants.JUPYTER_REPORT_CSV, startDate, stopDate, studyId, folderPath, false);
+            }
+            else if (isFullReport) {
+            	writeReport(new FullReportWriter(allReports, path, formatVersion), "", 
+            			Constants.HEALTH_REPORT_CSV, startDate, stopDate, studyId, folderPath, true);
+            }
+            else if (isZipReport) {
+            	String datePath = folderPath + "/" + stopDate;
+        		new File(datePath).mkdir();
+        		
+            	writeReport(new PerCidReportWriter(allReports, path, formatVersion), "", 
+            			Constants.HEALTH_REPORT_CSV, startDate, stopDate, studyId, datePath, true);
+        		
+            	writeReport(new JupyterReportWriter(allReports, path, formatVersion), datePath + "/", 
+            			Constants.JUPYTER_REPORT_CSV, startDate, stopDate, studyId, folderPath, true);
+            }
+        }
+    }
+	
+	private void writeReport(AbsReportWriter writer, String prepend, String name, String startDate, String stopDate, 
+			int studyId, String folderPath, boolean writeDocs) throws IOException {
+		String reportName = prepend + name.substring(0, name.length()
+    			- 4) + "_" + startDate + "_to_" + stopDate + ".csv";
+    	writer.writeAllDataToFiles(reportName, folderPath, studyId, writeDocs);
 	}
 }

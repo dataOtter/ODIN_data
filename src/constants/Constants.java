@@ -23,11 +23,11 @@ public class Constants {
     public static final int FORMAT_VERSION = 3;
     public static final boolean TESTING_GPS_ONLY = true;
     
-    public static final double START_TIME_IN_SECS = getSecsFromStringDate("01/21/2020 16:23");
+    public static final double START_TIME_IN_SECS = getSecsFromStringDate("01/25/2020 16:23");
     public static final double STOP_TIME_IN_SECS = getSecsFromStringDate("02/01/2020 19:52");  //02/18/2020
     //public static final double STOP_TIME_IN_SECS = -1;  // means go until last entry 
     //public static final double TIME_SLIDING_WINDOW_IN_HRS = -1.0;
-    public static final double TIME_SLIDING_WINDOW_IN_HRS = 24.0 * 10.0;
+    public static final double TIME_SLIDING_WINDOW_IN_HRS = 24.0 * 5.0;
 
     //*********ANALAYSIS VARIABLES*********
     // for sensor data eval

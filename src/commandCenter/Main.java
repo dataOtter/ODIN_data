@@ -1,13 +1,16 @@
 package commandCenter;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Scanner;
 
 import constants.Constants;
 import dao.BasicReportFilesWriter;
@@ -43,13 +46,12 @@ public class Main {
         double stopTimeInSecs = Constants.STOP_TIME_IN_SECS;
         double slidingWindowInHrs = Constants.TIME_SLIDING_WINDOW_IN_HRS;
         
-        AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion, consentstatuses, 
-        		stopTimeInSecs, slidingWindowInHrs);
-        AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
+        //AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion, consentstatuses, stopTimeInSecs, slidingWindowInHrs);
+        //AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
         //AnalysisEngine eng = bld.addRuleJobs().buildEngine();
         //AnalysisEngine eng = bld.addSensorJobs().buildEngine();
         
-        ReportsCollection allReports = eng.getAllReports();
+        //ReportsCollection allReports = eng.getAllReports();
         //BasicReportFilesWriter out = new BasicReportFilesWriter(allReports, path, formatVersion);
         //out.writeAllDataToFiles();
         
@@ -57,19 +59,70 @@ public class Main {
         //StatsEngine stats = sb.build();
         //ReportsCollection allStats = stats.getStats();
         
-        //new ZipReportWriter(path, formatVersion).writeTimeWindowReportsToFiles(consentstatuses, stopTimeInSecs, startTInSecs, 
-        		//slidingWindowInHrs, false, false, true, "study_", Constants.HEALTH_REPORT_CSV);
+        /*BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)); 
+	    String name = reader.readLine(); */
+
+        //args = [path, pathOut, yyyy-mm-dd start, yyyy-mm-dd stop, #days]
+        String inPath = args[0];
+        String outPath = args[1];
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(sdf.parse(args[2]));
+        startTInSecs = calendar.getTimeInMillis() / 1000.0;
+        calendar.setTime(sdf.parse(args[3]));
+        stopTimeInSecs = calendar.getTimeInMillis() / 1000.0;
+	    slidingWindowInHrs = Double.parseDouble(args[4]) * 24.0;
+        
+        makeZipReport(inPath, outPath, startTInSecs, stopTimeInSecs, slidingWindowInHrs);
+        
+        makeForTexReport(inPath, outPath, startTInSecs, stopTimeInSecs, slidingWindowInHrs);
         
         // FYI this has no codebook and no folder structure
         //new FullReportWriter(allReports, path, formatVersion).writeTimeWindowReportsToFiles(consentstatuses, stopTimeInSecs, 
         		//startTInSecs, slidingWindowInHrs, false, true, false, "", Constants.HEALTH_REPORT_CSV);
         
-        new JupyterReportWriter(allReports, path, formatVersion).writeTimeWindowReportsToFiles(consentstatuses, stopTimeInSecs, 
-        		startTInSecs, slidingWindowInHrs, true, false, false, "", Constants.JUPYTER_REPORT_CSV);
 
         //System.out.println(allReports);
         //System.out.println(allStats);
 
+    }
+    
+    public static void makeForTexReport(String inPath, String outPath, double startTInSecs, double stopTimeInSecs, 
+    		double slidingWindowInHrs) {
+    	IMJ_OC<String> consentstatuses = new MJ_OC_Factory<String>().create();
+        //consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTREVOKED);
+        consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTWITHDRAWN);
+        consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTAGREED);
+        int formatVersion = Constants.FORMAT_VERSION;
+		try {
+			AnalysisEngineBuilder bld = new AnalysisEngineBuilder(inPath, formatVersion, consentstatuses, stopTimeInSecs, 
+					slidingWindowInHrs);
+	        AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
+	        ReportsCollection allReports = eng.getAllReports();
+	        
+	        new JupyterReportWriter(allReports, inPath, formatVersion).writeTimeWindowReportsToFiles(consentstatuses, 
+	        		stopTimeInSecs, startTInSecs, slidingWindowInHrs, true, false, false, outPath, Constants.JUPYTER_REPORT_CSV);
+		} catch (ParseException | IOException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public static void makeZipReport(String inPath, String outPath, double startTInSecs, double stopTimeInSecs, 
+    		double slidingWindowInHrs) {
+    	IMJ_OC<String> consentstatuses = new MJ_OC_Factory<String>().create();
+        //consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTREVOKED);
+        consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTWITHDRAWN);
+        consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTAGREED);
+        int formatVersion = Constants.FORMAT_VERSION;
+        int idx1 = inPath.lastIndexOf("\\");
+        int idx2 = inPath.lastIndexOf("/");
+        String folderName = inPath.substring(Math.max(idx1, idx2));
+    	try {
+			new ZipReportWriter(inPath, formatVersion).writeTimeWindowReportsToFiles(consentstatuses, stopTimeInSecs, startTInSecs, 
+					slidingWindowInHrs, false, false, true, outPath + folderName + "_report", Constants.HEALTH_REPORT_CSV);
+		} catch (ParseException | IOException e) {
+			e.printStackTrace();
+		}
     }
     
     public static void checkPredicate() {

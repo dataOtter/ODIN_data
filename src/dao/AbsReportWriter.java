@@ -54,10 +54,12 @@ public abstract class AbsReportWriter {
 	        AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
 	        ReportsCollection allReports = eng.getAllReports();
 
-			folderPath += Integer.toString(studyId);
-	        new File(folderPath).mkdir();
-	        String folderPath2 = folderPath + "/full";
-	        new File(folderPath2).mkdir();
+			new File(folderPath).mkdir();
+	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-dd-MM", Locale.ENGLISH);
+            String startDate = sdf.format(startT * 1000);
+            String stopDate = sdf.format(stopT * 1000);
+	        String folderPath2 = folderPath + "/" + startDate + "_to_" + stopDate; 
+			new File(folderPath2).mkdir();
 	        
 	        PerCidReportWriter writer = new PerCidReportWriter(allReports, _path, _formatVersion);
 	        writer.writeAllDataToFiles(reportName, folderPath2, studyId, true);
@@ -69,12 +71,14 @@ public abstract class AbsReportWriter {
 		else {
 			boolean writeDocs = true;
 			if (isJupyterReport) {
-				String folderPath2 = "tex_study_" + Integer.toString(studyId);
-		        new File(folderPath2).mkdir();
-		        folderPath = folderPath2;
+				folderPath += "\\tex_study_" + Integer.toString(studyId);
+		        new File(folderPath).mkdir();
 		        writeDocs = false;
 			}
-			//writeAllDataToFiles(reportName, folderPath, studyId, writeDocs);
+			else {
+				// this makes a report for the entire time-frame, not any sliding window
+				writeAllDataToFiles(reportName, folderPath, studyId, writeDocs);
+			}
 		}
 		
 		loopTimeForRep(_path, _formatVersion, consentstatuses, stopT, startT, slidingWindowInHrs, folderPath, studyId, 
@@ -229,14 +233,14 @@ public abstract class AbsReportWriter {
             AnalysisEngine eng = bld.addRuleJobs().buildEngine();
             ReportsCollection allReports = eng.getAllReports();
             
-            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             Date date =  new Date( (long) t * 1000);
             String startDate = sdf.format(date);
             date =  new Date( (long) (t + newWindow*60*60) * 1000);
             String stopDate = sdf.format(date);
             
             if (isJupyterReport) {
-            	writeReport(new JupyterReportWriter(allReports, path, formatVersion), folderPath + "/", 
+            	writeReport(new JupyterReportWriter(allReports, path, formatVersion), folderPath + "\\", 
             			Constants.JUPYTER_REPORT_CSV, startDate, stopDate, studyId, folderPath, false);
             }
             else if (isFullReport) {
@@ -244,7 +248,7 @@ public abstract class AbsReportWriter {
             			Constants.HEALTH_REPORT_CSV, startDate, stopDate, studyId, folderPath, true);
             }
             else if (isZipReport) {
-            	String datePath = folderPath + "/" + stopDate;
+            	String datePath = folderPath + "\\" + stopDate;
         		new File(datePath).mkdir();
         		
             	writeReport(new PerCidReportWriter(allReports, path, formatVersion), "", 

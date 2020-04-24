@@ -1,6 +1,5 @@
 package commandCenter;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -70,12 +69,12 @@ public class Main {
         calendar.setTime(sdf.parse(args[2]));
         startTInSecs = calendar.getTimeInMillis() / 1000.0;
         calendar.setTime(sdf.parse(args[3]));
-        stopTimeInSecs = calendar.getTimeInMillis() / 1000.0;
+        stopTimeInSecs = calendar.getTimeInMillis() / 1000.0 + (11 * 60 * 60 + 59 * 60 + 59);
 	    slidingWindowInHrs = Double.parseDouble(args[4]) * 24.0;
         
         makeZipReport(inPath, outPath, startTInSecs, stopTimeInSecs, slidingWindowInHrs);
         
-        makeForTexReport(inPath, outPath, startTInSecs, stopTimeInSecs, slidingWindowInHrs);
+        //makeForTexReport(inPath, outPath, startTInSecs, stopTimeInSecs, slidingWindowInHrs, startTimeInSecs);
         
         // FYI this has no codebook and no folder structure
         //new FullReportWriter(allReports, path, formatVersion).writeTimeWindowReportsToFiles(consentstatuses, stopTimeInSecs, 
@@ -88,7 +87,7 @@ public class Main {
     }
     
     public static void makeForTexReport(String inPath, String outPath, double startTInSecs, double stopTimeInSecs, 
-    		double slidingWindowInHrs) {
+    		double slidingWindowInHrs, double startTimeInSecs) {
     	IMJ_OC<String> consentstatuses = new MJ_OC_Factory<String>().create();
         //consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTREVOKED);
         consentstatuses.add(Constants.COUPON_CONSENTSTATUS_CONSENTWITHDRAWN);
@@ -96,7 +95,7 @@ public class Main {
         int formatVersion = Constants.FORMAT_VERSION;
 		try {
 			AnalysisEngineBuilder bld = new AnalysisEngineBuilder(inPath, formatVersion, consentstatuses, stopTimeInSecs, 
-					slidingWindowInHrs);
+					slidingWindowInHrs, startTimeInSecs);
 	        AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
 	        ReportsCollection allReports = eng.getAllReports();
 	        

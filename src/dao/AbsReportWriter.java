@@ -50,7 +50,7 @@ public abstract class AbsReportWriter {
 		
 		if (isZipReport) {
 			AnalysisEngineBuilder bld = new AnalysisEngineBuilder(_path, _formatVersion, consentstatuses, 
-	        		stopT, slidingWindowInHrs);
+	        		stopT, -1, startT);
 	        AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
 	        ReportsCollection allReports = eng.getAllReports();
 
@@ -61,11 +61,10 @@ public abstract class AbsReportWriter {
 	        String folderPath2 = folderPath + "/" + startDate + "_to_" + stopDate; 
 			new File(folderPath2).mkdir();
 	        
-	        PerCidReportWriter writer = new PerCidReportWriter(allReports, _path, _formatVersion);
-	        writer.writeAllDataToFiles(reportName, folderPath2, studyId, true);
+	        new PerCidReportWriter(allReports, _path, _formatVersion).writeAllDataToFiles(reportName, folderPath2, studyId, true);
 	        
-	        JupyterReportWriter writer2 = new JupyterReportWriter(allReports, _path, _formatVersion);
-	        writer2.writeAllDataToFiles(folderPath2 + "/" + Constants.JUPYTER_REPORT_CSV, folderPath, studyId, true);
+	        new JupyterReportWriter(allReports, _path, _formatVersion)
+	        .writeAllDataToFiles(folderPath2 + "/" + Constants.JUPYTER_REPORT_CSV, folderPath, studyId, true);
 		}
 		
 		else {
@@ -74,9 +73,19 @@ public abstract class AbsReportWriter {
 				folderPath += "\\tex_study_" + Integer.toString(studyId);
 		        new File(folderPath).mkdir();
 		        writeDocs = false;
+		        
+		        AnalysisEngineBuilder bld = new AnalysisEngineBuilder(_path, _formatVersion, consentstatuses, 
+		        		stopT, -1, startT);
+		        ReportsCollection allReports = bld.addSensorJobs().addRuleJobs().buildEngine().getAllReports();
+		        new JupyterReportWriter(allReports, _path, _formatVersion)
+		        .writeAllDataToFiles(folderPath + "/" + Constants.JUPYTER_REPORT_CSV, folderPath, studyId, writeDocs);
 			}
-			else {
+			else if (isFullReport) {
 				// this makes a report for the entire time-frame, not any sliding window
+				AnalysisEngineBuilder bld = new AnalysisEngineBuilder(_path, _formatVersion, consentstatuses, 
+		        		stopT, -1, startT);
+		        ReportsCollection allReports = bld.addSensorJobs().addRuleJobs().buildEngine().getAllReports();
+		        new FullReportWriter(allReports, _path, _formatVersion).
 				writeAllDataToFiles(reportName, folderPath, studyId, writeDocs);
 			}
 		}
@@ -229,7 +238,7 @@ public abstract class AbsReportWriter {
         		checkT += (24 * 60 * 60);
         	}
         	AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion, consentstatuses, 
-        			t + (newWindow * 60 * 60), newWindow);
+        			t + (newWindow * 60 * 60), newWindow, startT);
             AnalysisEngine eng = bld.addRuleJobs().buildEngine();
             ReportsCollection allReports = eng.getAllReports();
             

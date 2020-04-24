@@ -15,14 +15,16 @@ import orderedcollection.*;
 public class CouponReader {
 	private final String _path;
 	private final int _formatVersion;
+	private final int _studyDuration;
 	
 	/**
 	 * @param path
 	 * @param formatVersion
 	 */
-	public CouponReader(String path, int formatVersion) {
+	public CouponReader(String path, int formatVersion, int studyDuration) {
 		_path = path;
 		_formatVersion = formatVersion;
+		_studyDuration = studyDuration;
 	}
 	
 	/**
@@ -48,7 +50,7 @@ public class CouponReader {
         	String[] lineArr = line.split(",");
             String consentStatus = lineArr[Constants.COUPON_CONSENTSTATUS_IDX];
             if (Constants.COUPON_CONSENTSTATUS_CONSENTAGREED.equals(consentStatus)){
-            	coll.add(new OneCoupon(line, uploadtimes));
+            	coll.add(new OneCoupon(line, uploadtimes, _studyDuration));
             }
         }
         sc.close();

@@ -21,7 +21,7 @@ public abstract class AbsRulePerformanceEval {
 	protected final int _cid;
 	private final IMJ_Map<Integer, String> _cIdToNames;
 	protected final int _rid;
-	protected final double _startTimeInSecs;
+	protected double _startTimeInSecs;
 	private final double _stopTimeInSecs;
 	
 	private final int _numRuleFiresTotal;
@@ -55,26 +55,32 @@ public abstract class AbsRulePerformanceEval {
 	protected AbsRulePerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
 			double gpsSensorFireTimeInterval, int cid, int rid, double minTReqRule, double allowanceOnTimeFireT, 
 			double allowanceLateFireT, CouponCollection coupons, double stopTimeInSecs, double windowInHrs, 
-			IMJ_Map<Integer, String> cIdToNames) {
+			IMJ_Map<Integer, String> cIdToNames, double startTimeInSecs) {
 		_cIdToNames = cIdToNames;
 		_cid = cid;
 		_rid = rid;
+		
 		if (stopTimeInSecs == -1) {
-			_stopTimeInSecs = (coupons.getCouponById(_cid).getVeryLastUpload().getTimeInMillis() / 1000.0) + 9999.0;
-			_startTimeInSecs = -1;
+			_stopTimeInSecs = (coupons.getCouponById(_cid).getStudyEndTime().getTimeInMillis() / 1000.0) + 9999.0;
+			_startTimeInSecs = startTimeInSecs;
 			_answersLeft = answers.getAnsForRuleAndCid(_cid, _rid);
 		}
 		else {
 			_stopTimeInSecs = stopTimeInSecs;
 			if (windowInHrs == -1.0) {
-				_startTimeInSecs = Constants.START_TIME_IN_SECS;
+				if (startTimeInSecs == -1) {
+					_startTimeInSecs = Constants.START_TIME_IN_SECS;
+				}
+				else {
+					_startTimeInSecs = startTimeInSecs;
+				}
 			}
 			else {
 			_startTimeInSecs = stopTimeInSecs - (windowInHrs * 60.0 * 60.0);
 			}
 			_answersLeft = answers.getAnswersInTimeWindowForCidAndRid(_cid, _rid, _startTimeInSecs, _stopTimeInSecs);
 		}
-		_maxAnsT = Math.min(coupons.getCouponById(_cid).getVeryLastUpload().getTimeInMillis() / 1000.0, stopTimeInSecs);
+		_maxAnsT = Math.min(coupons.getCouponById(_cid).getStudyEndTime().getTimeInMillis() / 1000.0, stopTimeInSecs);
 		_gpsSensorFireTimeInterval = gpsSensorFireTimeInterval;
 		_minTReqRule = minTReqRule;
 		_allowedDivergenceOnTimeFireT = allowanceOnTimeFireT;

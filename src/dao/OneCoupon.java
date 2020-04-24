@@ -16,8 +16,9 @@ public class OneCoupon {
     private final IMJ_Map<String, Calendar> _lastUploads;
     private final Calendar _lastQuestionCallTime;
     private final String _consentStatus;
+    private final Calendar _studyEndTime;
 
-    public OneCoupon(String couponRow, IMJ_Map<Integer, IMJ_Map<String, Calendar>> uploads) throws ParseException {
+	public OneCoupon(String couponRow, IMJ_Map<Integer, IMJ_Map<String, Calendar>> uploads, int studyDuration) throws ParseException {
     	String[] line = couponRow.split(",");
         _id = Integer.parseInt(line[Constants.COUPON_COUPONID_IDX]);
         _name = line[Constants.COUPON_COUPONNUMBER_IDX];
@@ -25,6 +26,8 @@ public class OneCoupon {
         _lastUploads = uploads.get(_id);
         _lastQuestionCallTime = getCalendar(line[Constants.COUPON_LASTQUESTIONCALL_IDX]);
         _consentStatus = line[Constants.COUPON_CONSENTSTATUS_IDX];
+        _studyEndTime = (Calendar) _lastRegistrationTime.clone();
+        _studyEndTime.add(Calendar.DAY_OF_MONTH, studyDuration);
     }
     
     private Calendar getLastRegTime(String date) throws ParseException {
@@ -37,6 +40,10 @@ public class OneCoupon {
 
 	public int getId() {
 		return _id;
+	}
+	
+    public Calendar getStudyEndTime() {
+		return _studyEndTime;
 	}
 
 	public String getName() {

@@ -16,11 +16,11 @@ public class AnalysisCron extends AbsAnalysisRule {
     // _answers contains all answers, regardless of cid and rid        
     public AnalysisCron(AnswersCollection answers, RulesCollection rules, 
     		SensorDataCollection allSensorData, double sensorFireTimeInterval, int cid, int rid, CouponCollection coupons,
-    		double stopTimeInSecs, double windowInHrs, IMJ_Map<Integer, String> cIdToNames) {
+    		double stopTimeInSecs, double windowInHrs, IMJ_Map<Integer, String> cIdToNames, double startTimeInSecs) {
     	
     	super(ConstTags.REPORT_TYPE_CRON_RULE_ANALYSIS, new String[]{});
     	
         _eval = new CronPerformanceEval(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, coupons,
-        		stopTimeInSecs, windowInHrs, cIdToNames);
+        		stopTimeInSecs, windowInHrs, cIdToNames, startTimeInSecs);
     }
 }

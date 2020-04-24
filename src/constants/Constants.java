@@ -92,6 +92,7 @@ public class Constants {
     public static final int STUDY_NUM_COLS = 15;
     public static final int STUDY_NUM_COLS_V2 = 18;
     public static final int STUDY_STUDYID_IDX = 0;
+    public static final int STUDY_STUDYDURATION_IDX = 16;
     
     public static final String SENSORTYPES_CSV = "sensortypes.csv";
     public static final int SENSORTYPES_NUM_COLS = 4;

@@ -16,10 +16,10 @@ public class OnArrivalPerformanceEval extends AbsGpsRulePerformanceEval {
 
 	public OnArrivalPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
 			double gpsSensorFireTimeInterval, int cid, int rid, CouponCollection coupons,
-			double stopTimeInSecs, double windowInHrs, IMJ_Map<Integer, String> cIdToNames) {
+			double stopTimeInSecs, double windowInHrs, IMJ_Map<Integer, String> cIdToNames, double startTimeInSecs) {
 		
 		super(answers, rules, allSensorData, gpsSensorFireTimeInterval, cid, rid, 2*gpsSensorFireTimeInterval, coupons,
-				stopTimeInSecs, windowInHrs, cIdToNames);
+				stopTimeInSecs, windowInHrs, cIdToNames, startTimeInSecs);
 	}
 
 	@Override

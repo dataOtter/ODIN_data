@@ -26,12 +26,12 @@ public class OnDepBtPerformanceEval extends AbsRulePerformanceEval {
 
 	public OnDepBtPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
 			double sensorFireTimeInterval, int cid, int rid, CouponCollection coupons,
-			double stopTimeInSecs, double windowInHrs, IMJ_Map<Integer, String> cIdToNames) {
+			double stopTimeInSecs, double windowInHrs, IMJ_Map<Integer, String> cIdToNames, double startTimeInSecs) {
 		
 		super(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, getMinTReq(rules, rid), 
 				Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_ONTIME * getMinTReq(rules, rid), 
 				Constants.PERC_ALLOWED_DEV_FROM_GIVEN_TIME_NOTMISSED * getMinTReq(rules, rid), coupons,
-				stopTimeInSecs, windowInHrs, cIdToNames);
+				stopTimeInSecs, windowInHrs, cIdToNames, startTimeInSecs);
 		
 		String sensorId = ConstTags.SENSORID_TO_TYPE.get(Constants.SENSORID_BT);
 		_btData = allSensorData.getCouponDataOfType(_cid, sensorId).getDeepCopy();

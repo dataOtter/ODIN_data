@@ -4,6 +4,7 @@ import java.text.ParseException;
 
 import constants.ConstTags;
 import dao.CouponReader;
+import dao.StudyReader;
 import orderedcollection.IMJ_OC;
 import reports.ReportsCollection;
 
@@ -30,7 +31,8 @@ public class StatsEngine {
 	public ReportsCollection getStats() throws ParseException {
 
         ReportsCollection stats = new ReportsCollection();
-        IMJ_OC<Integer> cidList = new CouponReader(_path, _formatVersion).getActiveCoupons().getAllCids();
+        int studyDuration = new StudyReader(_path, _formatVersion).getStudy().getStudyDuration();
+        IMJ_OC<Integer> cidList = new CouponReader(_path, _formatVersion, studyDuration).getActiveCoupons().getAllCids();
         
         for (int cid: cidList) {
         	

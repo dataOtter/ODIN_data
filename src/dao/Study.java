@@ -8,6 +8,7 @@ import constants.Constants;
  */
 public class Study {
     private Integer _id;
+    private Integer _studyDuration;
 //    private Integer _name;
 //    private String _description;
 //    private Integer _leader;
@@ -38,5 +39,15 @@ public class Study {
             _id = Integer.parseInt(_allData[Constants.STUDY_STUDYID_IDX]);
         }
         return _id;
+    }
+    
+    /**
+     * @return the duration of this study as an int
+     */
+    public Integer getStudyDuration(){
+        if (_studyDuration == null){
+        	_studyDuration = Integer.parseInt(_allData[Constants.STUDY_STUDYDURATION_IDX]);
+        }
+        return _studyDuration;
     }
 }

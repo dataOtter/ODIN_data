@@ -20,10 +20,10 @@ public class WhileAtPerformanceEval extends AbsGpsRulePerformanceEval {
 
 	public WhileAtPerformanceEval(AnswersCollection answers, RulesCollection rules, SensorDataCollection allSensorData,
 			double sensorFireTimeInterval, int cid, int rid, CouponCollection coupons, 
-			double stopTimeInSecs, double windowInHrs, IMJ_Map<Integer, String> cIdToNames) {
+			double stopTimeInSecs, double windowInHrs, IMJ_Map<Integer, String> cIdToNames, double startTimeInSecs) {
 		
 		super(answers, rules, allSensorData, sensorFireTimeInterval, cid, rid, getMinTReq(rules, rid), coupons,
-				stopTimeInSecs, windowInHrs, cIdToNames);
+				stopTimeInSecs, windowInHrs, cIdToNames, startTimeInSecs);
 	}
 	
 	private static double getMinTReq(RulesCollection rules, int rid) {

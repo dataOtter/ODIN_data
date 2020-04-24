@@ -33,14 +33,16 @@ public class AnalysisEngineBuilder {
     private SensorDataCollection _sensorData;
     private final StudySensorsCollection _studySensors;
     private final double _stopTimeInSecs; 
+    private final double _startTimeInSecs;
     private final double _windowInHrs;
     private IMJ_OC<IJob> _jobs;
     
     public AnalysisEngineBuilder(String path, int formatVersion, IMJ_OC<String> consentstatuses,
-    		double stopTimeInSecs, double windowInHrs) throws ParseException {
+    		double stopTimeInSecs, double windowInHrs, double startTimeInSecs) throws ParseException {
         _path = path;
         _formatVersion = formatVersion;
         _stopTimeInSecs = stopTimeInSecs;
+        _startTimeInSecs = startTimeInSecs;
         _windowInHrs = windowInHrs;
         _sensorData = new SensorDataCollection();
         IMJ_OC<String> sensorTblNames = new SensorTblNamesReader(_path, _formatVersion).getSensorTblNames();
@@ -48,7 +50,8 @@ public class AnalysisEngineBuilder {
         	new SensorsReader(_path, _formatVersion).addAllSensorDataToDataColl(tblName, _sensorData);
         }
         _studySensors = new SensorsReader(_path, _formatVersion).getStudySensorsCollection();
-        _coupons = new CouponReader(_path, _formatVersion).getSpecifiedCoupons(consentstatuses);
+        int studyDuration = new StudyReader(_path, _formatVersion).getStudy().getStudyDuration();
+        _coupons = new CouponReader(_path, _formatVersion, studyDuration).getSpecifiedCoupons(consentstatuses);
         _cIdToNames = _coupons.getAllCidsToCNames();
         _cids = _coupons.getAllCids();
         
@@ -94,22 +97,22 @@ public class AnalysisEngineBuilder {
     	            	IAnalysis an;
     	            	if (type.contains(Constants.RULE_WHILEAT_NOTAT)) {
 	            			an = new AnalysisWhileAt(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid, _coupons,
-	            					_stopTimeInSecs, _windowInHrs, _cIdToNames);
+	            					_stopTimeInSecs, _windowInHrs, _cIdToNames, _startTimeInSecs);
 	            			e.register(an);
     	            	}
     	            	else if (type.contains(Constants.RULE_ONARRIVAL) && ! type.contains(Constants.RULE_BLUETOOTH)) {
 	            			an = new AnalysisOnArrival(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid, _coupons,
-	            					_stopTimeInSecs, _windowInHrs, _cIdToNames);
+	            					_stopTimeInSecs, _windowInHrs, _cIdToNames, _startTimeInSecs);
 	            			e.register(an);
     	            	}
     	            	else if (type.contains(Constants.RULE_CRON)) {
 	            			an = new AnalysisCron(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid, _coupons,
-	            					_stopTimeInSecs, _windowInHrs, _cIdToNames);
+	            					_stopTimeInSecs, _windowInHrs, _cIdToNames, _startTimeInSecs);
 	            			e.register(an);
     	            	}
     	            	else if (type.contains(Constants.RULE_ONDEPARTURE) && type.contains(Constants.RULE_BLUETOOTH)) {
 	            			an = new AnalysisOnDepBt(_answers, _rules, _sensorData, gpsSensorInterval, cid, rid, _coupons,
-	            					_stopTimeInSecs, _windowInHrs, _cIdToNames);
+	            					_stopTimeInSecs, _windowInHrs, _cIdToNames, _startTimeInSecs);
 	            			e.register(an);
     	            	}
     	            }

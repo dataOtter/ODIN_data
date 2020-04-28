@@ -76,7 +76,8 @@ public class AnalysisEngineBuilder {
     			for (int cid: _cids) {
     				for (int sensorId: _sids) {
 						double sensorInterval = _studySensors.getSensorInterval(sensorId);
-	    	            an = new AnalysisSensor(cid, sensorId, _sensorData, sensorInterval, _stopTimeInSecs, _windowInHrs, _cIdToNames);
+	    	            an = new AnalysisSensor(cid, sensorId, _sensorData, sensorInterval, _stopTimeInSecs, _windowInHrs, 
+	    	            		_cIdToNames, _startTimeInSecs, _coupons);
         	            e.register(an);
     				}
     	        }

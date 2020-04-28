@@ -10,42 +10,14 @@ import sensors.data.SensorDataOfOneType;
  */
 public class SensorMaxTimeInterval extends AbsSensorPerformanceEval {
     
-    public SensorMaxTimeInterval(SensorDataOfOneType data, double si) {
-        super(data, si);
-    }
-    
-    @Override
-    public Double getValue(){
-        if (_val != null){
-            return _val;
-        }
-        if (_data.isEmpty()) {
-        	return null;
-        }
-        
-        long t1 = _data.get(0).getDateTime().getTimeInMillis();
-        long t2;
-        long maxDiff = 0;
-        long tempDiff;
-        int numDataPoints = _data.size();
-        
-        for (int i = 1; i<numDataPoints; i++){
-            t2 = _data.get(i).getDateTime().getTimeInMillis();
-            tempDiff = t2-t1;
-            if (tempDiff > maxDiff){
-                maxDiff = tempDiff;
-            }
-            t1 = t2;
-        }
-        
-        double answer = maxDiff / 1000.0;
-        _val = (double) Math.round(answer);
-        return _val;
+    public SensorMaxTimeInterval(SensorDataOfOneType data, double si, SensorPerformances sps) {
+        super(data, si, sps);
+        _val = _sensorPerformances.getMax();
     }
     
     @Override
     public void printAll(){
-        double maxGap = this.getValue();
+        double maxGap = _val;
         String message = "\n\t" + ConstTags.REPORTS_MAX_B_S_R_TEXT + ": " + maxGap;
         if (maxGap > (5 * this._sensorInterval)){
             message += " (" + maxGap/60 + " mins)";
@@ -59,7 +31,7 @@ public class SensorMaxTimeInterval extends AbsSensorPerformanceEval {
 
     @Override
     public OneReport addToMap(OneReport map) {
-        map.addValue(ConstTags.REPORTS_MAXT_BTW_SENSOR_RECS, getValue(), ConstTags.REPORTS_MAX_B_S_R_TEXT);
+        map.addValue(ConstTags.REPORTS_MAXT_BTW_SENSOR_RECS, _val, ConstTags.REPORTS_MAX_B_S_R_TEXT);
         map.addValue(ConstTags.REPORTS_MAXT_BTW_SENSOR_RECS_AS_PERC, getValueInPercent(), ConstTags.REPORTS_MAX_B_S_R_A_P_TEXT);
         return map;
     }

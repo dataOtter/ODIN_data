@@ -106,6 +106,8 @@ public class ConstTags {
 	public static String REPORTS_EARLY_ANS(int i) {return "_earlyAns#" + i;}
 	public static String REPORTS_E_A_TEXT(int i) {return "Early answer occurence " + i + ", time in milliseconds";}
 
+	public static final String REPORTS_NUM_IDEAL_RECORDINGS = "_numIdealRecordings";
+	public static final String REPORTS_N_I_R_TEXT = "Number of ideal world sensor recordings";
 	public static final String REPORTS_TOTAL_SENSOR_RECS = "_numTotalSensorRecordings";
 	public static final String REPORTS_T_S_R_TEXT = "Total sensor recordings";
 	public static final String REPORTS_SENSOR_RECS_WITHIN_DEV = "_numSensorRecsWithinAllowedDevOFSi";

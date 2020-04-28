@@ -12,28 +12,29 @@ public abstract class AbsSensorPerformanceEval{
     protected final SensorDataOfOneType _data;
     protected Double _val = null;
     protected final double _sensorInterval;
+    protected final SensorPerformances _sensorPerformances;
 
-    public AbsSensorPerformanceEval(SensorDataOfOneType data, double si) {
+    public AbsSensorPerformanceEval(SensorDataOfOneType data, double si, SensorPerformances sps) {
         _data = data;
         _sensorInterval = si;     
+        _sensorPerformances = sps;
     }
     
     public void printTimeInterval(){
         System.out.println("\n" + ConstTags.REPORTS_S_I_TEXT + ": " + Math.round(_sensorInterval));
     }
     
+    
     public Double getTimeInterval(){
         return _sensorInterval;
     }
-    
-    protected abstract Double getValue();
     
     public abstract void printAll();
     
     public abstract OneReport addToMap(OneReport map);
     
     public Double getValueInPercent(){
-        Double rawNum = getValue();
+        Double rawNum = _val;
     	if (rawNum == null) {
     		return null;
     	}

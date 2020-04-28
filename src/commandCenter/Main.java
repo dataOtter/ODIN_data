@@ -72,7 +72,8 @@ public class Main {
         stopTimeInSecs = calendar.getTimeInMillis() / 1000.0 + (11 * 60 * 60 + 59 * 60 + 59);
 	    slidingWindowInHrs = Double.parseDouble(args[4]) * 24.0;
         
-        makeZipReport(inPath, outPath, startTInSecs, stopTimeInSecs, slidingWindowInHrs);
+        //makeZipReport(inPath, outPath, startTInSecs, stopTimeInSecs, slidingWindowInHrs);
+        makeZipReport(inPath, outPath, -1, -1, -1);
         
         //makeForTexReport(inPath, outPath, startTInSecs, stopTimeInSecs, slidingWindowInHrs, startTimeInSecs);
         

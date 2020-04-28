@@ -10,59 +10,29 @@ import sensors.data.SensorDataOfOneType;
  */
 public class SensorAverageTimeInterval extends AbsSensorPerformanceEval {
 
-    public SensorAverageTimeInterval(SensorDataOfOneType data, double si) {
-        super(data, si);
-    }
-    
-    @Override
-    public Double getValue(){
-        if (_val != null){
-            return _val;
-        }
-        if (_data.isEmpty()) {
-        	return null;
-        }
-        
-        long t1 = _data.get(0).getDateTime().getTimeInMillis();
-        long t2;
-        int numDataPoints = _data.size();
-        int numTimeIntervals = numDataPoints - 1;
-        long sum = 0;
-        
-        for (int i = 1; i<numDataPoints; i++){
-            t2 = _data.get(i).getDateTime().getTimeInMillis();
-            sum += t2-t1;
-            t1 = t2;
-        }
-        
-        long avg = sum / numTimeIntervals;
-        double avgInSecs = avg / 1000.0;
-        _val = (double) Math.round(avgInSecs);
-        return _val;
+    public SensorAverageTimeInterval(SensorDataOfOneType data, double si, SensorPerformances sps) {
+        super(data, si, sps);
+        _val = _sensorPerformances.getAvg();
     }
     
     @Override
     public void printAll(){
-        System.out.println("\n\t" + ConstTags.REPORTS_A_O_S_I_S_TEXT + ": " + getValue() +
+        System.out.println("\n\t" + ConstTags.REPORTS_A_O_S_I_S_TEXT + ": " + _val +
                 "\n\t" + ConstTags.REPORTS_A_O_S_TEXT + ": " + getValueInPercent() +
                 "\n\t" + ConstTags.REPORTS_S_D_O_S_TEXT + ": " + getStdev());
     }
     
     @Override
     public OneReport addToMap(OneReport map) {
-        Double avg = getValue();
         Double stdev = getStdev();
         Double avgInPer = getValueInPercent();
-        map.addValue(ConstTags.REPORTS_AVERAGE_ONE_SENSOR_IN_SECS, avg, ConstTags.REPORTS_A_O_S_I_S_TEXT);
+        map.addValue(ConstTags.REPORTS_AVERAGE_ONE_SENSOR_IN_SECS, _val, ConstTags.REPORTS_A_O_S_I_S_TEXT);
         map.addValue(ConstTags.REPORTS_AVERAGE_ONE_SENSOR, avgInPer, ConstTags.REPORTS_A_O_S_TEXT);
         map.addValue(ConstTags.REPORTS_STANDARD_DEV_ONE_SENSOR, stdev, ConstTags.REPORTS_S_D_O_S_TEXT);
         return map;
     }
     
     private Double getStdev(){
-        if (_val == null){
-            _val = getValue();
-        }
         if (_data.isEmpty()) {
         	return null;
         }

@@ -22,7 +22,7 @@ public abstract class AbsRulePerformanceEval {
 	private final IMJ_Map<Integer, String> _cIdToNames;
 	protected final int _rid;
 	protected double _startTimeInSecs;
-	private final double _stopTimeInSecs;
+	private double _stopTimeInSecs;
 	
 	private final int _numRuleFiresTotal;
 	private final int _numAnsweredRuleFiresTotal;
@@ -42,7 +42,7 @@ public abstract class AbsRulePerformanceEval {
 	protected double _trueFireT = 0.0;
 	
 	protected final AnswersCollection _allAnswers;
-	private final AnswersCollection _answersLeft;
+	private AnswersCollection _answersLeft;
 	private final IMJ_OC<OneAnswer> _lateAns;
 	private final IMJ_OC<OneAnswer> _earlyAns;
 	
@@ -60,26 +60,8 @@ public abstract class AbsRulePerformanceEval {
 		_cid = cid;
 		_rid = rid;
 		
-		if (stopTimeInSecs == -1) {
-			_stopTimeInSecs = (coupons.getCouponById(_cid).getStudyEndTime().getTimeInMillis() / 1000.0) + 9999.0;
-			_startTimeInSecs = startTimeInSecs;
-			_answersLeft = answers.getAnsForRuleAndCid(_cid, _rid);
-		}
-		else {
-			_stopTimeInSecs = stopTimeInSecs;
-			if (windowInHrs == -1.0) {
-				if (startTimeInSecs == -1) {
-					_startTimeInSecs = Constants.START_TIME_IN_SECS;
-				}
-				else {
-					_startTimeInSecs = startTimeInSecs;
-				}
-			}
-			else {
-			_startTimeInSecs = stopTimeInSecs - (windowInHrs * 60.0 * 60.0);
-			}
-			_answersLeft = answers.getAnswersInTimeWindowForCidAndRid(_cid, _rid, _startTimeInSecs, _stopTimeInSecs);
-		}
+		setTimesAndAnsLeft(stopTimeInSecs, windowInHrs, startTimeInSecs, coupons, cid, answers);
+
 		_maxAnsT = Math.min(coupons.getCouponById(_cid).getStudyEndTime().getTimeInMillis() / 1000.0, stopTimeInSecs);
 		_gpsSensorFireTimeInterval = gpsSensorFireTimeInterval;
 		_minTReqRule = minTReqRule;
@@ -168,6 +150,49 @@ public abstract class AbsRulePerformanceEval {
 			}
 		}
 		return passed;
+	}
+	
+	private void setTimesAndAnsLeft(double stopTimeInSecs, double windowInHrs, double startTimeInSecs, 
+			CouponCollection coupons, int cid, AnswersCollection answers) {
+		// if no time restraints are given
+        if (stopTimeInSecs == -1.0 && startTimeInSecs == -1.0 && windowInHrs == -1.0) {
+			_startTimeInSecs = coupons.getCouponById(cid).getLastRegistrationTime().getTimeInMillis() / 1000.0;
+			_stopTimeInSecs = (coupons.getCouponById(cid).getStudyEndTime().getTimeInMillis() / 1000.0) + 9999.0;
+			_answersLeft = answers.getAnsForRuleAndCid(_cid, _rid);
+		}
+        // if some time restraints are given
+        else {
+        	// if a time window is given
+        	if (windowInHrs != -1.0) {
+        		double windowInSecs = windowInHrs * 60 * 60;
+        		
+        		if (stopTimeInSecs == -1.0 && startTimeInSecs == -1.0) {
+                	_startTimeInSecs = coupons.getCouponById(cid).getLastRegistrationTime().getTimeInMillis() / 1000.0;
+                	_stopTimeInSecs = startTimeInSecs + windowInSecs;
+                }
+        		else if (stopTimeInSecs == -1.0) {
+        			_startTimeInSecs = startTimeInSecs;
+                	_stopTimeInSecs = startTimeInSecs + windowInSecs;
+                }
+                else if (startTimeInSecs == -1.0) {
+                	_startTimeInSecs = stopTimeInSecs - windowInSecs;
+                	_stopTimeInSecs = stopTimeInSecs;
+                }
+        	}
+        	// if no time window is given
+            else {
+            	if (stopTimeInSecs == -1.0 && windowInHrs == -1.0) {
+            		_startTimeInSecs = startTimeInSecs;
+                	_stopTimeInSecs = (coupons.getCouponById(cid).getStudyEndTime().getTimeInMillis() / 1000.0) + 9999.0;
+                }
+                else if (startTimeInSecs == -1.0 && windowInHrs == -1.0) {
+        			_startTimeInSecs = coupons.getCouponById(cid).getLastRegistrationTime().getTimeInMillis() / 1000.0;
+        			_stopTimeInSecs = stopTimeInSecs;
+                }
+            }
+        	// answers with time restraints 
+        	_answersLeft = answers.getAnswersInTimeWindowForCidAndRid(_cid, _rid, _startTimeInSecs, _stopTimeInSecs);
+        }
 	}
 	
 	private OneAnswer findClosestAnswer(double t) {

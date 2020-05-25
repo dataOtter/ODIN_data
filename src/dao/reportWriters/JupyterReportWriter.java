@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dao;
+package dao.reportWriters;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,21 +9,31 @@ import java.io.IOException;
 import constants.ConstTags;
 import constants.Constants;
 import maps.*;
+import orderedcollection.*;
 import reports.ReportsCollection;
 
 /**
  * @author Maisha Jauernig
  *
  */
-public class FullReportWriter extends AbsReportWriter {
+public class JupyterReportWriter extends AbsReportWriter {
 	
-	public FullReportWriter(ReportsCollection reps, String path, int formatVersion) {
+	public JupyterReportWriter(ReportsCollection reps, String path, int formatVersion) {
 		super(reps, path, formatVersion, null);
-		_allFinalTags.add(ConstTags.REPORTS_COUPONID);
-		_allFinalTags.add(ConstTags.REPORTS_STUDYID);
+		
+		_onlyAddTheseTags = new MJ_OC_Factory<String>().create();
+		_onlyAddTheseTags.add(ConstTags.REPORTS_RULEID); 
+		_onlyAddTheseTags.add(ConstTags.REPORTS_TOTAL_RULE_FIRES); 
+		_onlyAddTheseTags.add(ConstTags.REPORTS_IDEAL_RULE_FIRES); 
+		//_onlyAddTheseTags.add(ConstTags.REPORTS_SKIPPED_RULE_FIRES); 
+		//_onlyAddTheseTags.add(ConstTags.REPORTS_EXPIRED_RULE_FIRES); 
+		//_onlyAddTheseTags.add(ConstTags.REPORTS_POWEREDOFF_RULE_FIRES); 
+		_onlyAddTheseTags.add(ConstTags.REPORTS_RESPONDED_RULE_FIRES); 
+		_onlyAddTheseTags.add(ConstTags.REPORTS_SENSORID); 
+		_onlyAddTheseTags.add(ConstTags.REPORTS_TOTAL_SENSOR_RECS); 
+		_onlyAddTheseTags.add(ConstTags.REPORTS_NUM_IDEAL_SENSOR_RECS); 
 	}
 	
-	@Override
 	protected void writeDataToFile(int studyId, String reportName, String colsToWrite, String folderName) throws IOException {
 		FileWriter wr = new FileWriter(reportName);
 		try { 
@@ -64,5 +74,6 @@ public class FullReportWriter extends AbsReportWriter {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}	
+	}
+
 }

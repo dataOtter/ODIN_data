@@ -1,10 +1,12 @@
-package dao;
+package dao.reportWriters;
 
 import java.io.FileWriter;
 import java.io.IOException;
 
 import constants.ConstTags;
 import constants.Constants;
+import dao.Study;
+import dao.StudyReader;
 import maps.*;
 import orderedcollection.*;
 import reports.ReportsCollection;

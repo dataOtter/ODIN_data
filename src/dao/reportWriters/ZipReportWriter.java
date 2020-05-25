@@ -1,8 +1,8 @@
-package dao;
+package dao.reportWriters;
 
 import java.io.IOException;
 
-public class ZipReportWriter extends AbsReportWriter{
+public class ZipReportWriter extends AbsReportWriter {
     
     public ZipReportWriter(String path, int formatVersion) {
     	super(null, path, formatVersion, null);

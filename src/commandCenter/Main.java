@@ -12,11 +12,11 @@ import java.util.Locale;
 import java.util.Scanner;
 
 import constants.Constants;
-import dao.BasicReportFilesWriter;
-import dao.JupyterReportWriter;
-import dao.FullReportWriter;
-import dao.PerCidReportWriter;
-import dao.ZipReportWriter;
+import dao.reportWriters.BasicReportFilesWriter;
+import dao.reportWriters.FullReportWriter;
+import dao.reportWriters.JupyterReportWriter;
+import dao.reportWriters.PerCidReportWriter;
+import dao.reportWriters.ZipReportWriter;
 import dao.StudyReader;
 import orderedcollection.*;
 import reports.AnalysisEngine;
@@ -73,9 +73,9 @@ public class Main {
 	    slidingWindowInHrs = Double.parseDouble(args[4]) * 24.0;
         
         //makeZipReport(inPath, outPath, startTInSecs, stopTimeInSecs, slidingWindowInHrs);
-        makeZipReport(inPath, outPath, -1, -1, -1);
+        //makeZipReport(inPath, outPath, -1, -1, -1);
         
-        //makeForTexReport(inPath, outPath, startTInSecs, stopTimeInSecs, slidingWindowInHrs, startTimeInSecs);
+        makeForTexReport(inPath, outPath, startTInSecs, stopTimeInSecs, slidingWindowInHrs, startTInSecs);
         
         // FYI this has no codebook and no folder structure
         //new FullReportWriter(allReports, path, formatVersion).writeTimeWindowReportsToFiles(consentstatuses, stopTimeInSecs, 
@@ -96,7 +96,7 @@ public class Main {
         int formatVersion = Constants.FORMAT_VERSION;
 		try {
 			AnalysisEngineBuilder bld = new AnalysisEngineBuilder(inPath, formatVersion, consentstatuses, stopTimeInSecs, 
-					slidingWindowInHrs, startTimeInSecs);
+					-1, startTimeInSecs);
 	        AnalysisEngine eng = bld.addSensorJobs().addRuleJobs().buildEngine();
 	        ReportsCollection allReports = eng.getAllReports();
 	        

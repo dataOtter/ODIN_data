@@ -46,7 +46,7 @@ public class AnalysisSensor implements IAnalysis {
         
     	SensorPerformances sps = new SensorPerformances(_data, _sensorInterval, _windowInSecs);
     	
-    	rep.addValue(ConstTags.REPORTS_NUM_IDEAL_RECORDINGS, sps.getIdealRecs(), ConstTags.REPORTS_N_I_R_TEXT); 
+    	rep.addValue(ConstTags.REPORTS_NUM_IDEAL_SENSOR_RECS, sps.getIdealRecs(), ConstTags.REPORTS_N_I_R_TEXT); 
     	rep.addValue(ConstTags.REPORTS_TOTAL_SENSOR_RECS, sps.getNumRecs(), ConstTags.REPORTS_T_S_R_TEXT); 
     	
         SensorRecordingsWithinGivenPercentOfTimeInterval numInRange = 
@@ -78,12 +78,14 @@ public class AnalysisSensor implements IAnalysis {
     
     private void setWindowAndData(int cid, SensorDataCollection allData, double stopTimeInSecs, 
     		double windowInHrs, double startTimeInSecs, CouponCollection coupons) {
+    	
     	// if no time restraints are given
         if (stopTimeInSecs == -1.0 && startTimeInSecs == -1.0 && windowInHrs == -1.0) {
 			stopTimeInSecs = (coupons.getCouponById(cid).getStudyEndTime().getTimeInMillis() / 1000.0) + 9999.0;
 			startTimeInSecs = coupons.getCouponById(cid).getLastRegistrationTime().getTimeInMillis() / 1000.0;
 			_windowInSecs = stopTimeInSecs - startTimeInSecs;
 	        _data = allData.getCouponDataOfType(cid, getAnalysisType()).getDeepCopy();
+	        
 		}
         // if some time restraints are given
         else {
@@ -101,14 +103,24 @@ public class AnalysisSensor implements IAnalysis {
                 else if (startTimeInSecs == -1.0) {
                 	startTimeInSecs = stopTimeInSecs - _windowInSecs;
                 }
+                else {
+                	startTimeInSecs = Math.max(startTimeInSecs, coupons.getCouponById(cid).getLastRegistrationTime().getTimeInMillis() / 1000.0);
+                	stopTimeInSecs = startTimeInSecs + _windowInSecs;
+                }
         	}
         	// if no time window is given
             else {
             	if (stopTimeInSecs == -1.0 && windowInHrs == -1.0) {
+                	startTimeInSecs = Math.max(startTimeInSecs, coupons.getCouponById(cid).getLastRegistrationTime().getTimeInMillis() / 1000.0);
                 	stopTimeInSecs = (coupons.getCouponById(cid).getStudyEndTime().getTimeInMillis() / 1000.0) + 9999.0;
                 }
                 else if (startTimeInSecs == -1.0 && windowInHrs == -1.0) {
         			startTimeInSecs = coupons.getCouponById(cid).getLastRegistrationTime().getTimeInMillis() / 1000.0;
+                	stopTimeInSecs = Math.min(stopTimeInSecs, (coupons.getCouponById(cid).getStudyEndTime().getTimeInMillis() / 1000.0) + 9999.0);
+                }
+                else {
+                	startTimeInSecs = Math.max(startTimeInSecs, coupons.getCouponById(cid).getLastRegistrationTime().getTimeInMillis() / 1000.0);
+                	stopTimeInSecs = Math.min(stopTimeInSecs, (coupons.getCouponById(cid).getStudyEndTime().getTimeInMillis() / 1000.0) + 9999.0);
                 }
             	_windowInSecs = stopTimeInSecs - startTimeInSecs;
             }

@@ -3,7 +3,6 @@ package reports.rules;
 import dao.OneAnswer;
 import orderedcollection.*;
 
-import java.util.Calendar;
 import java.util.Iterator;
 
 import constants.Constants;

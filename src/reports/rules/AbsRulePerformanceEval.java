@@ -178,6 +178,10 @@ public abstract class AbsRulePerformanceEval {
                 	_startTimeInSecs = stopTimeInSecs - windowInSecs;
                 	_stopTimeInSecs = stopTimeInSecs;
                 }
+                else {
+                	_startTimeInSecs = Math.max(startTimeInSecs, coupons.getCouponById(cid).getLastRegistrationTime().getTimeInMillis() / 1000.0);
+                	_stopTimeInSecs = startTimeInSecs + windowInSecs;
+                }
         	}
         	// if no time window is given
             else {
@@ -188,6 +192,10 @@ public abstract class AbsRulePerformanceEval {
                 else if (startTimeInSecs == -1.0 && windowInHrs == -1.0) {
         			_startTimeInSecs = coupons.getCouponById(cid).getLastRegistrationTime().getTimeInMillis() / 1000.0;
         			_stopTimeInSecs = stopTimeInSecs;
+                }
+                else {
+                	_startTimeInSecs = Math.max(startTimeInSecs, coupons.getCouponById(cid).getLastRegistrationTime().getTimeInMillis() / 1000.0);
+                	_stopTimeInSecs = Math.min(stopTimeInSecs, (coupons.getCouponById(cid).getStudyEndTime().getTimeInMillis() / 1000.0) + 9999.0);
                 }
             }
         	// answers with time restraints 

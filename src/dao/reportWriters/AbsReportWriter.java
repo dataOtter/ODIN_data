@@ -1,4 +1,4 @@
-package dao;
+package dao.reportWriters;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,6 +15,7 @@ import java.util.zip.ZipOutputStream;
 
 import constants.ConstTags;
 import constants.Constants;
+import dao.StudyReader;
 import maps.IMJ_Map;
 import orderedcollection.IMJ_OC;
 import orderedcollection.MJ_OC_Factory;
@@ -238,8 +239,9 @@ public abstract class AbsReportWriter {
         		checkT += (24 * 60 * 60);
         	}
         	AnalysisEngineBuilder bld = new AnalysisEngineBuilder(path, formatVersion, consentstatuses, 
-        			t + (newWindow * 60 * 60), newWindow, startT);
-            AnalysisEngine eng = bld.addRuleJobs().buildEngine();
+        			//t + (newWindow * 60 * 60), newWindow, startT);
+        			t + (newWindow * 60 * 60), newWindow, t);
+            AnalysisEngine eng = bld.addRuleJobs().addSensorJobs().buildEngine();
             ReportsCollection allReports = eng.getAllReports();
             
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);

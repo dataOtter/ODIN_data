@@ -1,44 +1,30 @@
 /**
  * 
  */
-package dao;
+package dao.reportWriters;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 import constants.ConstTags;
 import constants.Constants;
 import maps.*;
-import orderedcollection.*;
 import reports.ReportsCollection;
 
 /**
  * @author Maisha Jauernig
  *
  */
-public class JupyterReportWriter extends AbsReportWriter {
+public class PerCidReportWriter extends AbsReportWriter {
 	
-	public JupyterReportWriter(ReportsCollection reps, String path, int formatVersion) {
+	protected PerCidReportWriter(ReportsCollection reps, String path, int formatVersion) {
 		super(reps, path, formatVersion, null);
-		
-		_onlyAddTheseTags = new MJ_OC_Factory<String>().create();
-		_onlyAddTheseTags.add(ConstTags.REPORTS_RULEID); 
-		_onlyAddTheseTags.add(ConstTags.REPORTS_TOTAL_RULE_FIRES); 
-		_onlyAddTheseTags.add(ConstTags.REPORTS_IDEAL_RULE_FIRES); 
-		//_onlyAddTheseTags.add(ConstTags.REPORTS_SKIPPED_RULE_FIRES); 
-		//_onlyAddTheseTags.add(ConstTags.REPORTS_EXPIRED_RULE_FIRES); 
-		//_onlyAddTheseTags.add(ConstTags.REPORTS_POWEREDOFF_RULE_FIRES); 
-		_onlyAddTheseTags.add(ConstTags.REPORTS_RESPONDED_RULE_FIRES); 
+		_allFinalTags.add(ConstTags.REPORTS_COUPONID);
+		_allFinalTags.add(ConstTags.REPORTS_STUDYID);
 	}
 	
-	protected void writeDataToFile(int studyId, String reportName, String colsToWrite, String folderName) throws IOException {
-		FileWriter wr = new FileWriter(reportName);
-		try { 
-			wr.write(colsToWrite);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+	protected void writeDataToFile(int studyId, String reportName, String colsToWrite, String folderName) {
 		IMJ_Map<String, String> tagOrderedToData = new MJ_Map_Factory<String, String>().create();
 		for (String tag: _allFinalTags) {
 			tagOrderedToData.put(tag, Constants.HEALTH_REPORT_NO_VALUE);
@@ -51,8 +37,10 @@ public class JupyterReportWriter extends AbsReportWriter {
 		// for each coupon's tagToData map
 		for (int i = 0; i<cidToTagToData.size(); i++) {
 			int cid = cidToTagToData.getKey(i);
+			
 			IMJ_Map<String, String> tempTagOrdToData = tagOrderedToData.getDeepCopy();
 			addToTagOrderedToData(tempTagOrdToData, cid, studyId, cidToTagToData.get(cid));
+			String cName = tempTagOrdToData.get(ConstTags.REPORTS_COUPONNAME);
 
 			// write the data row for the cid to the file
 			String toWrite = "";
@@ -60,17 +48,27 @@ public class JupyterReportWriter extends AbsReportWriter {
 				String tag = tempTagOrdToData.getKey(j);
 				toWrite += tempTagOrdToData.get(tag) + ",";
 			}
+
+			String tempPath = folderName + "/" + cName;
+			String pathAndName = tempPath + "/" + cName + "_" + reportName;
 			try {
+				new File(tempPath).mkdir();
+				
+				FileWriter wr = new FileWriter(pathAndName);
+				wr.write(colsToWrite);
 				wr.write(toWrite.substring(0, toWrite.length()-1) + "\n");
+				wr.close();
+				
+				/*File tmpDir = new File(tempPath + "/" + Constants.CEDARS_CODEBOOK_CSV);
+				if (! tmpDir.exists()) {
+					Path source = Paths.get(folderName + "/" + Constants.CEDARS_CODEBOOK_CSV);
+					Path newdir = Paths.get(tempPath);
+					Files.copy(source, newdir.resolve(source.getFileName()));
+				}*/
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		try {
-			wr.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
-
 }

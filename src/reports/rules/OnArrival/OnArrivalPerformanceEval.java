@@ -1,6 +1,5 @@
 package reports.rules.OnArrival;
 
-import Assert.Assertion;
 import dao.CouponCollection;
 import maps.IMJ_Map;
 import reports.rules.*;

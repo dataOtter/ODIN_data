@@ -2,7 +2,6 @@ package sensors.data;
 
 import java.util.Calendar;
 
-import constants.*;
 import maps.*;
 
 /**
